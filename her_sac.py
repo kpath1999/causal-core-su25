@@ -25,12 +25,11 @@ import numpy as np
 import wandb
 from wandb.integration.sb3 import WandbCallback
 
-from curriculum.graph_interventions import GraphInterventionPolicy, GraphBasedCurriculumCallback
+from curriculum.graph_interventions import GraphBasedCurriculumManager, GraphBasedCurriculumCallback
 
 def train_policy(num_of_envs, log_relative_path, maximum_episode_length,
                  skip_frame, seed_num, her_config, total_time_steps,
-                 validate_every_timesteps, task_name, wandb_config=None, 
-                 curriculum_kwargs=None):
+                 validate_every_timesteps, task_name, wandb_config=None):
     
     # initialize the w&b run
     if wandb_config:
@@ -50,36 +49,33 @@ def train_policy(num_of_envs, log_relative_path, maximum_episode_length,
             sync_tensorboard=True  # Also sync tensorboard logs
         )
     
-    # initialize the graph-based curriculum manager
-
-    # get initial curriculum
-    initial_curriculum_config = graph_curriculum_manager.get_current_curriculum_config()
-
-
-
-
+    # create the environment FIRST
     task = generate_task(task_generator_id=task_name,
                          dense_reward_weights=np.array([0]*8),
                          fractional_reward_weight=1,
                          goal_height=0.15,
                          tool_block_mass=0.02)
-    
+
     env = CausalWorld(task=task,
                       skip_frame=skip_frame,
                       enable_visualization=False,
                       seed=seed_num,
                       max_episode_length=maximum_episode_length)
-    
-    # apply the curriculum wrapper before the HER wrapper
-    if curriculum_kwargs:
-        env = CurriculumWrapper(
-            env,
-            intervention_actors=curriculum_kwargs['intervention_actors'],
-            actives=curriculum_kwargs['actives']
-        )
-        print(f"Curriculum enabled with {len(curriculum_kwargs['intervention_actors'])} intervention actors")
 
-    env = HERGoalEnvWrapper(env)
+    # initialize the graph-based curriculum manager
+    graph_curriculum_manager = GraphBasedCurriculumManager(total_timesteps=total_time_steps)
+
+    # get initial curriculum configuration
+    initial_curriculum_config = graph_curriculum_manager.get_current_curriculum_config()
+
+    # apply curriculum wrapper with graph-based curriculum
+    curriculum_env = CurriculumWrapper(
+        env,
+        intervention_actors=initial_curriculum_config['intervention_actors'],
+        actives=initial_curriculum_config['actives']
+    )
+
+    final_env = HERGoalEnvWrapper(curriculum_env)
     set_random_seed(seed_num)
     
     # add graph-based curriculum callback
@@ -116,7 +112,7 @@ def train_policy(num_of_envs, log_relative_path, maximum_episode_length,
 
     model = SAC(
         MultiInputPolicy,  # REQUIRED for HER
-        env,
+        final_env,
         replay_buffer_class=HerReplayBuffer,
         replay_buffer_kwargs=replay_buffer_kwargs,
         verbose=1,
@@ -159,22 +155,6 @@ if __name__ == '__main__':
         "tensorboard_log": log_relative_path
     }
 
-    # add the curriculum configuration
-    curriculum_kwargs = {
-        'intervention_actors': [
-            GoalInterventionActorPolicy(),      # Goal complexity variations
-            VisualInterventionActorPolicy(),    # Visual/appearance changes  
-            RandomInterventionActorPolicy(),    # Random environmental factors
-            GoalInterventionActorPolicy()       # Additional goal variations
-        ], 
-        'actives': [
-            (5000, 10000, 1, 0),   # Goal intervention: steps 5K-10K, every episode, timestep 0
-            (10000, 20000, 2, 0),  # Visual intervention: steps 10K-20K, every 2 episodes, timestep 0
-            (20000, 25000, 1, 0),  # Random intervention: steps 20K-25K, every episode, timestep 0
-            (25000, 30000, 1, 50)  # Goal intervention: steps 25K-30K, every episode, timestep 50
-        ]
-    }
-
     # w&b configuration
     wandb_config = {
         'project': 'causal-world-her-sac-curriculum',
@@ -191,6 +171,5 @@ if __name__ == '__main__':
         total_time_steps=total_time_steps,
         validate_every_timesteps=total_time_steps_per_update,
         task_name=task_name,
-        wandb_config=wandb_config,
-        curriculum_kwargs=curriculum_kwargs
+        wandb_config=wandb_config
     )

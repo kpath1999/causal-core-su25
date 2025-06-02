@@ -3,6 +3,8 @@ import numpy as np
 from collections import defaultdict, deque
 import wandb
 
+from stable_baselines3.common.callbacks import BaseCallback
+
 from causal_world.intervention_actors import GoalInterventionActorPolicy, RandomInterventionActorPolicy, \
     VisualInterventionActorPolicy, RigidPoseInterventionActorPolicy, PhysicalPropertiesInterventionActorPolicy
 
@@ -80,6 +82,11 @@ class GraphBasedCurriculumManager:
                 {'group': 'mass'},
                 'physics_friction'
             ),
+            'physics_mass': InterventionNode(
+                PhysicalPropertiesInterventionActorPolicy,
+                {'group': 'mass'},
+                'physics_mass'
+            ),
             'visual': InterventionNode(
                 VisualInterventionActorPolicy,
                 {},
@@ -130,13 +137,18 @@ class GraphBasedCurriculumManager:
             # check if all prerequisites are met
             prerequisites_met = True
             for prereq_id in node.prerequisites:
-                prereq_node = self.graph.nodes[prereq_id]['node_obj']
-                if prereq_node.success_rate < 0.6:
+                if prereq_id in self.graph.nodes:    # safety check
+                    prereq_node = self.graph.nodes[prereq_id]['node_obj']
+                    if prereq_node.success_rate < 0.6:  # prerequisite not mastered
+                        prerequisites_met = False
+                        break
+                else:
+                    # if prereq node does not exist, consider it unmet
                     prerequisites_met = False
                     break
             
             if prerequisites_met:
-                eligible.append(node)
+                eligible.append(node_id)
         
         return eligible
     
@@ -169,16 +181,16 @@ class GraphBasedCurriculumManager:
                 # check conflicts
                 has_conflict = False
                 for conflict_id in node.conflicts:
-                    if any(node['node_id'] == conflict_id for node in active_interventions):
+                    if any(intervention['node_id'] == conflict_id for intervention in active_interventions):
                         has_conflict = True
                         break
                 
                 if not has_conflict:
                     active_interventions.append({
-                        'node_id': node_id,
-                        'actor': node.create_actor_instance(),
-                        'activation_strength': node.activation_strength
-                    })
+                    'node_id': node_id,
+                    'actor': node.create_actor_instance(),
+                    'strength': node.activation_strength
+                })
         
         return active_interventions
     
@@ -205,7 +217,8 @@ class GraphBasedCurriculumManager:
             # fallback to a basic goal intervention
             return {
                 'intervention_actors': [GoalInterventionActorPolicy()],
-                'actives': [(0, self.total_timesteps, 1, 0)]
+                'actives': [(0, self.total_timesteps, 1, 0)],
+                'active_node_ids': []
             }
         
         actors = []
@@ -222,7 +235,7 @@ class GraphBasedCurriculumManager:
         return {
             'intervention_actors': actors,
             'actives': actives,
-            'active_interventions': [node['node_id'] for node in active_interventions]
+            'active_interventions': [intervention['node_id'] for intervention in active_interventions]
         }
 
 class GraphBasedCurriculumCallback(BaseCallback):
