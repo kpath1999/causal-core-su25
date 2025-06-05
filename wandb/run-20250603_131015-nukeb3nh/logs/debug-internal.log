@@ -1,0 +1,18 @@
+{"time":"2025-06-03T13:10:15.921828-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-06-03T13:10:15.922438-04:00","level":"INFO","msg":"created symlink","path":"C:\\Users\\Admin\\Documents\\school_projects\\causal-core-su25\\wandb\\run-20250603_131015-nukeb3nh\\logs\\debug-core.log"}
+{"time":"2025-06-03T13:10:16.0653369-04:00","level":"INFO","msg":"created new stream","id":"nukeb3nh"}
+{"time":"2025-06-03T13:10:16.0658883-04:00","level":"INFO","msg":"stream: started","id":"nukeb3nh"}
+{"time":"2025-06-03T13:10:16.0664281-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"nukeb3nh"}
+{"time":"2025-06-03T13:10:16.0664281-04:00","level":"INFO","msg":"handler: started","stream_id":"nukeb3nh"}
+{"time":"2025-06-03T13:10:16.0664281-04:00","level":"INFO","msg":"sender: started","stream_id":"nukeb3nh"}
+{"time":"2025-06-03T13:10:16.4972044-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-06-03T13:10:27.5257136-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-06-03T13:10:27.5326234-04:00","level":"ERROR","msg":"tensorboard: error creating symlink","target":"C:\\Users\\Admin\\Documents\\school_projects\\causal-core-su25\\baseline_picking_her_sac_curriculum\\her_sac_curriculum_1\\events.out.tfevents.1748970617.DESKTOP-F9CFTND.17128.0","symlink":"C:\\Users\\Admin\\Documents\\school_projects\\causal-core-su25\\wandb\\run-20250603_131015-nukeb3nh\\files\\baseline_picking_her_sac_curriculum\\her_sac_curriculum_1\\events.out.tfevents.1748970617.DESKTOP-F9CFTND.17128.0","error":"symlink C:\\Users\\Admin\\Documents\\school_projects\\causal-core-su25\\baseline_picking_her_sac_curriculum\\her_sac_curriculum_1\\events.out.tfevents.1748970617.DESKTOP-F9CFTND.17128.0 C:\\Users\\Admin\\Documents\\school_projects\\causal-core-su25\\wandb\\run-20250603_131015-nukeb3nh\\files\\baseline_picking_her_sac_curriculum\\her_sac_curriculum_1\\events.out.tfevents.1748970617.DESKTOP-F9CFTND.17128.0: A required privilege is not held by the client."}
+{"time":"2025-06-03T13:55:49.1235029-04:00","level":"INFO","msg":"stream: closing","id":"nukeb3nh"}
+{"time":"2025-06-03T13:55:49.124017-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-06-03T13:55:49.1265541-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-06-03T13:55:50.4002745-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-06-03T13:55:50.53334-04:00","level":"INFO","msg":"handler: closed","stream_id":"nukeb3nh"}
+{"time":"2025-06-03T13:55:50.53334-04:00","level":"INFO","msg":"sender: closed","stream_id":"nukeb3nh"}
+{"time":"2025-06-03T13:55:50.53334-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"nukeb3nh"}
+{"time":"2025-06-03T13:55:50.53334-04:00","level":"INFO","msg":"stream: closed","id":"nukeb3nh"}

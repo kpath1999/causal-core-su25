@@ -1,0 +1,32 @@
+{
+  "os":  "Windows-10-10.0.22621-SP0",
+  "python":  "3.7.4",
+  "startedAt":  "2025-06-03T20:18:14.236995Z",
+  "program":  "her_sac.py",
+  "codePath":  "her_sac.py",
+  "git":  {
+    "remote":  "https://github.com/kpath1999/causal-core-su25.git",
+    "commit":  "cd96e61e57506d3e29151722dccfd41382fe63ab"
+  },
+  "email":  "kausarpatheryaa@gmail.com",
+  "root":  "C:\\Users\\Admin\\Documents\\school_projects\\causal-core-su25",
+  "host":  "DESKTOP-F9CFTND",
+  "username":  "Admin",
+  "executable":  "C:\\Users\\Admin\\anaconda3\\envs\\causal_world\\python.exe",
+  "codePathLocal":  "her_sac.py",
+  "cpu_count":  4,
+  "cpu_count_logical":  8,
+  "disk":  {
+    "/":  {
+      "total":  "255146848256",
+      "used":  "150109016064"
+    }
+  },
+  "memory":  {
+    "total":  "8388567040"
+  },
+  "cpu":  {
+    "count":  4,
+    "countLogical":  8
+  }
+}

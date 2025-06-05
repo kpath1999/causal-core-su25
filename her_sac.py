@@ -42,10 +42,10 @@ def train_policy(num_of_envs, log_relative_path, maximum_episode_length,
                 'skip_frame': skip_frame,
                 'seed_num': seed_num,
                 'total_time_steps': total_time_steps,
-                'curriculum_enabled': curriculum_kwargs is not None,
+                'graph_curriculum_enabled': True,
                 **her_config  # Log all hyperparameters
             },
-            tags=[task_name, 'HER', 'SAC'],
+            tags=[task_name, 'HER', 'SAC', 'GraphCurriculum'],
             sync_tensorboard=True  # Also sync tensorboard logs
         )
     
@@ -75,16 +75,11 @@ def train_policy(num_of_envs, log_relative_path, maximum_episode_length,
         actives=initial_curriculum_config['actives']
     )
 
+    # apply the HER wrapper
     final_env = HERGoalEnvWrapper(curriculum_env)
     set_random_seed(seed_num)
     
-    # add graph-based curriculum callback
-    graph_curriculum_cb = GraphBasedCurriculumCallback(
-        curriculum_manager=graph_curriculum_manager,
-        curriculum_wrapper_env=curriculum_env,
-        adaptation_interval_episodes=30
-    )
-    # combining callbacks
+    # time to callback
     callbacks = [
         CheckpointCallback(
             save_freq=int(validate_every_timesteps / num_of_envs),
@@ -92,6 +87,12 @@ def train_policy(num_of_envs, log_relative_path, maximum_episode_length,
             name_prefix='model'
         )
     ]
+    # add graph-based curriculum callback
+    graph_curriculum_cb = GraphBasedCurriculumCallback(
+        curriculum_manager=graph_curriculum_manager,
+        curriculum_wrapper_env=curriculum_env,
+        adaptation_interval_episodes=30
+    )
     callbacks.append(graph_curriculum_cb)
     
     # Add W&B callback if configured
@@ -123,14 +124,14 @@ def train_policy(num_of_envs, log_relative_path, maximum_episode_length,
     )
     
     model.learn(total_timesteps=total_time_steps,
-                tb_log_name="her_sac_curriculum" if curriculum_kwargs else "her_sac",
+                tb_log_name="her_sac_curriculum",
                 callback=callbacks)
     
     # finish w&b run
     if wandb_config:
         wandb.finish()
     
-    return
+    return model
 
 if __name__ == '__main__':
     total_time_steps_per_update = 1000000
@@ -157,7 +158,7 @@ if __name__ == '__main__':
 
     # w&b configuration
     wandb_config = {
-        'project': 'causal-world-her-sac-curriculum',
+        'project': 'causal-world-her-sac-graph-curriculum',
         'run_name': f'{task_name}_seed_{seed_num}_{maximum_episode_length}steps'
     }
 

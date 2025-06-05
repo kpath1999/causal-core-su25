@@ -1,0 +1,318 @@
+_current_progress_remaining:
+    value: 1
+_custom_logger:
+    value: "False"
+_episode_num:
+    value: 0
+_episode_storage:
+    value: None
+_last_episode_starts:
+    value: '[ True]'
+_last_obs:
+    value: |-
+        OrderedDict([('achieved_goal', array([[-0.06426357, -0.06116914,  0.17556817,  0.02758888,  0.0306833 ,
+                 0.24056817]])), ('desired_goal', array([[-0.03944146, -0.03944146,  0.21354938,  0.03944146,  0.03944146,
+                 0.27854938]])), ('observation', array([[ 1.00000000e+00,  2.21789883e-01,  4.33500479e-01,
+                -2.61799388e-01,  2.21789883e-01,  4.33500479e-01,
+                -2.61799388e-01,  2.21789883e-01,  4.33500479e-01,
+                -2.61799388e-01,  0.00000000e+00,  0.00000000e+00,
+                 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,
+                 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,
+                 0.00000000e+00, -1.18900000e-01,  3.17274170e-01,
+                -7.76548340e-01,  3.34217491e-01, -5.56666645e-02,
+                -7.76548340e-01, -2.15317491e-01, -2.61607506e-01,
+                -7.76548340e-01,  1.00000000e+00,  0.00000000e+00,
+                 0.00000000e+00,  0.00000000e+00, -3.66746952e-02,
+                -3.04858377e-02, -1.67727339e-01,  0.00000000e+00,
+                 0.00000000e+00, -4.00820298e-02,  9.16156694e-02,
+                 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,
+                 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,
+                 2.00000000e+01,  0.00000000e+00,  0.00000000e+00,
+                 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,
+                -1.58024600e-02,  0.00000000e+00,  0.00000000e+00,
+                 9.92431275e-02, -1.22801323e-02]]))])
+_last_original_obs:
+    value: None
+_logger:
+    value: <stable_baselines3.common.logger.Logger object at 0x000001EE8D81BC88>
+_n_updates:
+    value: 0
+_num_timesteps_at_start:
+    value: 0
+_total_timesteps:
+    value: 50000
+_vec_normalize_env:
+    value: None
+_wandb:
+    value:
+        cli_version: 0.18.7
+        m: []
+        python_version: 3.7.4
+        t:
+            "1":
+                - 1
+                - 55
+            "2":
+                - 1
+                - 55
+            "3":
+                - 1
+                - 3
+                - 13
+                - 15
+                - 16
+                - 22
+                - 23
+                - 35
+                - 55
+                - 61
+            "4": 3.7.4
+            "5": 0.18.7
+            "8":
+                - 3
+                - 5
+            "12": 0.18.7
+            "13": windows-amd64
+action_noise:
+    value: None
+action_space:
+    value: Box(9,)
+actor:
+    value: |-
+        Actor(
+          (features_extractor): CombinedExtractor(
+            (extractors): ModuleDict(
+              (achieved_goal): Flatten(start_dim=1, end_dim=-1)
+              (desired_goal): Flatten(start_dim=1, end_dim=-1)
+              (observation): Flatten(start_dim=1, end_dim=-1)
+            )
+          )
+          (latent_pi): Sequential(
+            (0): Linear(in_features=68, out_features=256, bias=True)
+            (1): ReLU()
+            (2): Linear(in_features=256, out_features=256, bias=True)
+            (3): ReLU()
+          )
+          (mu): Linear(in_features=256, out_features=9, bias=True)
+          (log_std): Linear(in_features=256, out_features=9, bias=True)
+        )
+algo:
+    value: SAC
+batch_size:
+    value: 128
+buffer_size:
+    value: 500000
+critic:
+    value: |-
+        ContinuousCritic(
+          (features_extractor): CombinedExtractor(
+            (extractors): ModuleDict(
+              (achieved_goal): Flatten(start_dim=1, end_dim=-1)
+              (desired_goal): Flatten(start_dim=1, end_dim=-1)
+              (observation): Flatten(start_dim=1, end_dim=-1)
+            )
+          )
+          (qf0): Sequential(
+            (0): Linear(in_features=77, out_features=256, bias=True)
+            (1): ReLU()
+            (2): Linear(in_features=256, out_features=256, bias=True)
+            (3): ReLU()
+            (4): Linear(in_features=256, out_features=1, bias=True)
+          )
+          (qf1): Sequential(
+            (0): Linear(in_features=77, out_features=256, bias=True)
+            (1): ReLU()
+            (2): Linear(in_features=256, out_features=256, bias=True)
+            (3): ReLU()
+            (4): Linear(in_features=256, out_features=1, bias=True)
+          )
+        )
+critic_target:
+    value: |-
+        ContinuousCritic(
+          (features_extractor): CombinedExtractor(
+            (extractors): ModuleDict(
+              (achieved_goal): Flatten(start_dim=1, end_dim=-1)
+              (desired_goal): Flatten(start_dim=1, end_dim=-1)
+              (observation): Flatten(start_dim=1, end_dim=-1)
+            )
+          )
+          (qf0): Sequential(
+            (0): Linear(in_features=77, out_features=256, bias=True)
+            (1): ReLU()
+            (2): Linear(in_features=256, out_features=256, bias=True)
+            (3): ReLU()
+            (4): Linear(in_features=256, out_features=1, bias=True)
+          )
+          (qf1): Sequential(
+            (0): Linear(in_features=77, out_features=256, bias=True)
+            (1): ReLU()
+            (2): Linear(in_features=256, out_features=256, bias=True)
+            (3): ReLU()
+            (4): Linear(in_features=256, out_features=1, bias=True)
+          )
+        )
+device:
+    value: cpu
+ent_coef:
+    value: auto
+ent_coef_optimizer:
+    value: |-
+        Adam (
+        Parameter Group 0
+            amsgrad: False
+            betas: (0.9, 0.999)
+            capturable: False
+            differentiable: False
+            eps: 1e-08
+            foreach: None
+            fused: False
+            lr: 0.00025
+            maximize: False
+            weight_decay: 0
+        )
+env:
+    value: <stable_baselines3.common.vec_env.dummy_vec_env.DummyVecEnv object at 0x000001EE8D86CAC8>
+ep_info_buffer:
+    value: deque([], maxlen=100)
+ep_success_buffer:
+    value: deque([], maxlen=100)
+eval_env:
+    value: None
+gamma:
+    value: 0.98
+goal_selection_strategy:
+    value: future
+gradient_steps:
+    value: 1
+graph_curriculum_enabled:
+    value: true
+learning_rate:
+    value: 0.00025
+learning_starts:
+    value: 1000
+log_ent_coef:
+    value: tensor([0.], requires_grad=True)
+lr_schedule:
+    value: <function constant_fn.<locals>.func at 0x000001EE8C07C678>
+maximum_episode_length:
+    value: 200
+n_envs:
+    value: 1
+n_sampled_goal:
+    value: 2
+num_timesteps:
+    value: 0
+observation_space:
+    value: Dict(achieved_goal:Box(6,), desired_goal:Box(6,), observation:Box(56,))
+optimize_memory_usage:
+    value: "False"
+policy:
+    value: |-
+        MultiInputPolicy(
+          (actor): Actor(
+            (features_extractor): CombinedExtractor(
+              (extractors): ModuleDict(
+                (achieved_goal): Flatten(start_dim=1, end_dim=-1)
+                (desired_goal): Flatten(start_dim=1, end_dim=-1)
+                (observation): Flatten(start_dim=1, end_dim=-1)
+              )
+            )
+            (latent_pi): Sequential(
+              (0): Linear(in_features=68, out_features=256, bias=True)
+              (1): ReLU()
+              (2): Linear(in_features=256, out_features=256, bias=True)
+              (3): ReLU()
+            )
+            (mu): Linear(in_features=256, out_features=9, bias=True)
+            (log_std): Linear(in_features=256, out_features=9, bias=True)
+          )
+          (critic): ContinuousCritic(
+            (features_extractor): CombinedExtractor(
+              (extractors): ModuleDict(
+                (achieved_goal): Flatten(start_dim=1, end_dim=-1)
+                (desired_goal): Flatten(start_dim=1, end_dim=-1)
+                (observation): Flatten(start_dim=1, end_dim=-1)
+              )
+            )
+            (qf0): Sequential(
+              (0): Linear(in_features=77, out_features=256, bias=True)
+              (1): ReLU()
+              (2): Linear(in_features=256, out_features=256, bias=True)
+              (3): ReLU()
+              (4): Linear(in_features=256, out_features=1, bias=True)
+            )
+            (qf1): Sequential(
+              (0): Linear(in_features=77, out_features=256, bias=True)
+              (1): ReLU()
+              (2): Linear(in_features=256, out_features=256, bias=True)
+              (3): ReLU()
+              (4): Linear(in_features=256, out_features=1, bias=True)
+            )
+          )
+          (critic_target): ContinuousCritic(
+            (features_extractor): CombinedExtractor(
+              (extractors): ModuleDict(
+                (achieved_goal): Flatten(start_dim=1, end_dim=-1)
+                (desired_goal): Flatten(start_dim=1, end_dim=-1)
+                (observation): Flatten(start_dim=1, end_dim=-1)
+              )
+            )
+            (qf0): Sequential(
+              (0): Linear(in_features=77, out_features=256, bias=True)
+              (1): ReLU()
+              (2): Linear(in_features=256, out_features=256, bias=True)
+              (3): ReLU()
+              (4): Linear(in_features=256, out_features=1, bias=True)
+            )
+            (qf1): Sequential(
+              (0): Linear(in_features=77, out_features=256, bias=True)
+              (1): ReLU()
+              (2): Linear(in_features=256, out_features=256, bias=True)
+              (3): ReLU()
+              (4): Linear(in_features=256, out_features=1, bias=True)
+            )
+          )
+        )
+policy_class:
+    value: <class 'stable_baselines3.sac.policies.MultiInputPolicy'>
+policy_kwargs:
+    value: '{''net_arch'': [256, 256], ''use_sde'': False}'
+remove_time_limit_termination:
+    value: "False"
+replay_buffer:
+    value: <stable_baselines3.her.her_replay_buffer.HerReplayBuffer object at 0x000001EE8BC26E48>
+replay_buffer_class:
+    value: <class 'stable_baselines3.her.her_replay_buffer.HerReplayBuffer'>
+replay_buffer_kwargs:
+    value: '{''n_sampled_goal'': 2, ''goal_selection_strategy'': ''future'', ''max_episode_length'': 200}'
+sde_sample_freq:
+    value: -1
+seed:
+    value: 0
+seed_num:
+    value: 0
+skip_frame:
+    value: 3
+start_time:
+    value: 1.7489818956420805e+09
+target_entropy:
+    value: -9
+target_update_interval:
+    value: 1
+task_name:
+    value: picking
+tau:
+    value: 0.01
+tensorboard_log:
+    value: baseline_picking_her_sac_curriculum
+total_time_steps:
+    value: 50000
+train_freq:
+    value: 'TrainFreq(frequency=1, unit=<TrainFrequencyUnit.STEP: ''step''>)'
+use_sde:
+    value: "False"
+use_sde_at_warmup:
+    value: "False"
+verbose:
+    value: 1
