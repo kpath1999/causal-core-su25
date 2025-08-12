@@ -1,0 +1,67 @@
+{
+  "sequence": [
+    {
+      "stage": 1,
+      "intervention": "random",
+      "test_metrics": null
+    },
+    {
+      "stage": 2,
+      "intervention": "visual",
+      "test_metrics": null
+    },
+    {
+      "stage": 3,
+      "intervention": "position",
+      "test_metrics": null
+    },
+    {
+      "stage": 4,
+      "intervention": "goal",
+      "test_metrics": null
+    },
+    {
+      "stage": 5,
+      "intervention": "friction",
+      "test_metrics": null
+    },
+    {
+      "stage": 6,
+      "intervention": "angle",
+      "test_metrics": null
+    },
+    {
+      "stage": 7,
+      "intervention": "mass",
+      "test_metrics": null
+    }
+  ],
+  "initial_performance": {
+    "avg_reward": 3.393721938342554,
+    "reward_std": 4.440892098500626e-16,
+    "avg_length": 501.0,
+    "success_rate": 1.0,
+    "total_episodes": 10
+  },
+  "final_performance": {
+    "avg_reward": -1.5683697414315427,
+    "reward_std": 0.0,
+    "avg_length": 501.0,
+    "success_rate": 0.0,
+    "total_episodes": 20
+  },
+  "cumulative_timesteps": 0,
+  "args": {
+    "curriculum_mode": "random",
+    "train": true,
+    "eval": true,
+    "task": "pushing",
+    "timesteps": 50000,
+    "pretrained_path": "ppo_pushing_sb3/final_model.zip",
+    "log_dir": "random_sequencing_logs",
+    "seed": 0,
+    "skip_frame": 3,
+    "use_wandb": true,
+    "test_episodes": 10
+  }
+}

@@ -1,0 +1,34 @@
+[AutoCaLC-CPDRL] Evaluating intervention: goal
+autocalc_cpdrl.py:109: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:230.)
+  states = torch.tensor([d[0] for d in data], dtype=torch.float32).to(device)
+  Reward: 0.0992, CM: 2.4715
+[AutoCaLC-CPDRL] Evaluating intervention: mass
+  Reward: 0.1550, CM: 2.2012
+[AutoCaLC-CPDRL] Evaluating intervention: friction
+  Reward: -0.6713, CM: 2.4794
+[AutoCaLC-CPDRL] Evaluating intervention: visual
+  Reward: -0.3322, CM: 2.5736
+[AutoCaLC-CPDRL] Evaluating intervention: joints
+WARNING:root:lower bound is: [-1.57 -1.2  -3.   -1.57 -1.2  -3.   -1.57 -1.2  -3.  ]
+WARNING:root:applied: [-0.22907822  0.08469799  0.06058339 -0.21905063 -0.10526343 -0.07677454
+ -0.92953049 -0.45258032 -0.34140257]
+WARNING:root:upper bound is:[-0.69  0.    0.   -0.69  0.    0.   -0.69  0.    0.  ]
+WARNING:root:Applying intervention is out of bounds {'joint_positions': array([-0.22907822,  0.08469799,  0.06058339, -0.21905063, -0.10526343,
+       -0.07677454, -0.92953049, -0.45258032, -0.34140257])}
+WARNING:root:Invalid Intervention was just executed!
+  Reward: -0.4200, CM: 2.4098
+[AutoCaLC-CPDRL] Evaluating intervention: pose
+Traceback (most recent call last):
+  File "autocalc_cpdrl.py", line 407, in <module>
+    main()
+  File "autocalc_cpdrl.py", line 319, in main
+    avg_reward, cm_score, cm_details = evaluate_intervention(args.task, intervention, device, seed=args.seed)
+  File "autocalc_cpdrl.py", line 234, in evaluate_intervention
+    obs, rew, done, _ = env.step(act)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/causal_world/envs/causalworld.py", line 268, in step
+    self._robot.apply_action(action)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/causal_world/envs/robot/trifinger.py", line 350, in apply_action
+    self.step_simulation()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/causal_world/envs/robot/trifinger.py", line 317, in step_simulation
+    physicsClientId=self._pybullet_client_full_id)
+KeyboardInterrupt

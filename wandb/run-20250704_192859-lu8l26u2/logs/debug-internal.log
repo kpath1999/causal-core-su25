@@ -1,0 +1,17 @@
+{"time":"2025-07-04T19:28:59.620382339-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-04T19:28:59.620413208-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250704_192859-lu8l26u2/logs/debug-core.log"}
+{"time":"2025-07-04T19:28:59.832877547-04:00","level":"INFO","msg":"created new stream","id":"lu8l26u2"}
+{"time":"2025-07-04T19:28:59.832943337-04:00","level":"INFO","msg":"stream: started","id":"lu8l26u2"}
+{"time":"2025-07-04T19:28:59.833024701-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"lu8l26u2"}
+{"time":"2025-07-04T19:28:59.833155232-04:00","level":"INFO","msg":"handler: started","stream_id":"lu8l26u2"}
+{"time":"2025-07-04T19:28:59.833024701-04:00","level":"INFO","msg":"sender: started","stream_id":"lu8l26u2"}
+{"time":"2025-07-04T19:29:00.316328516-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-04T19:29:17.319668614-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-04T19:29:21.992198406-04:00","level":"INFO","msg":"stream: closing","id":"lu8l26u2"}
+{"time":"2025-07-04T19:29:21.992257491-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-04T19:29:21.993375497-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-04T19:29:23.684178896-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-04T19:29:23.778307509-04:00","level":"INFO","msg":"handler: closed","stream_id":"lu8l26u2"}
+{"time":"2025-07-04T19:29:23.778402073-04:00","level":"INFO","msg":"sender: closed","stream_id":"lu8l26u2"}
+{"time":"2025-07-04T19:29:23.778388873-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"lu8l26u2"}
+{"time":"2025-07-04T19:29:23.77854357-04:00","level":"INFO","msg":"stream: closed","id":"lu8l26u2"}

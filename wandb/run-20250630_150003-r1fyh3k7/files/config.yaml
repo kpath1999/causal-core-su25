@@ -1,0 +1,53 @@
+_wandb:
+    value:
+        cli_version: 0.18.7
+        m: []
+        python_version: 3.7.16
+        t:
+            "1":
+                - 1
+                - 55
+            "2":
+                - 1
+                - 55
+            "3":
+                - 13
+                - 15
+                - 16
+                - 23
+                - 35
+                - 55
+            "4": 3.7.16
+            "5": 0.18.7
+            "8":
+                - 5
+            "12": 0.18.7
+            "13": linux-x86_64
+batch_size:
+    value: 256
+clip_range:
+    value: 0.2
+ent_coef:
+    value: 0.01
+gae_lambda:
+    value: 0.95
+gamma:
+    value: 0.98
+learning_rate:
+    value: 0.0003
+max_episode_length:
+    value: 250
+max_grad_norm:
+    value: 0.5
+n_steps:
+    value: 128
+seed:
+    value: 0
+skip_frame:
+    value: 3
+task_name:
+    value: pushing
+total_timesteps:
+    value: 1000000
+vf_coef:
+    value: 0.5

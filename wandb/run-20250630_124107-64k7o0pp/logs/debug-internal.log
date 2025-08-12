@@ -1,0 +1,18 @@
+{"time":"2025-06-30T12:41:07.31247023-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-06-30T12:41:07.312496211-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250630_124107-64k7o0pp/logs/debug-core.log"}
+{"time":"2025-06-30T12:41:08.731825511-04:00","level":"INFO","msg":"created new stream","id":"64k7o0pp"}
+{"time":"2025-06-30T12:41:08.731878869-04:00","level":"INFO","msg":"stream: started","id":"64k7o0pp"}
+{"time":"2025-06-30T12:41:08.731899681-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"64k7o0pp"}
+{"time":"2025-06-30T12:41:08.731962607-04:00","level":"INFO","msg":"sender: started","stream_id":"64k7o0pp"}
+{"time":"2025-06-30T12:41:08.732084688-04:00","level":"INFO","msg":"handler: started","stream_id":"64k7o0pp"}
+{"time":"2025-06-30T12:41:08.924338928-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-06-30T12:41:24.525506786-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-06-30T13:51:29.350556631-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-06-30T13:51:29.351430473-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-06-30T13:51:30.324545868-04:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"saving job artifact","runtime_seconds":0.874803637}],"total_operations":1}}
+{"time":"2025-06-30T13:51:31.311458644-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-06-30T13:51:32.426191708-04:00","level":"INFO","msg":"stream: closing","id":"64k7o0pp"}
+{"time":"2025-06-30T13:51:32.426245555-04:00","level":"INFO","msg":"handler: closed","stream_id":"64k7o0pp"}
+{"time":"2025-06-30T13:51:32.426271117-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"64k7o0pp"}
+{"time":"2025-06-30T13:51:32.426292907-04:00","level":"INFO","msg":"sender: closed","stream_id":"64k7o0pp"}
+{"time":"2025-06-30T13:51:32.426360094-04:00","level":"INFO","msg":"stream: closed","id":"64k7o0pp"}

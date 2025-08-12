@@ -1,0 +1,96 @@
+{
+  "sequence": [
+    {
+      "stage": 1,
+      "intervention": "position",
+      "test_metrics": {
+        "avg_reward": 1.162146602642371,
+        "cm_score": 2.279236286878586,
+        "unified_score": 0.9302862255826223
+      }
+    },
+    {
+      "stage": 2,
+      "intervention": "friction",
+      "test_metrics": {
+        "avg_reward": 4.475636531015959,
+        "cm_score": 1.7229484468698502,
+        "unified_score": 0.613334231273283
+      }
+    },
+    {
+      "stage": 3,
+      "intervention": "visual",
+      "test_metrics": {
+        "avg_reward": 5.35041288078321,
+        "cm_score": 1.9755988121032715,
+        "unified_score": 0.9999999867274023
+      }
+    },
+    {
+      "stage": 4,
+      "intervention": "mass",
+      "test_metrics": {
+        "avg_reward": 2.278518022037359,
+        "cm_score": 2.0294074714183807,
+        "unified_score": 0.9190620988127316
+      }
+    },
+    {
+      "stage": 5,
+      "intervention": "random",
+      "test_metrics": {
+        "avg_reward": 0.8935239383392457,
+        "cm_score": 2.15902441740036,
+        "unified_score": 0.9999999837889774
+      }
+    },
+    {
+      "stage": 6,
+      "intervention": "goal",
+      "test_metrics": {
+        "avg_reward": 1.3396000542322262,
+        "cm_score": 1.7845655381679535,
+        "unified_score": 0.999999976792805
+      }
+    },
+    {
+      "stage": 7,
+      "intervention": "angle",
+      "test_metrics": {
+        "avg_reward": -0.5985987475337364,
+        "cm_score": 1.5967604890465736,
+        "unified_score": 0.0
+      }
+    }
+  ],
+  "initial_performance": {
+    "avg_reward": 3.393721938342554,
+    "reward_std": 4.440892098500626e-16,
+    "avg_length": 501.0,
+    "success_rate": 1.0,
+    "total_episodes": 10
+  },
+  "final_performance": {
+    "avg_reward": -1.8509929840204513,
+    "reward_std": 4.440892098500626e-16,
+    "avg_length": 501.0,
+    "success_rate": 1.0,
+    "total_episodes": 20
+  },
+  "cumulative_timesteps": 0,
+  "args": {
+    "curriculum_mode": "cm",
+    "train": true,
+    "eval": true,
+    "task": "pushing",
+    "timesteps": 50000,
+    "pretrained_path": "ppo_pushing_sb3/final_model.zip",
+    "log_dir": "cm_sequencing_logs",
+    "seed": 0,
+    "skip_frame": 3,
+    "use_wandb": true,
+    "test_episodes": 10,
+    "alpha_cm": 0.5
+  }
+}

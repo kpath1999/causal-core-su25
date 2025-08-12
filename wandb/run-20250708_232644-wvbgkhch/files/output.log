@@ -1,0 +1,2007 @@
+2025-07-08 23:26:47,431 2213589 INFO [AutoCaLC-CPDRL] Evaluating intervention: goal
+autocalc_cpdrl.py:282: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:230.)
+  states = torch.tensor([d[0] for d in data], dtype=torch.float32).to(device)
+2025-07-08 23:26:55,607 2213589 INFO   CM: 2.1113
+2025-07-08 23:26:55,609 2213589 INFO [AutoCaLC-CPDRL] Evaluating intervention: mass
+2025-07-08 23:27:02,761 2213589 INFO   CM: 2.2314
+2025-07-08 23:27:02,763 2213589 INFO [AutoCaLC-CPDRL] Evaluating intervention: friction
+2025-07-08 23:27:09,800 2213589 INFO   CM: 2.3691
+2025-07-08 23:27:09,803 2213589 INFO [AutoCaLC-CPDRL] Evaluating intervention: visual
+2025-07-08 23:27:17,470 2213589 INFO   CM: 2.2086
+2025-07-08 23:27:17,474 2213589 INFO [AutoCaLC-CPDRL] Evaluating intervention: pose
+2025-07-08 23:27:24,584 2213589 INFO   CM: 2.1335
+2025-07-08 23:27:24,588 2213589 INFO [AutoCaLC-CPDRL] Evaluating intervention: random
+2025-07-08 23:27:31,556 2213589 INFO   CM: 2.4088
+2025-07-08 23:27:31,559 2213589 INFO
+[AutoCaLC-CPDRL] Intervention ranking (by CM score):
+2025-07-08 23:27:31,560 2213589 INFO   1. random | CM: 2.4088
+2025-07-08 23:27:31,560 2213589 INFO   2. friction | CM: 2.3691
+2025-07-08 23:27:31,560 2213589 INFO   3. mass | CM: 2.2314
+2025-07-08 23:27:31,560 2213589 INFO   4. visual | CM: 2.2086
+2025-07-08 23:27:31,561 2213589 INFO   5. pose | CM: 2.1335
+2025-07-08 23:27:31,561 2213589 INFO   6. goal | CM: 2.1113
+2025-07-08 23:27:31,562 2213589 INFO
+[AutoCaLC-CPDRL] === Intervention 'random' just got applied (rank 1) ===
+Logging to autocalc_cpdrl_logs/PPO_4
+2025-07-08 23:27:34,382 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.0505 (Intervention: random, Rank: 1)
+[34m[1mwandb[0m: [33mWARNING[0m Step cannot be set when using tensorboard syncing. Please use `run.define_metric(...)` to define a custom metric to log your step values.
+2025-07-08 23:27:35,053 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=-0.0218 (Intervention: random, Rank: 1)
+2025-07-08 23:27:35,746 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0662 (Intervention: random, Rank: 1)
+2025-07-08 23:27:36,338 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0687 (Intervention: random, Rank: 1)
+2025-07-08 23:27:37,237 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.0619 (Intervention: random, Rank: 1)
+2025-07-08 23:27:38,254 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0469 (Intervention: random, Rank: 1)
+2025-07-08 23:27:39,061 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.0784 (Intervention: random, Rank: 1)
+2025-07-08 23:27:39,735 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=0.0179 (Intervention: random, Rank: 1)
+-----------------------------
+| time/              |      |
+|    fps             | 322  |
+|    iterations      | 1    |
+|    time_elapsed    | 6    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:27:47,070 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0804 (Intervention: random, Rank: 1)
+2025-07-08 23:27:47,805 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=0.0133 (Intervention: random, Rank: 1)
+2025-07-08 23:27:47,806 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0463
+2025-07-08 23:27:48,554 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=0.0484 (Intervention: random, Rank: 1)
+2025-07-08 23:27:49,246 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=0.0030 (Intervention: random, Rank: 1)
+2025-07-08 23:27:49,893 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=-0.0081 (Intervention: random, Rank: 1)
+2025-07-08 23:27:50,496 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0579 (Intervention: random, Rank: 1)
+2025-07-08 23:27:51,112 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0842 (Intervention: random, Rank: 1)
+2025-07-08 23:27:51,766 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=-0.0493 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 221         |
+|    iterations           | 2           |
+|    time_elapsed         | 18          |
+|    total_timesteps      | 4096        |
+| train/                  |             |
+|    approx_kl            | 0.037801716 |
+|    clip_fraction        | 0.482       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.6       |
+|    explained_variance   | 0.451       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.554      |
+|    n_updates            | 1170        |
+|    policy_gradient_loss | -0.116      |
+|    std                  | 2.66        |
+|    value_loss           | 0.0426      |
+-----------------------------------------
+2025-07-08 23:27:58,248 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=0.1087 (Intervention: random, Rank: 1)
+2025-07-08 23:27:59,029 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=0.0382 (Intervention: random, Rank: 1)
+2025-07-08 23:27:59,774 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=0.0034 (Intervention: random, Rank: 1)
+2025-07-08 23:28:00,443 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0496 (Intervention: random, Rank: 1)
+2025-07-08 23:28:00,444 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0336
+2025-07-08 23:28:01,042 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.1006 (Intervention: random, Rank: 1)
+2025-07-08 23:28:01,619 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0472 (Intervention: random, Rank: 1)
+2025-07-08 23:28:02,191 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=-0.0127 (Intervention: random, Rank: 1)
+2025-07-08 23:28:02,771 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=-0.0063 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 207         |
+|    iterations           | 3           |
+|    time_elapsed         | 29          |
+|    total_timesteps      | 6144        |
+| train/                  |             |
+|    approx_kl            | 0.047504127 |
+|    clip_fraction        | 0.537       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.6       |
+|    explained_variance   | 0.691       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.556      |
+|    n_updates            | 1185        |
+|    policy_gradient_loss | -0.113      |
+|    std                  | 2.67        |
+|    value_loss           | 0.0218      |
+-----------------------------------------
+2025-07-08 23:28:09,256 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=0.0169 (Intervention: random, Rank: 1)
+2025-07-08 23:28:10,010 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=0.0620 (Intervention: random, Rank: 1)
+2025-07-08 23:28:10,779 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.0774 (Intervention: random, Rank: 1)
+2025-07-08 23:28:11,553 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.1118 (Intervention: random, Rank: 1)
+2025-07-08 23:28:12,275 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=0.0863 (Intervention: random, Rank: 1)
+2025-07-08 23:28:12,918 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=-0.0146 (Intervention: random, Rank: 1)
+2025-07-08 23:28:12,918 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0469
+2025-07-08 23:28:13,531 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.0069 (Intervention: random, Rank: 1)
+2025-07-08 23:28:14,135 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0523 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 199         |
+|    iterations           | 4           |
+|    time_elapsed         | 41          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.043570876 |
+|    clip_fraction        | 0.531       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.7       |
+|    explained_variance   | 0.66        |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.533      |
+|    n_updates            | 1200        |
+|    policy_gradient_loss | -0.109      |
+|    std                  | 2.69        |
+|    value_loss           | 0.035       |
+-----------------------------------------
+2025-07-08 23:28:20,405 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=-0.0239 (Intervention: random, Rank: 1)
+2025-07-08 23:28:20,977 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0228 (Intervention: random, Rank: 1)
+2025-07-08 23:28:21,632 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0191 (Intervention: random, Rank: 1)
+2025-07-08 23:28:22,336 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=-0.0259 (Intervention: random, Rank: 1)
+2025-07-08 23:28:23,045 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0306 (Intervention: random, Rank: 1)
+2025-07-08 23:28:23,784 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=0.0196 (Intervention: random, Rank: 1)
+2025-07-08 23:28:24,498 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=0.0158 (Intervention: random, Rank: 1)
+2025-07-08 23:28:25,140 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=-0.0050 (Intervention: random, Rank: 1)
+2025-07-08 23:28:25,141 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): -0.0006
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 196         |
+|    iterations           | 5           |
+|    time_elapsed         | 52          |
+|    total_timesteps      | 10240       |
+| train/                  |             |
+|    approx_kl            | 0.049657904 |
+|    clip_fraction        | 0.512       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.7       |
+|    explained_variance   | 0.638       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.525      |
+|    n_updates            | 1215        |
+|    policy_gradient_loss | -0.107      |
+|    std                  | 2.71        |
+|    value_loss           | 0.0431      |
+-----------------------------------------
+2025-07-08 23:28:36,095 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 10000, Current CM: 2.1488, Reduction: 10.79%
+2025-07-08 23:28:36,097 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_5
+2025-07-08 23:28:37,760 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.0782 (Intervention: random, Rank: 1)
+2025-07-08 23:28:38,361 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=0.0366 (Intervention: random, Rank: 1)
+2025-07-08 23:28:38,944 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0577 (Intervention: random, Rank: 1)
+2025-07-08 23:28:39,564 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0393 (Intervention: random, Rank: 1)
+2025-07-08 23:28:40,217 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.0734 (Intervention: random, Rank: 1)
+2025-07-08 23:28:40,957 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0529 (Intervention: random, Rank: 1)
+2025-07-08 23:28:41,676 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.1002 (Intervention: random, Rank: 1)
+2025-07-08 23:28:42,349 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=-0.0087 (Intervention: random, Rank: 1)
+-----------------------------
+| time/              |      |
+|    fps             | 367  |
+|    iterations      | 1    |
+|    time_elapsed    | 5    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:28:48,614 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0938 (Intervention: random, Rank: 1)
+2025-07-08 23:28:49,186 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=-0.0124 (Intervention: random, Rank: 1)
+2025-07-08 23:28:49,187 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0511
+2025-07-08 23:28:49,746 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=-0.0793 (Intervention: random, Rank: 1)
+2025-07-08 23:28:50,303 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=0.0031 (Intervention: random, Rank: 1)
+2025-07-08 23:28:50,863 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=0.0000 (Intervention: random, Rank: 1)
+2025-07-08 23:28:51,465 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0119 (Intervention: random, Rank: 1)
+2025-07-08 23:28:52,184 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.1610 (Intervention: random, Rank: 1)
+2025-07-08 23:28:52,886 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=-0.0640 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 252         |
+|    iterations           | 2           |
+|    time_elapsed         | 16          |
+|    total_timesteps      | 4096        |
+| train/                  |             |
+|    approx_kl            | 0.040136606 |
+|    clip_fraction        | 0.514       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.9       |
+|    explained_variance   | 0.743       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.555      |
+|    n_updates            | 1245        |
+|    policy_gradient_loss | -0.109      |
+|    std                  | 2.77        |
+|    value_loss           | 0.0229      |
+-----------------------------------------
+2025-07-08 23:28:59,645 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=-0.0486 (Intervention: random, Rank: 1)
+2025-07-08 23:29:00,371 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=-0.0203 (Intervention: random, Rank: 1)
+2025-07-08 23:29:00,960 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=-0.0512 (Intervention: random, Rank: 1)
+2025-07-08 23:29:01,518 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0950 (Intervention: random, Rank: 1)
+2025-07-08 23:29:01,519 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0008
+2025-07-08 23:29:02,078 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.1165 (Intervention: random, Rank: 1)
+2025-07-08 23:29:02,643 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0479 (Intervention: random, Rank: 1)
+2025-07-08 23:29:03,295 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=0.0004 (Intervention: random, Rank: 1)
+2025-07-08 23:29:04,021 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=0.0109 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 223         |
+|    iterations           | 3           |
+|    time_elapsed         | 27          |
+|    total_timesteps      | 6144        |
+| train/                  |             |
+|    approx_kl            | 0.047597766 |
+|    clip_fraction        | 0.566       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22         |
+|    explained_variance   | 0.799       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.571      |
+|    n_updates            | 1260        |
+|    policy_gradient_loss | -0.118      |
+|    std                  | 2.78        |
+|    value_loss           | 0.0184      |
+-----------------------------------------
+2025-07-08 23:29:10,286 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0324 (Intervention: random, Rank: 1)
+2025-07-08 23:29:11,019 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=-0.0415 (Intervention: random, Rank: 1)
+2025-07-08 23:29:11,625 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.1131 (Intervention: random, Rank: 1)
+2025-07-08 23:29:12,185 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.1295 (Intervention: random, Rank: 1)
+2025-07-08 23:29:12,757 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=0.0215 (Intervention: random, Rank: 1)
+2025-07-08 23:29:13,353 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=0.0234 (Intervention: random, Rank: 1)
+2025-07-08 23:29:13,354 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0389
+2025-07-08 23:29:14,057 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.0624 (Intervention: random, Rank: 1)
+2025-07-08 23:29:14,780 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0346 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 213         |
+|    iterations           | 4           |
+|    time_elapsed         | 38          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.054170035 |
+|    clip_fraction        | 0.559       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22         |
+|    explained_variance   | 0.609       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.559      |
+|    n_updates            | 1275        |
+|    policy_gradient_loss | -0.112      |
+|    std                  | 2.8         |
+|    value_loss           | 0.0213      |
+-----------------------------------------
+2025-07-08 23:29:21,089 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=-0.0093 (Intervention: random, Rank: 1)
+2025-07-08 23:29:21,678 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0516 (Intervention: random, Rank: 1)
+2025-07-08 23:29:22,279 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0688 (Intervention: random, Rank: 1)
+2025-07-08 23:29:22,887 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=-0.0293 (Intervention: random, Rank: 1)
+2025-07-08 23:29:23,548 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0196 (Intervention: random, Rank: 1)
+2025-07-08 23:29:24,288 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=0.0608 (Intervention: random, Rank: 1)
+2025-07-08 23:29:24,970 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=-0.0046 (Intervention: random, Rank: 1)
+2025-07-08 23:29:25,624 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=-0.0986 (Intervention: random, Rank: 1)
+2025-07-08 23:29:25,624 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): -0.0038
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 208         |
+|    iterations           | 5           |
+|    time_elapsed         | 49          |
+|    total_timesteps      | 10240       |
+| train/                  |             |
+|    approx_kl            | 0.052607775 |
+|    clip_fraction        | 0.543       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.1       |
+|    explained_variance   | 0.501       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.545      |
+|    n_updates            | 1290        |
+|    policy_gradient_loss | -0.103      |
+|    std                  | 2.82        |
+|    value_loss           | 0.0477      |
+-----------------------------------------
+2025-07-08 23:29:36,533 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 20000, Current CM: 2.1457, Reduction: 10.92%
+2025-07-08 23:29:36,534 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_6
+2025-07-08 23:29:37,199 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.0449 (Intervention: random, Rank: 1)
+2025-07-08 23:29:37,793 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=0.0346 (Intervention: random, Rank: 1)
+2025-07-08 23:29:38,494 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=-0.0088 (Intervention: random, Rank: 1)
+2025-07-08 23:29:39,187 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0428 (Intervention: random, Rank: 1)
+2025-07-08 23:29:39,898 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.0796 (Intervention: random, Rank: 1)
+2025-07-08 23:29:40,589 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0260 (Intervention: random, Rank: 1)
+2025-07-08 23:29:41,241 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.0669 (Intervention: random, Rank: 1)
+2025-07-08 23:29:41,801 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=-0.0070 (Intervention: random, Rank: 1)
+-----------------------------
+| time/              |      |
+|    fps             | 384  |
+|    iterations      | 1    |
+|    time_elapsed    | 5    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:29:47,851 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0393 (Intervention: random, Rank: 1)
+2025-07-08 23:29:48,407 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=-0.0212 (Intervention: random, Rank: 1)
+2025-07-08 23:29:48,408 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0297
+2025-07-08 23:29:48,967 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=-0.0025 (Intervention: random, Rank: 1)
+2025-07-08 23:29:49,528 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=-0.0287 (Intervention: random, Rank: 1)
+2025-07-08 23:29:50,179 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=-0.0293 (Intervention: random, Rank: 1)
+2025-07-08 23:29:50,870 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0274 (Intervention: random, Rank: 1)
+2025-07-08 23:29:51,565 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0880 (Intervention: random, Rank: 1)
+2025-07-08 23:29:52,264 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=-0.0391 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 257         |
+|    iterations           | 2           |
+|    time_elapsed         | 15          |
+|    total_timesteps      | 4096        |
+| train/                  |             |
+|    approx_kl            | 0.041452702 |
+|    clip_fraction        | 0.517       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.3       |
+|    explained_variance   | 0.713       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.567      |
+|    n_updates            | 1320        |
+|    policy_gradient_loss | -0.11       |
+|    std                  | 2.88        |
+|    value_loss           | 0.0303      |
+-----------------------------------------
+2025-07-08 23:29:58,823 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=0.0103 (Intervention: random, Rank: 1)
+2025-07-08 23:29:59,392 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=-0.0628 (Intervention: random, Rank: 1)
+2025-07-08 23:29:59,958 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=-0.0600 (Intervention: random, Rank: 1)
+2025-07-08 23:30:00,520 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0318 (Intervention: random, Rank: 1)
+2025-07-08 23:30:00,520 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): -0.0065
+2025-07-08 23:30:01,076 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=-0.0072 (Intervention: random, Rank: 1)
+2025-07-08 23:30:01,790 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0323 (Intervention: random, Rank: 1)
+2025-07-08 23:30:02,544 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=-0.0040 (Intervention: random, Rank: 1)
+2025-07-08 23:30:03,291 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=0.0218 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 227         |
+|    iterations           | 3           |
+|    time_elapsed         | 27          |
+|    total_timesteps      | 6144        |
+| train/                  |             |
+|    approx_kl            | 0.053850926 |
+|    clip_fraction        | 0.577       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.4       |
+|    explained_variance   | 0.807       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.564      |
+|    n_updates            | 1335        |
+|    policy_gradient_loss | -0.113      |
+|    std                  | 2.93        |
+|    value_loss           | 0.0158      |
+-----------------------------------------
+2025-07-08 23:30:09,740 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0298 (Intervention: random, Rank: 1)
+2025-07-08 23:30:10,338 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=0.0193 (Intervention: random, Rank: 1)
+2025-07-08 23:30:10,908 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.0489 (Intervention: random, Rank: 1)
+2025-07-08 23:30:11,479 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=-0.0118 (Intervention: random, Rank: 1)
+2025-07-08 23:30:12,084 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=-0.0298 (Intervention: random, Rank: 1)
+2025-07-08 23:30:12,718 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=0.0442 (Intervention: random, Rank: 1)
+2025-07-08 23:30:12,719 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0084
+2025-07-08 23:30:13,442 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.0938 (Intervention: random, Rank: 1)
+2025-07-08 23:30:14,209 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0530 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 215         |
+|    iterations           | 4           |
+|    time_elapsed         | 38          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.053299762 |
+|    clip_fraction        | 0.591       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.5       |
+|    explained_variance   | 0.692       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.563      |
+|    n_updates            | 1350        |
+|    policy_gradient_loss | -0.109      |
+|    std                  | 2.97        |
+|    value_loss           | 0.0215      |
+-----------------------------------------
+2025-07-08 23:30:21,032 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=-0.0448 (Intervention: random, Rank: 1)
+2025-07-08 23:30:21,695 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0513 (Intervention: random, Rank: 1)
+2025-07-08 23:30:22,341 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0108 (Intervention: random, Rank: 1)
+2025-07-08 23:30:23,048 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=0.0282 (Intervention: random, Rank: 1)
+2025-07-08 23:30:23,689 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0501 (Intervention: random, Rank: 1)
+2025-07-08 23:30:24,338 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=0.0369 (Intervention: random, Rank: 1)
+2025-07-08 23:30:24,977 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=0.0293 (Intervention: random, Rank: 1)
+2025-07-08 23:30:25,621 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=-0.0086 (Intervention: random, Rank: 1)
+2025-07-08 23:30:25,622 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0006
+---------------------------------------
+| time/                   |           |
+|    fps                  | 206       |
+|    iterations           | 5         |
+|    time_elapsed         | 49        |
+|    total_timesteps      | 10240     |
+| train/                  |           |
+|    approx_kl            | 0.0661464 |
+|    clip_fraction        | 0.505     |
+|    clip_range           | 0.2       |
+|    entropy_loss         | -22.6     |
+|    explained_variance   | 0.452     |
+|    learning_rate        | 0.00025   |
+|    loss                 | -0.511    |
+|    n_updates            | 1365      |
+|    policy_gradient_loss | -0.0834   |
+|    std                  | 3         |
+|    value_loss           | 0.0781    |
+---------------------------------------
+2025-07-08 23:30:36,399 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 30000, Current CM: 2.1436, Reduction: 11.01%
+2025-07-08 23:30:36,400 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_7
+2025-07-08 23:30:37,108 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.1019 (Intervention: random, Rank: 1)
+2025-07-08 23:30:37,690 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=0.0632 (Intervention: random, Rank: 1)
+2025-07-08 23:30:38,267 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0064 (Intervention: random, Rank: 1)
+2025-07-08 23:30:38,828 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0437 (Intervention: random, Rank: 1)
+2025-07-08 23:30:39,441 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.0525 (Intervention: random, Rank: 1)
+2025-07-08 23:30:40,144 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=-0.1156 (Intervention: random, Rank: 1)
+2025-07-08 23:30:40,870 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.1169 (Intervention: random, Rank: 1)
+2025-07-08 23:30:41,591 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=0.0212 (Intervention: random, Rank: 1)
+-----------------------------
+| time/              |      |
+|    fps             | 388  |
+|    iterations      | 1    |
+|    time_elapsed    | 5    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:30:48,490 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0810 (Intervention: random, Rank: 1)
+2025-07-08 23:30:49,067 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=0.0223 (Intervention: random, Rank: 1)
+2025-07-08 23:30:49,067 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0394
+2025-07-08 23:30:49,633 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=0.0101 (Intervention: random, Rank: 1)
+2025-07-08 23:30:50,191 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=0.0153 (Intervention: random, Rank: 1)
+2025-07-08 23:30:50,761 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=-0.0022 (Intervention: random, Rank: 1)
+2025-07-08 23:30:51,356 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0539 (Intervention: random, Rank: 1)
+2025-07-08 23:30:52,038 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0427 (Intervention: random, Rank: 1)
+2025-07-08 23:30:52,732 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=0.0221 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 247         |
+|    iterations           | 2           |
+|    time_elapsed         | 16          |
+|    total_timesteps      | 4096        |
+| train/                  |             |
+|    approx_kl            | 0.055956297 |
+|    clip_fraction        | 0.541       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.8       |
+|    explained_variance   | 0.54        |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.571      |
+|    n_updates            | 1395        |
+|    policy_gradient_loss | -0.108      |
+|    std                  | 3.06        |
+|    value_loss           | 0.0449      |
+-----------------------------------------
+2025-07-08 23:30:59,181 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=-0.0121 (Intervention: random, Rank: 1)
+2025-07-08 23:30:59,854 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=0.0352 (Intervention: random, Rank: 1)
+2025-07-08 23:31:00,462 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=0.0109 (Intervention: random, Rank: 1)
+2025-07-08 23:31:01,035 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0213 (Intervention: random, Rank: 1)
+2025-07-08 23:31:01,036 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0197
+2025-07-08 23:31:01,610 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.0676 (Intervention: random, Rank: 1)
+2025-07-08 23:31:02,173 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0591 (Intervention: random, Rank: 1)
+2025-07-08 23:31:02,811 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=-0.0322 (Intervention: random, Rank: 1)
+2025-07-08 23:31:03,517 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=-0.0293 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 224         |
+|    iterations           | 3           |
+|    time_elapsed         | 27          |
+|    total_timesteps      | 6144        |
+| train/                  |             |
+|    approx_kl            | 0.055393033 |
+|    clip_fraction        | 0.563       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.9       |
+|    explained_variance   | 0.684       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.565      |
+|    n_updates            | 1410        |
+|    policy_gradient_loss | -0.103      |
+|    std                  | 3.11        |
+|    value_loss           | 0.0344      |
+-----------------------------------------
+2025-07-08 23:31:10,386 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0415 (Intervention: random, Rank: 1)
+2025-07-08 23:31:11,130 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=-0.0031 (Intervention: random, Rank: 1)
+2025-07-08 23:31:11,704 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.0719 (Intervention: random, Rank: 1)
+2025-07-08 23:31:12,284 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.0618 (Intervention: random, Rank: 1)
+2025-07-08 23:31:12,865 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=0.0557 (Intervention: random, Rank: 1)
+2025-07-08 23:31:13,461 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=-0.0460 (Intervention: random, Rank: 1)
+2025-07-08 23:31:13,461 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0164
+2025-07-08 23:31:14,129 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=0.0074 (Intervention: random, Rank: 1)
+2025-07-08 23:31:14,870 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0241 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 210         |
+|    iterations           | 4           |
+|    time_elapsed         | 38          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.052383255 |
+|    clip_fraction        | 0.528       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -23         |
+|    explained_variance   | 0.719       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.532      |
+|    n_updates            | 1425        |
+|    policy_gradient_loss | -0.0928     |
+|    std                  | 3.14        |
+|    value_loss           | 0.0713      |
+-----------------------------------------
+2025-07-08 23:31:21,056 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=-0.0420 (Intervention: random, Rank: 1)
+2025-07-08 23:31:21,744 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0655 (Intervention: random, Rank: 1)
+2025-07-08 23:31:22,347 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=-0.0864 (Intervention: random, Rank: 1)
+2025-07-08 23:31:22,951 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=-0.0203 (Intervention: random, Rank: 1)
+2025-07-08 23:31:23,556 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0308 (Intervention: random, Rank: 1)
+2025-07-08 23:31:24,248 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=0.0610 (Intervention: random, Rank: 1)
+2025-07-08 23:31:24,982 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=0.0291 (Intervention: random, Rank: 1)
+2025-07-08 23:31:25,672 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=0.0220 (Intervention: random, Rank: 1)
+2025-07-08 23:31:25,673 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0043
+----------------------------------------
+| time/                   |            |
+|    fps                  | 205        |
+|    iterations           | 5          |
+|    time_elapsed         | 49         |
+|    total_timesteps      | 10240      |
+| train/                  |            |
+|    approx_kl            | 0.06776641 |
+|    clip_fraction        | 0.591      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -23.1      |
+|    explained_variance   | 0.683      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.556     |
+|    n_updates            | 1440       |
+|    policy_gradient_loss | -0.105     |
+|    std                  | 3.19       |
+|    value_loss           | 0.0683     |
+----------------------------------------
+2025-07-08 23:31:36,458 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 40000, Current CM: 2.1439, Reduction: 11.00%
+2025-07-08 23:31:36,459 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_8
+2025-07-08 23:31:38,619 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=-0.0129 (Intervention: random, Rank: 1)
+2025-07-08 23:31:39,208 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=0.0524 (Intervention: random, Rank: 1)
+2025-07-08 23:31:39,776 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0174 (Intervention: random, Rank: 1)
+2025-07-08 23:31:40,353 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0598 (Intervention: random, Rank: 1)
+2025-07-08 23:31:40,921 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.1131 (Intervention: random, Rank: 1)
+2025-07-08 23:31:41,517 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0202 (Intervention: random, Rank: 1)
+2025-07-08 23:31:42,202 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=-0.0458 (Intervention: random, Rank: 1)
+2025-07-08 23:31:42,921 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=0.0281 (Intervention: random, Rank: 1)
+-----------------------------
+| time/              |      |
+|    fps             | 395  |
+|    iterations      | 1    |
+|    time_elapsed    | 5    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:31:49,416 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0630 (Intervention: random, Rank: 1)
+2025-07-08 23:31:50,151 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=0.0231 (Intervention: random, Rank: 1)
+2025-07-08 23:31:50,152 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0318
+2025-07-08 23:31:50,754 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=-0.0173 (Intervention: random, Rank: 1)
+2025-07-08 23:31:51,329 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=0.0368 (Intervention: random, Rank: 1)
+2025-07-08 23:31:51,905 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=-0.0190 (Intervention: random, Rank: 1)
+2025-07-08 23:31:52,491 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0223 (Intervention: random, Rank: 1)
+2025-07-08 23:31:53,133 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0474 (Intervention: random, Rank: 1)
+2025-07-08 23:31:53,870 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=-0.0425 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 252         |
+|    iterations           | 2           |
+|    time_elapsed         | 16          |
+|    total_timesteps      | 4096        |
+| train/                  |             |
+|    approx_kl            | 0.093799785 |
+|    clip_fraction        | 0.601       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -23.4       |
+|    explained_variance   | 0.805       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.583      |
+|    n_updates            | 1470        |
+|    policy_gradient_loss | -0.113      |
+|    std                  | 3.26        |
+|    value_loss           | 0.0285      |
+-----------------------------------------
+2025-07-08 23:32:00,231 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=-0.0453 (Intervention: random, Rank: 1)
+2025-07-08 23:32:00,919 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=0.0035 (Intervention: random, Rank: 1)
+2025-07-08 23:32:01,526 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=-0.1937 (Intervention: random, Rank: 1)
+2025-07-08 23:32:02,138 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0505 (Intervention: random, Rank: 1)
+2025-07-08 23:32:02,139 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): -0.0157
+2025-07-08 23:32:02,753 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.0478 (Intervention: random, Rank: 1)
+2025-07-08 23:32:03,396 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0371 (Intervention: random, Rank: 1)
+2025-07-08 23:32:04,099 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=-0.0372 (Intervention: random, Rank: 1)
+2025-07-08 23:32:04,782 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=-0.0036 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 225        |
+|    iterations           | 3          |
+|    time_elapsed         | 27         |
+|    total_timesteps      | 6144       |
+| train/                  |            |
+|    approx_kl            | 0.05373212 |
+|    clip_fraction        | 0.575      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -23.5      |
+|    explained_variance   | 0.671      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.567     |
+|    n_updates            | 1485       |
+|    policy_gradient_loss | -0.102     |
+|    std                  | 3.3        |
+|    value_loss           | 0.0488     |
+----------------------------------------
+2025-07-08 23:32:11,388 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0521 (Intervention: random, Rank: 1)
+2025-07-08 23:32:12,107 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=0.0237 (Intervention: random, Rank: 1)
+2025-07-08 23:32:12,791 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.1069 (Intervention: random, Rank: 1)
+2025-07-08 23:32:13,474 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.0320 (Intervention: random, Rank: 1)
+2025-07-08 23:32:14,113 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=0.0121 (Intervention: random, Rank: 1)
+2025-07-08 23:32:14,781 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=0.0395 (Intervention: random, Rank: 1)
+2025-07-08 23:32:14,782 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0206
+2025-07-08 23:32:15,478 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.0261 (Intervention: random, Rank: 1)
+2025-07-08 23:32:16,197 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=0.0170 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 211         |
+|    iterations           | 4           |
+|    time_elapsed         | 38          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.064872004 |
+|    clip_fraction        | 0.605       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -23.6       |
+|    explained_variance   | 0.634       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.567      |
+|    n_updates            | 1500        |
+|    policy_gradient_loss | -0.107      |
+|    std                  | 3.34        |
+|    value_loss           | 0.0669      |
+-----------------------------------------
+2025-07-08 23:32:22,783 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=0.0211 (Intervention: random, Rank: 1)
+2025-07-08 23:32:23,357 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0145 (Intervention: random, Rank: 1)
+2025-07-08 23:32:23,987 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0350 (Intervention: random, Rank: 1)
+2025-07-08 23:32:24,661 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=-0.0137 (Intervention: random, Rank: 1)
+2025-07-08 23:32:25,430 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0149 (Intervention: random, Rank: 1)
+2025-07-08 23:32:26,234 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=0.0741 (Intervention: random, Rank: 1)
+2025-07-08 23:32:26,952 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=-0.0272 (Intervention: random, Rank: 1)
+2025-07-08 23:32:27,561 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=0.0173 (Intervention: random, Rank: 1)
+2025-07-08 23:32:27,562 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0127
+----------------------------------------
+| time/                   |            |
+|    fps                  | 204        |
+|    iterations           | 5          |
+|    time_elapsed         | 50         |
+|    total_timesteps      | 10240      |
+| train/                  |            |
+|    approx_kl            | 0.07683569 |
+|    clip_fraction        | 0.608      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -23.7      |
+|    explained_variance   | 0.721      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.59      |
+|    n_updates            | 1515       |
+|    policy_gradient_loss | -0.114     |
+|    std                  | 3.38       |
+|    value_loss           | 0.0279     |
+----------------------------------------
+2025-07-08 23:32:38,609 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 50000, Current CM: 2.1438, Reduction: 11.00%
+2025-07-08 23:32:38,610 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_9
+2025-07-08 23:32:39,271 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.0630 (Intervention: random, Rank: 1)
+2025-07-08 23:32:39,845 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=0.0283 (Intervention: random, Rank: 1)
+2025-07-08 23:32:40,408 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=-0.0019 (Intervention: random, Rank: 1)
+2025-07-08 23:32:40,977 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0141 (Intervention: random, Rank: 1)
+2025-07-08 23:32:41,594 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.0615 (Intervention: random, Rank: 1)
+2025-07-08 23:32:42,292 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=-0.0204 (Intervention: random, Rank: 1)
+2025-07-08 23:32:43,007 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.1437 (Intervention: random, Rank: 1)
+2025-07-08 23:32:43,770 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=-0.1091 (Intervention: random, Rank: 1)
+-----------------------------
+| time/              |      |
+|    fps             | 390  |
+|    iterations      | 1    |
+|    time_elapsed    | 5    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:32:50,304 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0339 (Intervention: random, Rank: 1)
+2025-07-08 23:32:50,887 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=0.0093 (Intervention: random, Rank: 1)
+2025-07-08 23:32:50,888 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0222
+2025-07-08 23:32:51,456 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=0.0400 (Intervention: random, Rank: 1)
+2025-07-08 23:32:52,039 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=0.0380 (Intervention: random, Rank: 1)
+2025-07-08 23:32:52,645 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=-0.0059 (Intervention: random, Rank: 1)
+2025-07-08 23:32:53,350 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0388 (Intervention: random, Rank: 1)
+2025-07-08 23:32:54,061 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0650 (Intervention: random, Rank: 1)
+2025-07-08 23:32:54,753 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=0.0143 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 251        |
+|    iterations           | 2          |
+|    time_elapsed         | 16         |
+|    total_timesteps      | 4096       |
+| train/                  |            |
+|    approx_kl            | 0.05164967 |
+|    clip_fraction        | 0.568      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -24        |
+|    explained_variance   | 0.847      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.6       |
+|    n_updates            | 1545       |
+|    policy_gradient_loss | -0.11      |
+|    std                  | 3.5        |
+|    value_loss           | 0.0252     |
+----------------------------------------
+2025-07-08 23:33:01,262 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=0.0181 (Intervention: random, Rank: 1)
+2025-07-08 23:33:01,835 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=0.0367 (Intervention: random, Rank: 1)
+2025-07-08 23:33:02,471 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=0.0058 (Intervention: random, Rank: 1)
+2025-07-08 23:33:03,280 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0534 (Intervention: random, Rank: 1)
+2025-07-08 23:33:03,281 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0304
+2025-07-08 23:33:04,077 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.0462 (Intervention: random, Rank: 1)
+2025-07-08 23:33:04,810 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0514 (Intervention: random, Rank: 1)
+2025-07-08 23:33:05,467 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=-0.0602 (Intervention: random, Rank: 1)
+2025-07-08 23:33:06,033 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=-0.0249 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 222        |
+|    iterations           | 3          |
+|    time_elapsed         | 27         |
+|    total_timesteps      | 6144       |
+| train/                  |            |
+|    approx_kl            | 0.04603294 |
+|    clip_fraction        | 0.543      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -24.1      |
+|    explained_variance   | 0.807      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.603     |
+|    n_updates            | 1560       |
+|    policy_gradient_loss | -0.11      |
+|    std                  | 3.55       |
+|    value_loss           | 0.0291     |
+----------------------------------------
+2025-07-08 23:33:11,998 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0004 (Intervention: random, Rank: 1)
+2025-07-08 23:33:12,857 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=-0.0310 (Intervention: random, Rank: 1)
+2025-07-08 23:33:13,811 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.1108 (Intervention: random, Rank: 1)
+2025-07-08 23:33:14,763 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.0797 (Intervention: random, Rank: 1)
+2025-07-08 23:33:15,493 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=0.0592 (Intervention: random, Rank: 1)
+2025-07-08 23:33:16,085 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=-0.0216 (Intervention: random, Rank: 1)
+2025-07-08 23:33:16,086 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0209
+2025-07-08 23:33:16,662 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.0361 (Intervention: random, Rank: 1)
+2025-07-08 23:33:17,246 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0412 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 210         |
+|    iterations           | 4           |
+|    time_elapsed         | 38          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.051489998 |
+|    clip_fraction        | 0.56        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -24.2       |
+|    explained_variance   | 0.692       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.608      |
+|    n_updates            | 1575        |
+|    policy_gradient_loss | -0.113      |
+|    std                  | 3.6         |
+|    value_loss           | 0.0296      |
+-----------------------------------------
+2025-07-08 23:33:24,756 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=0.0308 (Intervention: random, Rank: 1)
+2025-07-08 23:33:25,904 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=-0.0193 (Intervention: random, Rank: 1)
+2025-07-08 23:33:26,820 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0138 (Intervention: random, Rank: 1)
+2025-07-08 23:33:27,472 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=0.0925 (Intervention: random, Rank: 1)
+2025-07-08 23:33:28,053 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=-0.0396 (Intervention: random, Rank: 1)
+2025-07-08 23:33:28,630 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=0.0965 (Intervention: random, Rank: 1)
+2025-07-08 23:33:29,220 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=-0.0519 (Intervention: random, Rank: 1)
+2025-07-08 23:33:29,941 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=-0.0099 (Intervention: random, Rank: 1)
+2025-07-08 23:33:29,941 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0036
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 197         |
+|    iterations           | 5           |
+|    time_elapsed         | 51          |
+|    total_timesteps      | 10240       |
+| train/                  |             |
+|    approx_kl            | 0.061049417 |
+|    clip_fraction        | 0.61        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -24.3       |
+|    explained_variance   | 0.841       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.602      |
+|    n_updates            | 1590        |
+|    policy_gradient_loss | -0.115      |
+|    std                  | 3.63        |
+|    value_loss           | 0.0298      |
+-----------------------------------------
+2025-07-08 23:33:40,897 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 60000, Current CM: 2.1462, Reduction: 10.90%
+2025-07-08 23:33:40,898 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_10
+2025-07-08 23:33:43,941 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.0198 (Intervention: random, Rank: 1)
+2025-07-08 23:33:44,756 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=-0.0436 (Intervention: random, Rank: 1)
+2025-07-08 23:33:45,354 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0528 (Intervention: random, Rank: 1)
+2025-07-08 23:33:45,927 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0171 (Intervention: random, Rank: 1)
+2025-07-08 23:33:46,530 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.1023 (Intervention: random, Rank: 1)
+2025-07-08 23:33:47,272 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0321 (Intervention: random, Rank: 1)
+2025-07-08 23:33:48,074 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.0916 (Intervention: random, Rank: 1)
+2025-07-08 23:33:48,886 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=0.0265 (Intervention: random, Rank: 1)
+-----------------------------
+| time/              |      |
+|    fps             | 324  |
+|    iterations      | 1    |
+|    time_elapsed    | 6    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:33:56,681 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0723 (Intervention: random, Rank: 1)
+2025-07-08 23:33:57,297 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=0.0419 (Intervention: random, Rank: 1)
+2025-07-08 23:33:57,298 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0413
+2025-07-08 23:33:57,924 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=0.0393 (Intervention: random, Rank: 1)
+2025-07-08 23:33:58,514 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=0.0280 (Intervention: random, Rank: 1)
+2025-07-08 23:33:59,165 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=-0.0113 (Intervention: random, Rank: 1)
+2025-07-08 23:33:59,897 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0376 (Intervention: random, Rank: 1)
+2025-07-08 23:34:00,691 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0707 (Intervention: random, Rank: 1)
+2025-07-08 23:34:01,525 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=0.0032 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 214        |
+|    iterations           | 2          |
+|    time_elapsed         | 19         |
+|    total_timesteps      | 4096       |
+| train/                  |            |
+|    approx_kl            | 0.06754954 |
+|    clip_fraction        | 0.568      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -24.6      |
+|    explained_variance   | 0.574      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.564     |
+|    n_updates            | 1620       |
+|    policy_gradient_loss | -0.0828    |
+|    std                  | 3.76       |
+|    value_loss           | 0.0783     |
+----------------------------------------
+2025-07-08 23:34:08,664 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=-0.0223 (Intervention: random, Rank: 1)
+2025-07-08 23:34:09,275 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=0.0243 (Intervention: random, Rank: 1)
+2025-07-08 23:34:09,857 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=-0.2790 (Intervention: random, Rank: 1)
+2025-07-08 23:34:10,430 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0622 (Intervention: random, Rank: 1)
+2025-07-08 23:34:10,431 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): -0.0047
+2025-07-08 23:34:11,024 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.1293 (Intervention: random, Rank: 1)
+2025-07-08 23:34:11,784 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0302 (Intervention: random, Rank: 1)
+2025-07-08 23:34:13,132 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=0.0458 (Intervention: random, Rank: 1)
+2025-07-08 23:34:14,196 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=0.0180 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 192         |
+|    iterations           | 3           |
+|    time_elapsed         | 31          |
+|    total_timesteps      | 6144        |
+| train/                  |             |
+|    approx_kl            | 0.050261565 |
+|    clip_fraction        | 0.509       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -24.7       |
+|    explained_variance   | 0.571       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.564      |
+|    n_updates            | 1635        |
+|    policy_gradient_loss | -0.0881     |
+|    std                  | 3.8         |
+|    value_loss           | 0.119       |
+-----------------------------------------
+2025-07-08 23:34:21,178 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0516 (Intervention: random, Rank: 1)
+2025-07-08 23:34:21,839 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=-0.0375 (Intervention: random, Rank: 1)
+2025-07-08 23:34:22,422 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.0367 (Intervention: random, Rank: 1)
+2025-07-08 23:34:23,000 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.0648 (Intervention: random, Rank: 1)
+2025-07-08 23:34:23,620 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=0.0203 (Intervention: random, Rank: 1)
+2025-07-08 23:34:24,307 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=0.0238 (Intervention: random, Rank: 1)
+2025-07-08 23:34:24,308 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0280
+2025-07-08 23:34:25,122 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.1261 (Intervention: random, Rank: 1)
+2025-07-08 23:34:25,938 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0363 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 187        |
+|    iterations           | 4          |
+|    time_elapsed         | 43         |
+|    total_timesteps      | 8192       |
+| train/                  |            |
+|    approx_kl            | 0.06245473 |
+|    clip_fraction        | 0.588      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -24.8      |
+|    explained_variance   | 0.692      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.612     |
+|    n_updates            | 1650       |
+|    policy_gradient_loss | -0.114     |
+|    std                  | 3.85       |
+|    value_loss           | 0.034      |
+----------------------------------------
+2025-07-08 23:34:32,970 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=0.0419 (Intervention: random, Rank: 1)
+2025-07-08 23:34:33,645 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.1001 (Intervention: random, Rank: 1)
+2025-07-08 23:34:34,272 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0449 (Intervention: random, Rank: 1)
+2025-07-08 23:34:34,887 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=0.0520 (Intervention: random, Rank: 1)
+2025-07-08 23:34:35,516 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0050 (Intervention: random, Rank: 1)
+2025-07-08 23:34:36,403 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=-0.0560 (Intervention: random, Rank: 1)
+2025-07-08 23:34:37,292 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=0.0618 (Intervention: random, Rank: 1)
+2025-07-08 23:34:38,196 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=-0.0258 (Intervention: random, Rank: 1)
+2025-07-08 23:34:38,197 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0061
+--------------------------------------
+| time/                   |          |
+|    fps                  | 182      |
+|    iterations           | 5        |
+|    time_elapsed         | 56       |
+|    total_timesteps      | 10240    |
+| train/                  |          |
+|    approx_kl            | 0.073091 |
+|    clip_fraction        | 0.588    |
+|    clip_range           | 0.2      |
+|    entropy_loss         | -25      |
+|    explained_variance   | 0.687    |
+|    learning_rate        | 0.00025  |
+|    loss                 | -0.577   |
+|    n_updates            | 1665     |
+|    policy_gradient_loss | -0.0939  |
+|    std                  | 3.92     |
+|    value_loss           | 0.0623   |
+--------------------------------------
+2025-07-08 23:34:49,702 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 70000, Current CM: 2.1437, Reduction: 11.01%
+2025-07-08 23:34:49,703 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_11
+2025-07-08 23:34:50,798 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=-0.0681 (Intervention: random, Rank: 1)
+2025-07-08 23:34:51,607 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=-0.0485 (Intervention: random, Rank: 1)
+2025-07-08 23:34:52,392 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0267 (Intervention: random, Rank: 1)
+2025-07-08 23:34:53,358 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0293 (Intervention: random, Rank: 1)
+2025-07-08 23:34:54,054 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.1240 (Intervention: random, Rank: 1)
+2025-07-08 23:34:54,683 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0280 (Intervention: random, Rank: 1)
+2025-07-08 23:34:55,286 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.0259 (Intervention: random, Rank: 1)
+2025-07-08 23:34:55,983 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=-0.0183 (Intervention: random, Rank: 1)
+-----------------------------
+| time/              |      |
+|    fps             | 325  |
+|    iterations      | 1    |
+|    time_elapsed    | 6    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:35:03,054 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0547 (Intervention: random, Rank: 1)
+2025-07-08 23:35:03,805 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=0.0245 (Intervention: random, Rank: 1)
+2025-07-08 23:35:03,806 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0178
+2025-07-08 23:35:04,538 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=0.0352 (Intervention: random, Rank: 1)
+2025-07-08 23:35:05,221 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=0.0296 (Intervention: random, Rank: 1)
+2025-07-08 23:35:05,929 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=0.0064 (Intervention: random, Rank: 1)
+2025-07-08 23:35:06,563 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0652 (Intervention: random, Rank: 1)
+2025-07-08 23:35:07,185 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0626 (Intervention: random, Rank: 1)
+2025-07-08 23:35:07,845 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=-0.0142 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 224        |
+|    iterations           | 2          |
+|    time_elapsed         | 18         |
+|    total_timesteps      | 4096       |
+| train/                  |            |
+|    approx_kl            | 0.07612319 |
+|    clip_fraction        | 0.551      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -25.2      |
+|    explained_variance   | 0.582      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.574     |
+|    n_updates            | 1695       |
+|    policy_gradient_loss | -0.0833    |
+|    std                  | 4.02       |
+|    value_loss           | 0.118      |
+----------------------------------------
+2025-07-08 23:35:15,459 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=0.0753 (Intervention: random, Rank: 1)
+2025-07-08 23:35:16,689 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=0.0283 (Intervention: random, Rank: 1)
+2025-07-08 23:35:17,674 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=0.0774 (Intervention: random, Rank: 1)
+2025-07-08 23:35:18,340 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0349 (Intervention: random, Rank: 1)
+2025-07-08 23:35:18,340 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0401
+2025-07-08 23:35:18,924 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.0543 (Intervention: random, Rank: 1)
+2025-07-08 23:35:19,515 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0041 (Intervention: random, Rank: 1)
+2025-07-08 23:35:20,094 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=-0.0385 (Intervention: random, Rank: 1)
+2025-07-08 23:35:20,706 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=0.0418 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 196        |
+|    iterations           | 3          |
+|    time_elapsed         | 31         |
+|    total_timesteps      | 6144       |
+| train/                  |            |
+|    approx_kl            | 0.06377857 |
+|    clip_fraction        | 0.537      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -25.4      |
+|    explained_variance   | 0.564      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.522     |
+|    n_updates            | 1710       |
+|    policy_gradient_loss | -0.0831    |
+|    std                  | 4.1        |
+|    value_loss           | 0.183      |
+----------------------------------------
+2025-07-08 23:35:27,099 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0585 (Intervention: random, Rank: 1)
+2025-07-08 23:35:28,130 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=-0.0559 (Intervention: random, Rank: 1)
+2025-07-08 23:35:29,119 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.0044 (Intervention: random, Rank: 1)
+2025-07-08 23:35:30,043 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.0992 (Intervention: random, Rank: 1)
+2025-07-08 23:35:30,763 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=0.0151 (Intervention: random, Rank: 1)
+2025-07-08 23:35:31,360 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=0.0138 (Intervention: random, Rank: 1)
+2025-07-08 23:35:31,360 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0080
+2025-07-08 23:35:31,958 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.1133 (Intervention: random, Rank: 1)
+2025-07-08 23:35:32,629 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0240 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 189         |
+|    iterations           | 4           |
+|    time_elapsed         | 43          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.055698145 |
+|    clip_fraction        | 0.535       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -25.6       |
+|    explained_variance   | 0.422       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.598      |
+|    n_updates            | 1725        |
+|    policy_gradient_loss | -0.0995     |
+|    std                  | 4.18        |
+|    value_loss           | 0.0603      |
+-----------------------------------------
+2025-07-08 23:35:40,547 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=-0.0446 (Intervention: random, Rank: 1)
+2025-07-08 23:35:41,803 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0430 (Intervention: random, Rank: 1)
+2025-07-08 23:35:42,963 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0643 (Intervention: random, Rank: 1)
+2025-07-08 23:35:43,920 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=-0.0196 (Intervention: random, Rank: 1)
+2025-07-08 23:35:44,583 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0259 (Intervention: random, Rank: 1)
+2025-07-08 23:35:45,166 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=-0.0967 (Intervention: random, Rank: 1)
+2025-07-08 23:35:45,768 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=-0.0048 (Intervention: random, Rank: 1)
+2025-07-08 23:35:46,395 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=-0.0197 (Intervention: random, Rank: 1)
+2025-07-08 23:35:46,396 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): -0.0190
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 179         |
+|    iterations           | 5           |
+|    time_elapsed         | 57          |
+|    total_timesteps      | 10240       |
+| train/                  |             |
+|    approx_kl            | 0.061439767 |
+|    clip_fraction        | 0.58        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -25.7       |
+|    explained_variance   | 0.731       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.624      |
+|    n_updates            | 1740        |
+|    policy_gradient_loss | -0.109      |
+|    std                  | 4.25        |
+|    value_loss           | 0.0465      |
+-----------------------------------------
+2025-07-08 23:35:58,938 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 80000, Current CM: 2.1481, Reduction: 10.82%
+2025-07-08 23:35:58,940 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_12
+2025-07-08 23:36:00,425 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.0302 (Intervention: random, Rank: 1)
+2025-07-08 23:36:01,025 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=-0.0716 (Intervention: random, Rank: 1)
+2025-07-08 23:36:01,614 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0121 (Intervention: random, Rank: 1)
+2025-07-08 23:36:02,212 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0526 (Intervention: random, Rank: 1)
+2025-07-08 23:36:02,907 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.1270 (Intervention: random, Rank: 1)
+2025-07-08 23:36:03,906 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0639 (Intervention: random, Rank: 1)
+2025-07-08 23:36:04,947 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=-0.0068 (Intervention: random, Rank: 1)
+2025-07-08 23:36:05,916 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=-0.0062 (Intervention: random, Rank: 1)
+-----------------------------
+| time/              |      |
+|    fps             | 318  |
+|    iterations      | 1    |
+|    time_elapsed    | 6    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:36:12,675 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0981 (Intervention: random, Rank: 1)
+2025-07-08 23:36:13,515 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=-0.0248 (Intervention: random, Rank: 1)
+2025-07-08 23:36:13,516 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0275
+2025-07-08 23:36:14,486 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=0.0280 (Intervention: random, Rank: 1)
+2025-07-08 23:36:15,411 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=-0.0455 (Intervention: random, Rank: 1)
+2025-07-08 23:36:16,202 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=0.0231 (Intervention: random, Rank: 1)
+2025-07-08 23:36:16,897 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0096 (Intervention: random, Rank: 1)
+2025-07-08 23:36:17,566 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0550 (Intervention: random, Rank: 1)
+2025-07-08 23:36:18,200 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=0.0211 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 217        |
+|    iterations           | 2          |
+|    time_elapsed         | 18         |
+|    total_timesteps      | 4096       |
+| train/                  |            |
+|    approx_kl            | 0.05915402 |
+|    clip_fraction        | 0.583      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -26        |
+|    explained_variance   | 0.464      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.576     |
+|    n_updates            | 1770       |
+|    policy_gradient_loss | -0.0826    |
+|    std                  | 4.37       |
+|    value_loss           | 0.124      |
+----------------------------------------
+2025-07-08 23:36:26,758 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=0.0917 (Intervention: random, Rank: 1)
+2025-07-08 23:36:27,710 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=-0.0100 (Intervention: random, Rank: 1)
+2025-07-08 23:36:28,655 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=-0.0079 (Intervention: random, Rank: 1)
+2025-07-08 23:36:29,488 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0914 (Intervention: random, Rank: 1)
+2025-07-08 23:36:29,489 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0257
+2025-07-08 23:36:30,261 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=-0.0092 (Intervention: random, Rank: 1)
+2025-07-08 23:36:30,982 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0774 (Intervention: random, Rank: 1)
+2025-07-08 23:36:31,655 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=0.0286 (Intervention: random, Rank: 1)
+2025-07-08 23:36:32,342 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=-0.0373 (Intervention: random, Rank: 1)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 186         |
+|    iterations           | 3           |
+|    time_elapsed         | 33          |
+|    total_timesteps      | 6144        |
+| train/                  |             |
+|    approx_kl            | 0.049250863 |
+|    clip_fraction        | 0.53        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -26.1       |
+|    explained_variance   | 0.39        |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.624      |
+|    n_updates            | 1785        |
+|    policy_gradient_loss | -0.104      |
+|    std                  | 4.41        |
+|    value_loss           | 0.0732      |
+-----------------------------------------
+2025-07-08 23:36:40,051 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=0.0170 (Intervention: random, Rank: 1)
+2025-07-08 23:36:40,645 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=0.0294 (Intervention: random, Rank: 1)
+2025-07-08 23:36:41,247 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.0200 (Intervention: random, Rank: 1)
+2025-07-08 23:36:41,891 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.0121 (Intervention: random, Rank: 1)
+2025-07-08 23:36:42,642 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=-0.0070 (Intervention: random, Rank: 1)
+2025-07-08 23:36:43,516 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=0.0007 (Intervention: random, Rank: 1)
+2025-07-08 23:36:43,517 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0132
+2025-07-08 23:36:44,285 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.0436 (Intervention: random, Rank: 1)
+2025-07-08 23:36:45,081 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0365 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 178        |
+|    iterations           | 4          |
+|    time_elapsed         | 45         |
+|    total_timesteps      | 8192       |
+| train/                  |            |
+|    approx_kl            | 0.05502584 |
+|    clip_fraction        | 0.531      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -26.2      |
+|    explained_variance   | 0.758      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.634     |
+|    n_updates            | 1800       |
+|    policy_gradient_loss | -0.103     |
+|    std                  | 4.47       |
+|    value_loss           | 0.0439     |
+----------------------------------------
+2025-07-08 23:36:51,755 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=0.0852 (Intervention: random, Rank: 1)
+2025-07-08 23:36:52,400 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0962 (Intervention: random, Rank: 1)
+2025-07-08 23:36:52,972 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0600 (Intervention: random, Rank: 1)
+2025-07-08 23:36:53,604 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=0.0360 (Intervention: random, Rank: 1)
+2025-07-08 23:36:54,254 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0545 (Intervention: random, Rank: 1)
+2025-07-08 23:36:54,938 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=-0.0245 (Intervention: random, Rank: 1)
+2025-07-08 23:36:55,651 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=-0.0101 (Intervention: random, Rank: 1)
+2025-07-08 23:36:56,463 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=0.0424 (Intervention: random, Rank: 1)
+2025-07-08 23:36:56,463 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0260
+----------------------------------------
+| time/                   |            |
+|    fps                  | 178        |
+|    iterations           | 5          |
+|    time_elapsed         | 57         |
+|    total_timesteps      | 10240      |
+| train/                  |            |
+|    approx_kl            | 0.06393787 |
+|    clip_fraction        | 0.601      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -26.3      |
+|    explained_variance   | 0.607      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.638     |
+|    n_updates            | 1815       |
+|    policy_gradient_loss | -0.0996    |
+|    std                  | 4.52       |
+|    value_loss           | 0.0544     |
+----------------------------------------
+2025-07-08 23:37:07,874 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 90000, Current CM: 2.1484, Reduction: 10.81%
+2025-07-08 23:37:07,875 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_13
+2025-07-08 23:37:08,617 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.1460 (Intervention: random, Rank: 1)
+2025-07-08 23:37:09,294 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=-0.2295 (Intervention: random, Rank: 1)
+2025-07-08 23:37:09,960 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0710 (Intervention: random, Rank: 1)
+2025-07-08 23:37:10,600 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0321 (Intervention: random, Rank: 1)
+2025-07-08 23:37:11,218 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.0632 (Intervention: random, Rank: 1)
+2025-07-08 23:37:11,848 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0591 (Intervention: random, Rank: 1)
+2025-07-08 23:37:12,431 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.0154 (Intervention: random, Rank: 1)
+2025-07-08 23:37:13,013 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=-0.0469 (Intervention: random, Rank: 1)
+-----------------------------
+| time/              |      |
+|    fps             | 394  |
+|    iterations      | 1    |
+|    time_elapsed    | 5    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:37:20,179 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.1010 (Intervention: random, Rank: 1)
+2025-07-08 23:37:20,925 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=0.0666 (Intervention: random, Rank: 1)
+2025-07-08 23:37:20,926 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0278
+2025-07-08 23:37:21,612 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=0.0165 (Intervention: random, Rank: 1)
+2025-07-08 23:37:22,267 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=-0.0197 (Intervention: random, Rank: 1)
+2025-07-08 23:37:22,949 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=-0.0090 (Intervention: random, Rank: 1)
+2025-07-08 23:37:23,663 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0009 (Intervention: random, Rank: 1)
+2025-07-08 23:37:24,384 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0224 (Intervention: random, Rank: 1)
+2025-07-08 23:37:25,088 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=0.0482 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 235        |
+|    iterations           | 2          |
+|    time_elapsed         | 17         |
+|    total_timesteps      | 4096       |
+| train/                  |            |
+|    approx_kl            | 0.06713435 |
+|    clip_fraction        | 0.57       |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -26.5      |
+|    explained_variance   | 0.445      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.611     |
+|    n_updates            | 1845       |
+|    policy_gradient_loss | -0.103     |
+|    std                  | 4.65       |
+|    value_loss           | 0.0725     |
+----------------------------------------
+2025-07-08 23:37:31,428 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=0.0846 (Intervention: random, Rank: 1)
+2025-07-08 23:37:32,081 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=0.0451 (Intervention: random, Rank: 1)
+2025-07-08 23:37:32,671 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=-0.0023 (Intervention: random, Rank: 1)
+2025-07-08 23:37:33,256 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=-0.0066 (Intervention: random, Rank: 1)
+2025-07-08 23:37:33,257 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0180
+2025-07-08 23:37:33,873 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.0361 (Intervention: random, Rank: 1)
+2025-07-08 23:37:34,511 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0437 (Intervention: random, Rank: 1)
+2025-07-08 23:37:35,277 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=-0.0083 (Intervention: random, Rank: 1)
+2025-07-08 23:37:36,107 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=0.0445 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 215        |
+|    iterations           | 3          |
+|    time_elapsed         | 28         |
+|    total_timesteps      | 6144       |
+| train/                  |            |
+|    approx_kl            | 0.06444453 |
+|    clip_fraction        | 0.597      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -26.6      |
+|    explained_variance   | 0.524      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.628     |
+|    n_updates            | 1860       |
+|    policy_gradient_loss | -0.1       |
+|    std                  | 4.72       |
+|    value_loss           | 0.0529     |
+----------------------------------------
+2025-07-08 23:37:43,454 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0324 (Intervention: random, Rank: 1)
+2025-07-08 23:37:44,130 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=0.0033 (Intervention: random, Rank: 1)
+2025-07-08 23:37:44,796 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.1056 (Intervention: random, Rank: 1)
+2025-07-08 23:37:45,535 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.0740 (Intervention: random, Rank: 1)
+2025-07-08 23:37:46,193 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=-0.0826 (Intervention: random, Rank: 1)
+2025-07-08 23:37:46,843 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=-0.0556 (Intervention: random, Rank: 1)
+2025-07-08 23:37:46,844 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0128
+2025-07-08 23:37:47,490 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.0306 (Intervention: random, Rank: 1)
+2025-07-08 23:37:48,075 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0379 (Intervention: random, Rank: 1)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 202        |
+|    iterations           | 4          |
+|    time_elapsed         | 40         |
+|    total_timesteps      | 8192       |
+| train/                  |            |
+|    approx_kl            | 0.07523625 |
+|    clip_fraction        | 0.592      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -26.8      |
+|    explained_variance   | 0.62       |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.618     |
+|    n_updates            | 1875       |
+|    policy_gradient_loss | -0.104     |
+|    std                  | 4.79       |
+|    value_loss           | 0.0748     |
+----------------------------------------
+2025-07-08 23:37:54,572 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=-0.0194 (Intervention: random, Rank: 1)
+2025-07-08 23:37:55,190 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0921 (Intervention: random, Rank: 1)
+2025-07-08 23:37:55,926 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=-0.0125 (Intervention: random, Rank: 1)
+2025-07-08 23:37:56,698 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=-0.0058 (Intervention: random, Rank: 1)
+2025-07-08 23:37:57,505 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0584 (Intervention: random, Rank: 1)
+2025-07-08 23:37:58,294 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=-0.0508 (Intervention: random, Rank: 1)
+2025-07-08 23:37:58,993 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=0.0298 (Intervention: random, Rank: 1)
+2025-07-08 23:37:59,666 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=-0.0396 (Intervention: random, Rank: 1)
+2025-07-08 23:37:59,666 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): -0.0016
+----------------------------------------
+| time/                   |            |
+|    fps                  | 196        |
+|    iterations           | 5          |
+|    time_elapsed         | 52         |
+|    total_timesteps      | 10240      |
+| train/                  |            |
+|    approx_kl            | 0.04264067 |
+|    clip_fraction        | 0.497      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -26.9      |
+|    explained_variance   | 0.652      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.645     |
+|    n_updates            | 1890       |
+|    policy_gradient_loss | -0.103     |
+|    std                  | 4.87       |
+|    value_loss           | 0.0541     |
+----------------------------------------
+2025-07-08 23:38:11,388 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 100000, Current CM: 2.1458, Reduction: 10.92%
+2025-07-08 23:38:11,389 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+2025-07-08 23:38:11,390 2213589 INFO
+[AutoCaLC-CPDRL] === Intervention 'friction' just got applied (rank 2) ===
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_14
+2025-07-08 23:38:12,452 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.0505 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:13,249 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=-0.0218 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:14,168 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0662 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:15,215 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0687 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:16,165 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.0619 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:16,929 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0469 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:17,571 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.0784 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:18,194 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=0.0179 (Intervention: friction, Rank: 2)
+-----------------------------
+| time/              |      |
+|    fps             | 308  |
+|    iterations      | 1    |
+|    time_elapsed    | 6    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:38:24,888 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0804 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:25,742 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=0.0133 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:25,743 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0463
+2025-07-08 23:38:26,714 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=0.0484 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:27,897 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=0.0030 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:28,940 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=-0.0081 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:29,772 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0579 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:30,386 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0842 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:30,964 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=-0.0493 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 210         |
+|    iterations           | 2           |
+|    time_elapsed         | 19          |
+|    total_timesteps      | 4096        |
+| train/                  |             |
+|    approx_kl            | 0.037801716 |
+|    clip_fraction        | 0.482       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.6       |
+|    explained_variance   | 0.451       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.554      |
+|    n_updates            | 1170        |
+|    policy_gradient_loss | -0.116      |
+|    std                  | 2.66        |
+|    value_loss           | 0.0426      |
+-----------------------------------------
+2025-07-08 23:38:38,173 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=0.1087 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:38,746 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=0.0382 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:39,436 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=0.0034 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:40,162 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0496 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:40,162 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0336
+2025-07-08 23:38:41,120 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.1006 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:42,047 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0472 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:42,822 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=-0.0127 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:43,539 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=-0.0063 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 190         |
+|    iterations           | 3           |
+|    time_elapsed         | 32          |
+|    total_timesteps      | 6144        |
+| train/                  |             |
+|    approx_kl            | 0.047504127 |
+|    clip_fraction        | 0.537       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.6       |
+|    explained_variance   | 0.691       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.556      |
+|    n_updates            | 1185        |
+|    policy_gradient_loss | -0.113      |
+|    std                  | 2.67        |
+|    value_loss           | 0.0218      |
+-----------------------------------------
+2025-07-08 23:38:50,389 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=0.0169 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:51,544 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=0.0620 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:52,625 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.0774 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:53,413 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.1118 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:54,018 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=0.0863 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:54,586 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=-0.0146 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:54,586 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0469
+2025-07-08 23:38:55,163 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.0069 (Intervention: friction, Rank: 2)
+2025-07-08 23:38:55,751 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0523 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 184         |
+|    iterations           | 4           |
+|    time_elapsed         | 44          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.043570876 |
+|    clip_fraction        | 0.531       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.7       |
+|    explained_variance   | 0.66        |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.533      |
+|    n_updates            | 1200        |
+|    policy_gradient_loss | -0.109      |
+|    std                  | 2.69        |
+|    value_loss           | 0.035       |
+-----------------------------------------
+2025-07-08 23:39:03,280 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=-0.0239 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:04,029 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0228 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:04,797 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0191 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:05,510 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=-0.0259 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:06,262 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0306 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:07,025 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=0.0196 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:07,813 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=0.0158 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:08,569 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=-0.0050 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:08,570 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): -0.0006
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 178         |
+|    iterations           | 5           |
+|    time_elapsed         | 57          |
+|    total_timesteps      | 10240       |
+| train/                  |             |
+|    approx_kl            | 0.049657904 |
+|    clip_fraction        | 0.512       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.7       |
+|    explained_variance   | 0.638       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.525      |
+|    n_updates            | 1215        |
+|    policy_gradient_loss | -0.107      |
+|    std                  | 2.71        |
+|    value_loss           | 0.0431      |
+-----------------------------------------
+2025-07-08 23:39:20,236 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 10000, Current CM: 2.1521, Reduction: 9.16%
+2025-07-08 23:39:20,237 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_15
+2025-07-08 23:39:23,419 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.0782 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:24,119 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=0.0366 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:24,756 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0577 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:25,400 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0393 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:26,272 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.0734 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:27,543 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0529 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:28,893 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.1002 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:29,990 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=-0.0087 (Intervention: friction, Rank: 2)
+-----------------------------
+| time/              |      |
+|    fps             | 262  |
+|    iterations      | 1    |
+|    time_elapsed    | 7    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:39:37,431 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0938 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:38,040 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=-0.0124 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:38,041 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0511
+2025-07-08 23:39:38,791 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=-0.0793 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:39,626 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=0.0031 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:40,442 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=0.0000 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:41,207 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0119 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:41,951 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.1610 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:42,635 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=-0.0640 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 199         |
+|    iterations           | 2           |
+|    time_elapsed         | 20          |
+|    total_timesteps      | 4096        |
+| train/                  |             |
+|    approx_kl            | 0.040136606 |
+|    clip_fraction        | 0.514       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.9       |
+|    explained_variance   | 0.743       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.555      |
+|    n_updates            | 1245        |
+|    policy_gradient_loss | -0.109      |
+|    std                  | 2.77        |
+|    value_loss           | 0.0229      |
+-----------------------------------------
+2025-07-08 23:39:50,040 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=-0.0486 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:50,616 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=-0.0203 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:51,206 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=-0.0512 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:51,984 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0950 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:51,985 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0008
+2025-07-08 23:39:52,790 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.1165 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:53,620 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0479 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:54,465 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=0.0004 (Intervention: friction, Rank: 2)
+2025-07-08 23:39:55,198 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=0.0109 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 185         |
+|    iterations           | 3           |
+|    time_elapsed         | 33          |
+|    total_timesteps      | 6144        |
+| train/                  |             |
+|    approx_kl            | 0.047597766 |
+|    clip_fraction        | 0.566       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22         |
+|    explained_variance   | 0.799       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.571      |
+|    n_updates            | 1260        |
+|    policy_gradient_loss | -0.118      |
+|    std                  | 2.78        |
+|    value_loss           | 0.0184      |
+-----------------------------------------
+2025-07-08 23:40:02,406 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0324 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:03,166 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=-0.0415 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:03,938 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.1131 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:04,754 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.1295 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:05,577 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=0.0215 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:06,365 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=0.0234 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:06,366 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0389
+2025-07-08 23:40:07,081 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.0624 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:07,696 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0346 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 179         |
+|    iterations           | 4           |
+|    time_elapsed         | 45          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.054170035 |
+|    clip_fraction        | 0.559       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22         |
+|    explained_variance   | 0.609       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.559      |
+|    n_updates            | 1275        |
+|    policy_gradient_loss | -0.112      |
+|    std                  | 2.8         |
+|    value_loss           | 0.0213      |
+-----------------------------------------
+2025-07-08 23:40:14,968 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=-0.0093 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:15,728 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0516 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:16,540 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0688 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:17,301 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=-0.0293 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:18,082 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0196 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:18,865 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=0.0608 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:19,644 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=-0.0046 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:20,356 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=-0.0986 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:20,357 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): -0.0038
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 175         |
+|    iterations           | 5           |
+|    time_elapsed         | 58          |
+|    total_timesteps      | 10240       |
+| train/                  |             |
+|    approx_kl            | 0.052607775 |
+|    clip_fraction        | 0.543       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.1       |
+|    explained_variance   | 0.501       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.545      |
+|    n_updates            | 1290        |
+|    policy_gradient_loss | -0.103      |
+|    std                  | 2.82        |
+|    value_loss           | 0.0477      |
+-----------------------------------------
+2025-07-08 23:40:32,881 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 20000, Current CM: 2.1504, Reduction: 9.23%
+2025-07-08 23:40:32,883 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_16
+2025-07-08 23:40:34,732 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.0449 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:35,517 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=0.0346 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:36,193 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=-0.0088 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:36,851 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0428 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:37,616 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.0796 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:38,678 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0260 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:39,641 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.0669 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:40,828 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=-0.0070 (Intervention: friction, Rank: 2)
+-----------------------------
+| time/              |      |
+|    fps             | 278  |
+|    iterations      | 1    |
+|    time_elapsed    | 7    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:40:48,341 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0393 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:49,241 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=-0.0212 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:49,241 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0297
+2025-07-08 23:40:49,905 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=-0.0025 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:50,537 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=-0.0287 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:51,211 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=-0.0293 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:51,830 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0274 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:52,512 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0880 (Intervention: friction, Rank: 2)
+2025-07-08 23:40:53,336 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=-0.0391 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 204         |
+|    iterations           | 2           |
+|    time_elapsed         | 20          |
+|    total_timesteps      | 4096        |
+| train/                  |             |
+|    approx_kl            | 0.041452702 |
+|    clip_fraction        | 0.517       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.3       |
+|    explained_variance   | 0.713       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.567      |
+|    n_updates            | 1320        |
+|    policy_gradient_loss | -0.11       |
+|    std                  | 2.88        |
+|    value_loss           | 0.0303      |
+-----------------------------------------
+2025-07-08 23:40:59,803 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=0.0103 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:00,679 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=-0.0628 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:01,994 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=-0.0600 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:03,053 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0318 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:03,054 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): -0.0065
+2025-07-08 23:41:03,954 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=-0.0072 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:04,569 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0323 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:05,146 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=-0.0040 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:05,741 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=0.0218 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 189         |
+|    iterations           | 3           |
+|    time_elapsed         | 32          |
+|    total_timesteps      | 6144        |
+| train/                  |             |
+|    approx_kl            | 0.053850926 |
+|    clip_fraction        | 0.577       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.4       |
+|    explained_variance   | 0.807       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.564      |
+|    n_updates            | 1335        |
+|    policy_gradient_loss | -0.113      |
+|    std                  | 2.93        |
+|    value_loss           | 0.0158      |
+-----------------------------------------
+2025-07-08 23:41:13,636 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0298 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:14,626 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=0.0193 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:15,571 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.0489 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:16,285 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=-0.0118 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:17,005 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=-0.0298 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:17,739 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=0.0442 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:17,739 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0084
+2025-07-08 23:41:18,455 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.0938 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:19,273 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0530 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 177         |
+|    iterations           | 4           |
+|    time_elapsed         | 46          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.053299762 |
+|    clip_fraction        | 0.591       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.5       |
+|    explained_variance   | 0.692       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.563      |
+|    n_updates            | 1350        |
+|    policy_gradient_loss | -0.109      |
+|    std                  | 2.97        |
+|    value_loss           | 0.0215      |
+-----------------------------------------
+2025-07-08 23:41:26,830 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=-0.0448 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:27,454 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0513 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:28,086 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0108 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:28,745 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=0.0282 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:29,393 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0501 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:30,182 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=0.0369 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:30,959 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=0.0293 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:31,726 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=-0.0086 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:31,727 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0006
+---------------------------------------
+| time/                   |           |
+|    fps                  | 174       |
+|    iterations           | 5         |
+|    time_elapsed         | 58        |
+|    total_timesteps      | 10240     |
+| train/                  |           |
+|    approx_kl            | 0.0661464 |
+|    clip_fraction        | 0.505     |
+|    clip_range           | 0.2       |
+|    entropy_loss         | -22.6     |
+|    explained_variance   | 0.452     |
+|    learning_rate        | 0.00025   |
+|    loss                 | -0.511    |
+|    n_updates            | 1365      |
+|    policy_gradient_loss | -0.0834   |
+|    std                  | 3         |
+|    value_loss           | 0.0781    |
+---------------------------------------
+2025-07-08 23:41:43,661 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 30000, Current CM: 2.1503, Reduction: 9.23%
+2025-07-08 23:41:43,663 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_17
+2025-07-08 23:41:47,168 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=0.1019 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:47,827 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=0.0632 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:48,425 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0064 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:49,013 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0437 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:49,744 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.0525 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:50,538 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=-0.1156 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:51,491 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=0.1169 (Intervention: friction, Rank: 2)
+2025-07-08 23:41:52,597 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=0.0212 (Intervention: friction, Rank: 2)
+-----------------------------
+| time/              |      |
+|    fps             | 310  |
+|    iterations      | 1    |
+|    time_elapsed    | 6    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:41:59,594 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0810 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:00,343 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=0.0223 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:00,343 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0394
+2025-07-08 23:42:00,969 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=0.0101 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:01,536 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=0.0153 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:02,191 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=-0.0022 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:02,911 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0539 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:03,699 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0427 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:04,816 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=0.0221 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 215         |
+|    iterations           | 2           |
+|    time_elapsed         | 19          |
+|    total_timesteps      | 4096        |
+| train/                  |             |
+|    approx_kl            | 0.055956297 |
+|    clip_fraction        | 0.541       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.8       |
+|    explained_variance   | 0.54        |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.571      |
+|    n_updates            | 1395        |
+|    policy_gradient_loss | -0.108      |
+|    std                  | 3.06        |
+|    value_loss           | 0.0449      |
+-----------------------------------------
+2025-07-08 23:42:11,582 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=-0.0121 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:12,429 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=0.0352 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:13,142 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=0.0109 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:13,771 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0213 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:13,772 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0197
+2025-07-08 23:42:14,426 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.0676 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:15,164 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0591 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:15,919 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=-0.0322 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:16,656 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=-0.0293 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 198         |
+|    iterations           | 3           |
+|    time_elapsed         | 30          |
+|    total_timesteps      | 6144        |
+| train/                  |             |
+|    approx_kl            | 0.055393033 |
+|    clip_fraction        | 0.563       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.9       |
+|    explained_variance   | 0.684       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.565      |
+|    n_updates            | 1410        |
+|    policy_gradient_loss | -0.103      |
+|    std                  | 3.11        |
+|    value_loss           | 0.0344      |
+-----------------------------------------
+2025-07-08 23:42:24,780 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0415 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:25,651 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=-0.0031 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:26,474 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.0719 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:27,228 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.0618 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:27,832 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=0.0557 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:28,405 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=-0.0460 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:28,406 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0164
+2025-07-08 23:42:28,991 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=0.0074 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:29,585 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=-0.0241 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 186         |
+|    iterations           | 4           |
+|    time_elapsed         | 43          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.052383255 |
+|    clip_fraction        | 0.528       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -23         |
+|    explained_variance   | 0.719       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.532      |
+|    n_updates            | 1425        |
+|    policy_gradient_loss | -0.0928     |
+|    std                  | 3.14        |
+|    value_loss           | 0.0713      |
+-----------------------------------------
+2025-07-08 23:42:35,709 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=-0.0420 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:36,377 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0655 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:37,017 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=-0.0864 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:37,696 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=-0.0203 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:38,410 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0308 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:39,192 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=0.0610 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:39,980 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=0.0291 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:40,730 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=0.0220 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:40,731 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0043
+----------------------------------------
+| time/                   |            |
+|    fps                  | 185        |
+|    iterations           | 5          |
+|    time_elapsed         | 55         |
+|    total_timesteps      | 10240      |
+| train/                  |            |
+|    approx_kl            | 0.06776641 |
+|    clip_fraction        | 0.591      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -23.1      |
+|    explained_variance   | 0.683      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.556     |
+|    n_updates            | 1440       |
+|    policy_gradient_loss | -0.105     |
+|    std                  | 3.19       |
+|    value_loss           | 0.0683     |
+----------------------------------------
+2025-07-08 23:42:51,998 2213589 INFO [AutoCaLC-CPDRL] Timesteps: 40000, Current CM: 2.1464, Reduction: 9.40%
+2025-07-08 23:42:51,999 2213589 INFO [AutoCaLC-CPDRL] CM reduction insufficient (< 30%), continuing training.
+[34m[1mwandb[0m: [33mWARNING[0m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+Logging to autocalc_cpdrl_logs/PPO_18
+2025-07-08 23:42:52,839 2213589 INFO [AutoCaLC-CPDRL] Episode 1: reward=-0.0129 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:53,778 2213589 INFO [AutoCaLC-CPDRL] Episode 2: reward=0.0524 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:54,703 2213589 INFO [AutoCaLC-CPDRL] Episode 3: reward=0.0174 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:55,628 2213589 INFO [AutoCaLC-CPDRL] Episode 4: reward=0.0598 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:56,358 2213589 INFO [AutoCaLC-CPDRL] Episode 5: reward=0.1131 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:56,974 2213589 INFO [AutoCaLC-CPDRL] Episode 6: reward=0.0202 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:57,533 2213589 INFO [AutoCaLC-CPDRL] Episode 7: reward=-0.0458 (Intervention: friction, Rank: 2)
+2025-07-08 23:42:58,161 2213589 INFO [AutoCaLC-CPDRL] Episode 8: reward=0.0281 (Intervention: friction, Rank: 2)
+-----------------------------
+| time/              |      |
+|    fps             | 331  |
+|    iterations      | 1    |
+|    time_elapsed    | 6    |
+|    total_timesteps | 2048 |
+-----------------------------
+2025-07-08 23:43:05,242 2213589 INFO [AutoCaLC-CPDRL] Episode 9: reward=0.0630 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:06,008 2213589 INFO [AutoCaLC-CPDRL] Episode 10: reward=0.0231 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:06,009 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0318
+2025-07-08 23:43:06,748 2213589 INFO [AutoCaLC-CPDRL] Episode 11: reward=-0.0173 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:07,336 2213589 INFO [AutoCaLC-CPDRL] Episode 12: reward=0.0368 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:07,918 2213589 INFO [AutoCaLC-CPDRL] Episode 13: reward=-0.0190 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:08,497 2213589 INFO [AutoCaLC-CPDRL] Episode 14: reward=0.0223 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:09,150 2213589 INFO [AutoCaLC-CPDRL] Episode 15: reward=0.0474 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:09,843 2213589 INFO [AutoCaLC-CPDRL] Episode 16: reward=-0.0425 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 227         |
+|    iterations           | 2           |
+|    time_elapsed         | 17          |
+|    total_timesteps      | 4096        |
+| train/                  |             |
+|    approx_kl            | 0.093799785 |
+|    clip_fraction        | 0.601       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -23.4       |
+|    explained_variance   | 0.805       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.583      |
+|    n_updates            | 1470        |
+|    policy_gradient_loss | -0.113      |
+|    std                  | 3.26        |
+|    value_loss           | 0.0285      |
+-----------------------------------------
+2025-07-08 23:43:16,530 2213589 INFO [AutoCaLC-CPDRL] Episode 17: reward=-0.0453 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:17,194 2213589 INFO [AutoCaLC-CPDRL] Episode 18: reward=0.0035 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:17,848 2213589 INFO [AutoCaLC-CPDRL] Episode 19: reward=-0.1937 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:18,450 2213589 INFO [AutoCaLC-CPDRL] Episode 20: reward=0.0505 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:18,450 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): -0.0157
+2025-07-08 23:43:19,055 2213589 INFO [AutoCaLC-CPDRL] Episode 21: reward=0.0478 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:19,718 2213589 INFO [AutoCaLC-CPDRL] Episode 22: reward=0.0371 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:20,551 2213589 INFO [AutoCaLC-CPDRL] Episode 23: reward=-0.0372 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:21,447 2213589 INFO [AutoCaLC-CPDRL] Episode 24: reward=-0.0036 (Intervention: friction, Rank: 2)
+----------------------------------------
+| time/                   |            |
+|    fps                  | 206        |
+|    iterations           | 3          |
+|    time_elapsed         | 29         |
+|    total_timesteps      | 6144       |
+| train/                  |            |
+|    approx_kl            | 0.05373212 |
+|    clip_fraction        | 0.575      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -23.5      |
+|    explained_variance   | 0.671      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.567     |
+|    n_updates            | 1485       |
+|    policy_gradient_loss | -0.102     |
+|    std                  | 3.3        |
+|    value_loss           | 0.0488     |
+----------------------------------------
+2025-07-08 23:43:28,021 2213589 INFO [AutoCaLC-CPDRL] Episode 25: reward=-0.0521 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:28,827 2213589 INFO [AutoCaLC-CPDRL] Episode 26: reward=0.0237 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:29,510 2213589 INFO [AutoCaLC-CPDRL] Episode 27: reward=0.1069 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:30,186 2213589 INFO [AutoCaLC-CPDRL] Episode 28: reward=0.0320 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:30,828 2213589 INFO [AutoCaLC-CPDRL] Episode 29: reward=0.0121 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:31,466 2213589 INFO [AutoCaLC-CPDRL] Episode 30: reward=0.0395 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:31,467 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0206
+2025-07-08 23:43:32,087 2213589 INFO [AutoCaLC-CPDRL] Episode 31: reward=-0.0261 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:32,718 2213589 INFO [AutoCaLC-CPDRL] Episode 32: reward=0.0170 (Intervention: friction, Rank: 2)
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 199         |
+|    iterations           | 4           |
+|    time_elapsed         | 41          |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.064872004 |
+|    clip_fraction        | 0.605       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -23.6       |
+|    explained_variance   | 0.634       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.567      |
+|    n_updates            | 1500        |
+|    policy_gradient_loss | -0.107      |
+|    std                  | 3.34        |
+|    value_loss           | 0.0669      |
+-----------------------------------------
+2025-07-08 23:43:39,628 2213589 INFO [AutoCaLC-CPDRL] Episode 33: reward=0.0211 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:40,471 2213589 INFO [AutoCaLC-CPDRL] Episode 34: reward=0.0145 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:41,102 2213589 INFO [AutoCaLC-CPDRL] Episode 35: reward=0.0350 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:41,678 2213589 INFO [AutoCaLC-CPDRL] Episode 36: reward=-0.0137 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:42,239 2213589 INFO [AutoCaLC-CPDRL] Episode 37: reward=0.0149 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:42,897 2213589 INFO [AutoCaLC-CPDRL] Episode 38: reward=0.0741 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:43,603 2213589 INFO [AutoCaLC-CPDRL] Episode 39: reward=-0.0272 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:44,351 2213589 INFO [AutoCaLC-CPDRL] Episode 40: reward=0.0173 (Intervention: friction, Rank: 2)
+2025-07-08 23:43:44,352 2213589 INFO [AutoCaLC-CPDRL] Mean reward (last 10): 0.0127
+----------------------------------------
+| time/                   |            |
+|    fps                  | 193        |
+|    iterations           | 5          |
+|    time_elapsed         | 52         |
+|    total_timesteps      | 10240      |
+| train/                  |            |
+|    approx_kl            | 0.07683569 |
+|    clip_fraction        | 0.608      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -23.7      |
+|    explained_variance   | 0.721      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.59      |
+|    n_updates            | 1515       |
+|    policy_gradient_loss | -0.114     |
+|    std                  | 3.38       |
+|    value_loss           | 0.0279     |
+----------------------------------------
+Traceback (most recent call last):
+  File "autocalc_cpdrl.py", line 553, in <module>
+    logging.info("\n[AutoCaLC-CPDRL] Curriculum complete.")
+  File "autocalc_cpdrl.py", line 527, in main
+    pretrained_path, env, train_steps, args.log_dir, args.seed, ppo_config, policy_kwargs, transfer_model=transfer_model, callback=callback
+  File "autocalc_cpdrl.py", line 398, in ppo_train_on_intervention
+    model.learn(total_timesteps=timesteps, callback=callback)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/ppo/ppo.py", line 308, in learn
+    reset_num_timesteps=reset_num_timesteps,
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/on_policy_algorithm.py", line 270, in learn
+    self.train()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/ppo/ppo.py", line 189, in train
+    for rollout_data in self.rollout_buffer.get(self.batch_size):
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/buffers.py", line 463, in get
+    yield self._get_samples(indices[start_idx : start_idx + batch_size])
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/buffers.py", line 468, in _get_samples
+    self.observations[batch_inds],
+KeyboardInterrupt

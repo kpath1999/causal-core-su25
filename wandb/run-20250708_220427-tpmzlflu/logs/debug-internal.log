@@ -1,0 +1,17 @@
+{"time":"2025-07-08T22:04:27.21129834-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-08T22:04:27.211325298-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250708_220427-tpmzlflu/logs/debug-core.log"}
+{"time":"2025-07-08T22:04:27.325974701-04:00","level":"INFO","msg":"created new stream","id":"tpmzlflu"}
+{"time":"2025-07-08T22:04:27.326055087-04:00","level":"INFO","msg":"stream: started","id":"tpmzlflu"}
+{"time":"2025-07-08T22:04:27.326120877-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"tpmzlflu"}
+{"time":"2025-07-08T22:04:27.326123252-04:00","level":"INFO","msg":"handler: started","stream_id":"tpmzlflu"}
+{"time":"2025-07-08T22:04:27.326140781-04:00","level":"INFO","msg":"sender: started","stream_id":"tpmzlflu"}
+{"time":"2025-07-08T22:04:27.635920194-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-08T22:05:37.991709024-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-08T22:11:30.610387411-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-08T22:11:30.610081789-04:00","level":"INFO","msg":"stream: closing","id":"tpmzlflu"}
+{"time":"2025-07-08T22:11:30.611869215-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-08T22:11:32.53028788-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-08T22:11:32.642952628-04:00","level":"INFO","msg":"handler: closed","stream_id":"tpmzlflu"}
+{"time":"2025-07-08T22:11:32.643006964-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"tpmzlflu"}
+{"time":"2025-07-08T22:11:32.64305243-04:00","level":"INFO","msg":"sender: closed","stream_id":"tpmzlflu"}
+{"time":"2025-07-08T22:11:32.643119546-04:00","level":"INFO","msg":"stream: closed","id":"tpmzlflu"}

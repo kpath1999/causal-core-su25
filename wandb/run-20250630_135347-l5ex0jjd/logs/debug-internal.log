@@ -1,0 +1,9 @@
+{"time":"2025-06-30T13:53:47.970993431-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-06-30T13:53:47.971018504-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250630_135347-l5ex0jjd/logs/debug-core.log"}
+{"time":"2025-06-30T13:53:49.290753832-04:00","level":"INFO","msg":"created new stream","id":"l5ex0jjd"}
+{"time":"2025-06-30T13:53:49.291349012-04:00","level":"INFO","msg":"stream: started","id":"l5ex0jjd"}
+{"time":"2025-06-30T13:53:49.291439385-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"l5ex0jjd"}
+{"time":"2025-06-30T13:53:49.291523613-04:00","level":"INFO","msg":"sender: started","stream_id":"l5ex0jjd"}
+{"time":"2025-06-30T13:53:49.29155958-04:00","level":"INFO","msg":"handler: started","stream_id":"l5ex0jjd"}
+{"time":"2025-06-30T13:53:49.456559732-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-06-30T13:54:05.150841732-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}

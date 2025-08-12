@@ -1,0 +1,18 @@
+{"time":"2025-07-08T19:15:57.772630359-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-08T19:15:57.772657736-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250708_191557-msn1hc2u/logs/debug-core.log"}
+{"time":"2025-07-08T19:15:57.98487182-04:00","level":"INFO","msg":"created new stream","id":"msn1hc2u"}
+{"time":"2025-07-08T19:15:57.984947527-04:00","level":"INFO","msg":"stream: started","id":"msn1hc2u"}
+{"time":"2025-07-08T19:15:57.984977349-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"msn1hc2u"}
+{"time":"2025-07-08T19:15:57.984996764-04:00","level":"INFO","msg":"sender: started","stream_id":"msn1hc2u"}
+{"time":"2025-07-08T19:15:57.985134909-04:00","level":"INFO","msg":"handler: started","stream_id":"msn1hc2u"}
+{"time":"2025-07-08T19:15:58.397917536-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-08T19:16:14.740243031-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-08T19:55:13.273002527-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-08T19:55:13.274005575-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-08T19:55:14.274407539-04:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"uploading adaptive_curriculum_on_ppo/adaptive_curriculum_on_ppo_4/events.out.tfevents.1752016564.v-ger.2112831.0","runtime_seconds":0.215714701,"progress":"530.7KB/530.7KB"},{"desc":"uploading model.zip","runtime_seconds":0.215695285,"progress":"1.9MB/1.9MB"}],"total_operations":2}}
+{"time":"2025-07-08T19:55:14.412633528-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-08T19:55:15.542756455-04:00","level":"INFO","msg":"stream: closing","id":"msn1hc2u"}
+{"time":"2025-07-08T19:55:15.542795216-04:00","level":"INFO","msg":"handler: closed","stream_id":"msn1hc2u"}
+{"time":"2025-07-08T19:55:15.542816029-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"msn1hc2u"}
+{"time":"2025-07-08T19:55:15.542856257-04:00","level":"INFO","msg":"sender: closed","stream_id":"msn1hc2u"}
+{"time":"2025-07-08T19:55:15.542978338-04:00","level":"INFO","msg":"stream: closed","id":"msn1hc2u"}

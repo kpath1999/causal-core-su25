@@ -1,0 +1,25 @@
+/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/vec_env/vec_monitor.py:48: UserWarning: The environment is already wrapped with a `Monitor` wrapperbut you are wrapping it with a `VecMonitor` wrapper, the `Monitor` statistics will beoverwritten by the `VecMonitor` ones.
+  UserWarning,
+Using cuda device
+Traceback (most recent call last):
+  File "ppo_vanilla.py", line 212, in <module>
+    main()
+  File "ppo_vanilla.py", line 205, in main
+    wandb_config=wandb_config
+  File "ppo_vanilla.py", line 121, in train_policy
+    seed=seed
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/ppo/ppo.py", line 152, in __init__
+    self._setup_model()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/ppo/ppo.py", line 155, in _setup_model
+    super(PPO, self)._setup_model()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/on_policy_algorithm.py", line 125, in _setup_model
+    **self.policy_kwargs  # pytype:disable=not-instantiable
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/policies.py", line 485, in __init__
+    self._build(lr_schedule)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/policies.py", line 542, in _build
+    self._build_mlp_extractor()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/policies.py", line 532, in _build_mlp_extractor
+    device=self.device,
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/torch_layers.py", line 182, in __init__
+    shared_net.append(activation_fn())
+TypeError: 'str' object is not callable

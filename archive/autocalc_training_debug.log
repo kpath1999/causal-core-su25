@@ -1,0 +1,7 @@
+2025-07-08 14:22:20,999 1870943 INFO 🔍 Auto-determined pretrained path: ppo_pushing_sb3/final_model.zip
+2025-07-08 15:02:11,715 1870943 INFO 📊 Enhanced test-based curriculum analysis plots saved to autocalcdual_curriculum
+2025-07-08 15:02:11,716 1870943 INFO Contamination Analysis Report:
+2025-07-08 15:02:11,717 1870943 INFO {'contamination_ratio': 0.0, 'total_testing_steps': 0, 'total_training_steps': 0, 'testing_efficiency': 0.0, 'early_termination_rate': 0.0, 'total_interventions_tested': 0, 'total_testing_episodes': 0, 'mini_episode_length': 50, 'max_test_episodes': 5}
+2025-07-08 15:02:14,202 1870943 INFO AutoCaLC training completed. Model saved to autocalcdual_curriculum
+2025-07-08 15:02:14,203 1870943 INFO Contamination ratio: 0.0000
+2025-07-08 15:02:14,203 1870943 INFO Testing efficiency: 0.00 episodes per intervention

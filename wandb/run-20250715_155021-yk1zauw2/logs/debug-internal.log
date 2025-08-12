@@ -1,0 +1,16 @@
+{"time":"2025-07-15T15:50:21.961733253-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-15T15:50:21.961757279-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250715_155021-yk1zauw2/logs/debug-core.log"}
+{"time":"2025-07-15T15:50:22.176489432-04:00","level":"INFO","msg":"created new stream","id":"yk1zauw2"}
+{"time":"2025-07-15T15:50:22.176549006-04:00","level":"INFO","msg":"stream: started","id":"yk1zauw2"}
+{"time":"2025-07-15T15:50:22.176623735-04:00","level":"INFO","msg":"sender: started","stream_id":"yk1zauw2"}
+{"time":"2025-07-15T15:50:22.176681982-04:00","level":"INFO","msg":"handler: started","stream_id":"yk1zauw2"}
+{"time":"2025-07-15T15:50:22.176623735-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"yk1zauw2"}
+{"time":"2025-07-15T15:50:22.521652499-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-15T15:51:15.782809268-04:00","level":"INFO","msg":"stream: closing","id":"yk1zauw2"}
+{"time":"2025-07-15T15:51:15.782873591-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-15T15:51:15.78388041-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-15T15:51:16.178296336-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-15T15:51:16.349710658-04:00","level":"INFO","msg":"handler: closed","stream_id":"yk1zauw2"}
+{"time":"2025-07-15T15:51:16.349818561-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"yk1zauw2"}
+{"time":"2025-07-15T15:51:16.349830923-04:00","level":"INFO","msg":"sender: closed","stream_id":"yk1zauw2"}
+{"time":"2025-07-15T15:51:16.349997911-04:00","level":"INFO","msg":"stream: closed","id":"yk1zauw2"}

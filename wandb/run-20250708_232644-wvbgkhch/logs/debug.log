@@ -1,0 +1,41 @@
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_setup.py:_flush():79] Current SDK version is 0.18.7
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_setup.py:_flush():79] Configure stats pid to 2213589
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_setup.py:_flush():79] Loading settings from /home/kpatherya3/.config/wandb/settings
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_setup.py:_flush():79] Loading settings from /home/kpatherya3/causal-core-su25/wandb/settings
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_setup.py:_flush():79] Loading settings from environment variables: {}
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_setup.py:_flush():79] Applying setup settings: {'mode': None, '_disable_service': None}
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_setup.py:_flush():79] Inferring run settings from compute environment: {'program_relpath': 'autocalc_cpdrl.py', 'program_abspath': '/home/kpatherya3/causal-core-su25/autocalc_cpdrl.py', 'program': 'autocalc_cpdrl.py'}
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_setup.py:_flush():79] Applying login settings: {}
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_init.py:_log_setup():533] Logging user logs to /home/kpatherya3/causal-core-su25/wandb/run-20250708_232644-wvbgkhch/logs/debug.log
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_init.py:_log_setup():534] Logging internal logs to /home/kpatherya3/causal-core-su25/wandb/run-20250708_232644-wvbgkhch/logs/debug-internal.log
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_init.py:init():619] calling init triggers
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_init.py:init():627] wandb.init called with sweep_config: {}
+config: {'task_name': 'pushing', 'curriculum_type': 'CausalMatching_Curriculum_on_PPO', 'cm_threshold': 0.05, 'timesteps_per_intervention': 100000, 'seed': 0}
+2025-07-08 23:26:44,272 INFO    MainThread:2213589 [wandb_init.py:init():669] starting backend
+2025-07-08 23:26:44,273 INFO    MainThread:2213589 [wandb_init.py:init():673] sending inform_init request
+2025-07-08 23:26:44,275 INFO    MainThread:2213589 [backend.py:_multiprocessing_setup():106] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2025-07-08 23:26:44,276 INFO    MainThread:2213589 [wandb_init.py:init():686] backend started and connected
+2025-07-08 23:26:44,279 INFO    MainThread:2213589 [wandb_init.py:init():781] updated telemetry
+2025-07-08 23:26:44,304 INFO    MainThread:2213589 [wandb_init.py:init():814] communicating run to backend with 90.0 second timeout
+2025-07-08 23:26:44,780 INFO    MainThread:2213589 [wandb_init.py:init():867] starting run threads in backend
+2025-07-08 23:26:44,857 INFO    MainThread:2213589 [wandb_run.py:_console_start():2456] atexit reg
+2025-07-08 23:26:44,857 INFO    MainThread:2213589 [wandb_run.py:_redirect():2305] redirect: wrap_raw
+2025-07-08 23:26:44,857 INFO    MainThread:2213589 [wandb_run.py:_redirect():2370] Wrapping output streams.
+2025-07-08 23:26:44,857 INFO    MainThread:2213589 [wandb_run.py:_redirect():2395] Redirects installed.
+2025-07-08 23:26:44,859 INFO    MainThread:2213589 [wandb_init.py:init():911] run started, returning control to user process
+2025-07-08 23:27:33,504 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_4, True
+2025-07-08 23:28:36,985 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_5, True
+2025-07-08 23:29:36,631 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_6, True
+2025-07-08 23:30:36,506 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_7, True
+2025-07-08 23:31:37,941 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_8, True
+2025-07-08 23:32:38,709 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_9, True
+2025-07-08 23:33:42,822 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_10, True
+2025-07-08 23:34:49,897 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_11, True
+2025-07-08 23:35:59,707 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_12, True
+2025-07-08 23:37:07,986 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_13, True
+2025-07-08 23:38:11,675 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_14, True
+2025-07-08 23:39:22,422 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_15, True
+2025-07-08 23:40:33,768 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_16, True
+2025-07-08 23:41:46,277 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_17, True
+2025-07-08 23:42:52,168 INFO    MainThread:2213589 [wandb_run.py:_tensorboard_callback():1544] tensorboard callback: autocalc_cpdrl_logs/PPO_18, True
+2025-07-08 23:43:46,631 WARNING MsgRouterThr:2213589 [router.py:message_loop():75] message_loop has been closed

@@ -1,0 +1,3 @@
+C:\Users\Admin\anaconda3
+C:\Users\Admin\anaconda3\envs\causal_world
+C:\Users\Admin\anaconda3\envs\serial_api_env

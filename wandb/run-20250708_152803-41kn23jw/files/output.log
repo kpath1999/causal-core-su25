@@ -1,0 +1,117 @@
+2025-07-08 15:28:04,102 1987260 INFO [WANDB] Initialized with project: adaptive-curriculum-ppo-pushing and run name: adaptive_curriculum_ppo_pushing_seed0
+2025-07-08 15:28:04,103 1987260 INFO [LOGDIR] Log directory: adaptive_curriculum_on_ppo
+2025-07-08 15:28:04,104 1987260 INFO [CURRICULUM] Interventions: ['GoalInterventionActorPolicy', 'PhysicalPropertiesInterventionActorPolicy', 'VisualInterventionActorPolicy', 'JointsInterventionActorPolicy', 'RigidPoseInterventionActorPolicy', 'RandomInterventionActorPolicy']
+[ADAPTIVE] Initialized with 6 interventions.
+2025-07-08 15:28:04,107 1987260 INFO [ENV] Creating 16 parallel training environments for task: pushing
+Traceback (most recent call last):
+  File "reward_curriculum_on_ppo.py", line 366, in <module>
+    main()
+  File "reward_curriculum_on_ppo.py", line 286, in main
+    for i in range(args.num_envs)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/vec_env/subproc_vec_env.py", line 106, in __init__
+    process.start()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/multiprocessing/process.py", line 112, in start
+    self._popen = self._Popen(self)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/multiprocessing/context.py", line 291, in _Popen
+    return Popen(process_obj)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/multiprocessing/popen_forkserver.py", line 35, in __init__
+    super().__init__(process_obj)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/multiprocessing/popen_fork.py", line 20, in __init__
+    self._launch(process_obj)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/multiprocessing/popen_forkserver.py", line 47, in _launch
+    reduction.dump(process_obj, buf)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/multiprocessing/reduction.py", line 60, in dump
+    ForkingPickler(file, protocol).dump(obj)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/vec_env/base_vec_env.py", line 371, in __getstate__
+    return cloudpickle.dumps(self.var)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/cloudpickle/cloudpickle.py", line 1148, in dumps
+    cp.dump(obj)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/cloudpickle/cloudpickle.py", line 491, in dump
+    return Pickler.dump(self, obj)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 437, in dump
+    self.save(obj)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/cloudpickle/cloudpickle.py", line 566, in save_function
+    return self.save_function_tuple(obj)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/cloudpickle/cloudpickle.py", line 780, in save_function_tuple
+    save(state)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 859, in save_dict
+    self._batch_setitems(obj.items())
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 885, in _batch_setitems
+    save(v)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 819, in save_list
+    self._batch_appends(obj)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 843, in _batch_appends
+    save(x)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 549, in save
+    self.save_reduce(obj=obj, *rv)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 662, in save_reduce
+    save(state)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 859, in save_dict
+    self._batch_setitems(obj.items())
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 885, in _batch_setitems
+    save(v)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 549, in save
+    self.save_reduce(obj=obj, *rv)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 638, in save_reduce
+    save(args)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 774, in save_tuple
+    save(element)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 549, in save
+    self.save_reduce(obj=obj, *rv)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 638, in save_reduce
+    save(args)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 774, in save_tuple
+    save(element)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 774, in save_tuple
+    save(element)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 859, in save_dict
+    self._batch_setitems(obj.items())
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 890, in _batch_setitems
+    save(v)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 549, in save
+    self.save_reduce(obj=obj, *rv)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 662, in save_reduce
+    save(state)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 859, in save_dict
+    self._batch_setitems(obj.items())
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 890, in _batch_setitems
+    save(v)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 774, in save_tuple
+    save(element)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 774, in save_tuple
+    save(element)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 549, in save
+    self.save_reduce(obj=obj, *rv)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 662, in save_reduce
+    save(state)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 504, in save
+    f(self, obj) # Call unbound method with explicit self
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 859, in save_dict
+    self._batch_setitems(obj.items())
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 885, in _batch_setitems
+    save(v)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/pickle.py", line 524, in save
+    rv = reduce(self.proto)
+TypeError: can't pickle mmap.mmap objects

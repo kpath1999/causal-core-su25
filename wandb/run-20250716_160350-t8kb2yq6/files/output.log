@@ -1,0 +1,611 @@
+
+==================================================
+starting meta-rl teacher-student training
+   task: pushing
+   meta-episodes: 30
+   student training steps: 50000
+==================================================
+2025-07-16 16:03:52,549 3246319 INFO Loaded student PPO from ppo_pushing_sb3/final_model.zip
+
+==================================================
+initial evaluation
+==================================================
+
+evaluating student performance (5 episodes)...
+episode 1: length=27, reward=-0.771, success=True
+episode 2: length=27, reward=-0.771, success=True
+episode 3: length=27, reward=-0.771, success=True
+performance summary:
+success rate: 1.000 (5/5)
+average reward: -0.771
+average episode length: 27.0
+initial student success rate: 1.000
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 10001 steps, reward: 45.214
+Reset #2: goal intervention applied (success: True)
+episode 2: 10001 steps, reward: 16.304
+Reset #3: goal intervention applied (success: True)
+episode 3: 10001 steps, reward: 14.194
+total data points collected: 40025
+average episode length: 8005.0
+average episode reward: 18.592
+termination reasons: ['max_length', 'max_length', 'max_length', 'max_length', 'success']
+success rate: 1/5
+meta_teacher_student.py:252: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:230.)
+  states = torch.tensor([d[0] for d in data], dtype=torch.float32).to(device)
+tensor shapes - states: torch.Size([40025, 56]), actions: torch.Size([40025, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4530', '7.8095', '7.3438', '7.0046', '7.5950']
+Training reward models...
+Reward model losses: ['0.3488', '0.1874', '0.0210', '0.9681', '0.0037']
+Training state VAE models...
+Training state VAE models...
+State VAE losses: ['0.9971', '1.0240', '1.0652', '1.0113', '0.9587']
+Training action VAE models...
+Action VAE losses: ['1.0915', '1.1447', '1.0703', '1.0606', '0.9321']
+CM score components:
+transition disagreement: 0.3868
+reward disagreement: 0.3493
+state disagreement: 0.4907
+action disagreement: 0.5201
+total CM score: 1.7469
+goal is complete. CM score: 1.7469
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 29 steps, reward: -0.761
+Reset #2: mass intervention applied (success: True)
+episode 2: 34 steps, reward: -0.422
+Reset #3: mass intervention applied (success: True)
+episode 3: 30 steps, reward: -0.534
+total data points collected: 151
+average episode length: 30.2
+average episode reward: -0.741
+termination reasons: ['success', 'success', 'success', 'success', 'success']
+success rate: 5/5
+tensor shapes - states: torch.Size([151, 56]), actions: torch.Size([151, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.3180', '6.9642', '7.7626', '7.5738', '7.8932']
+Training reward models...
+Reward model losses: ['0.1668', '0.0219', '0.0115', '0.0837', '0.0423']
+Training state VAE models...
+Training state VAE models...
+State VAE losses: ['1.8087', '1.7376', '1.7994', '1.9091', '1.7669']
+Training action VAE models...
+Action VAE losses: ['1.3928', '1.3632', '1.4283', '1.4441', '1.3337']
+CM score components:
+transition disagreement: 0.4351
+reward disagreement: 0.1166
+state disagreement: 0.5346
+action disagreement: 0.5420
+total CM score: 1.6283
+mass is complete. CM score: 1.6283
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 27 steps, reward: -0.764
+Reset #2: friction intervention applied (success: True)
+episode 2: 27 steps, reward: -0.771
+Reset #3: friction intervention applied (success: True)
+episode 3: 27 steps, reward: -0.771
+total data points collected: 136
+average episode length: 27.2
+average episode reward: -0.790
+termination reasons: ['success', 'success', 'success', 'success', 'success']
+success rate: 5/5
+tensor shapes - states: torch.Size([136, 56]), actions: torch.Size([136, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.8421', '7.4845', '7.6449', '7.9799', '6.7912']
+Training reward models...
+Reward model losses: ['0.0217', '0.1581', '0.5899', '0.0356', '0.0690']
+Training state VAE models...
+Training state VAE models...
+State VAE losses: ['1.3773', '1.5370', '1.7074', '1.5879', '1.5768']
+Training action VAE models...
+Action VAE losses: ['1.4240', '1.3458', '1.5365', '1.3256', '1.4250']
+CM score components:
+transition disagreement: 0.3655
+reward disagreement: 0.2209
+state disagreement: 0.5122
+action disagreement: 0.5682
+total CM score: 1.6668
+friction is complete. CM score: 1.6668
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 27 steps, reward: -0.771
+Reset #2: visual intervention applied (success: True)
+episode 2: 27 steps, reward: -0.771
+Reset #3: visual intervention applied (success: True)
+episode 3: 27 steps, reward: -0.771
+total data points collected: 135
+average episode length: 27.0
+average episode reward: -0.771
+termination reasons: ['success', 'success', 'success', 'success', 'success']
+success rate: 5/5
+tensor shapes - states: torch.Size([135, 56]), actions: torch.Size([135, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.7998', '7.7304', '7.8474', '7.5528', '7.4615']
+Training reward models...
+Reward model losses: ['0.0465', '0.0097', '0.0692', '0.0378', '0.0049']
+Training state VAE models...
+Training state VAE models...
+State VAE losses: ['1.6547', '1.8368', '1.5178', '1.5826', '1.7961']
+Training action VAE models...
+Action VAE losses: ['1.4371', '1.4053', '1.4527', '1.4541', '1.4050']
+CM score components:
+transition disagreement: 0.3661
+reward disagreement: 0.0685
+state disagreement: 0.4895
+action disagreement: 0.5668
+total CM score: 1.4909
+visual is complete. CM score: 1.4909
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 10001 steps, reward: 104.537
+Reset #2: pose intervention applied (success: True)
+episode 2: 10001 steps, reward: 18.875
+Reset #3: pose intervention applied (success: True)
+episode 3: 10001 steps, reward: 12.484
+total data points collected: 40030
+average episode length: 8006.0
+average episode reward: 30.308
+termination reasons: ['max_length', 'max_length', 'max_length', 'max_length', 'success']
+success rate: 1/5
+tensor shapes - states: torch.Size([40030, 56]), actions: torch.Size([40030, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.3780', '7.3473', '7.6298', '7.7960', '7.4765']
+Training reward models...
+Reward model losses: ['0.0141', '0.0530', '0.0155', '0.0131', '0.0166']
+Training state VAE models...
+Training state VAE models...
+State VAE losses: ['0.9747', '0.9201', '0.9646', '0.9782', '1.0084']
+Training action VAE models...
+Action VAE losses: ['1.2062', '1.0083', '1.0961', '1.1192', '1.3217']
+CM score components:
+transition disagreement: 0.4235
+reward disagreement: 0.1052
+state disagreement: 0.4664
+action disagreement: 0.5390
+total CM score: 1.5341
+pose is complete. CM score: 1.5341
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 10001 steps, reward: 18.717
+Reset #2: random intervention applied (success: True)
+episode 2: 10001 steps, reward: -2.825
+Reset #3: random intervention applied (success: True)
+episode 3: 10001 steps, reward: 0.332
+total data points collected: 50005
+average episode length: 10001.0
+average episode reward: 28.136
+termination reasons: ['max_length', 'max_length', 'max_length', 'max_length', 'max_length']
+success rate: 0/5
+tensor shapes - states: torch.Size([50005, 56]), actions: torch.Size([50005, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.3097', '6.8237', '7.3788', '7.5246', '7.5979']
+Training reward models...
+Reward model losses: ['0.0046', '0.1462', '0.0785', '0.0061', '1.3262']
+Training state VAE models...
+Training state VAE models...
+State VAE losses: ['1.1516', '1.3164', '1.2524', '1.1430', '1.3041']
+Training action VAE models...
+Action VAE losses: ['1.3559', '1.3617', '1.3519', '1.3987', '1.4783']
+CM score components:
+transition disagreement: 0.4256
+reward disagreement: 0.3924
+state disagreement: 0.5085
+action disagreement: 0.5451
+total CM score: 1.8716
+random is complete. CM score: 1.8716
+IntervenedCausalWorld created with visual intervention
+Reset #1: visual intervention applied (success: True)
+Logging to ppo_pushing_sb3/PPO_0
+Reset #2: visual intervention applied (success: True)
+Reset #3: visual intervention applied (success: True)
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 254       |
+|    ep_rew_mean     | 2.2132688 |
+| time/              |           |
+|    fps             | 452       |
+|    iterations      | 1         |
+|    time_elapsed    | 9         |
+|    total_timesteps | 5050368   |
+----------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 254         |
+|    ep_rew_mean          | 2.2132688   |
+| time/                   |             |
+|    fps                  | 284         |
+|    iterations           | 2           |
+|    time_elapsed         | 28          |
+|    total_timesteps      | 5054464     |
+| train/                  |             |
+|    approx_kl            | 0.035862505 |
+|    clip_fraction        | 0.388       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.5       |
+|    explained_variance   | 0.242       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.519      |
+|    n_updates            | 1170        |
+|    policy_gradient_loss | -0.0915     |
+|    std                  | 2.65        |
+|    value_loss           | 0.0527      |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 254         |
+|    ep_rew_mean          | 2.2132688   |
+| time/                   |             |
+|    fps                  | 255         |
+|    iterations           | 3           |
+|    time_elapsed         | 48          |
+|    total_timesteps      | 5058560     |
+| train/                  |             |
+|    approx_kl            | 0.029173575 |
+|    clip_fraction        | 0.363       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.6       |
+|    explained_variance   | 0.745       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.517      |
+|    n_updates            | 1185        |
+|    policy_gradient_loss | -0.071      |
+|    std                  | 2.66        |
+|    value_loss           | 0.0384      |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 352         |
+|    ep_rew_mean          | 2.285199    |
+| time/                   |             |
+|    fps                  | 242         |
+|    iterations           | 4           |
+|    time_elapsed         | 67          |
+|    total_timesteps      | 5062656     |
+| train/                  |             |
+|    approx_kl            | 0.022583915 |
+|    clip_fraction        | 0.301       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.7       |
+|    explained_variance   | 0.775       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.479      |
+|    n_updates            | 1200        |
+|    policy_gradient_loss | -0.0459     |
+|    std                  | 2.69        |
+|    value_loss           | 0.0241      |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 352         |
+|    ep_rew_mean          | 2.285199    |
+| time/                   |             |
+|    fps                  | 234         |
+|    iterations           | 5           |
+|    time_elapsed         | 87          |
+|    total_timesteps      | 5066752     |
+| train/                  |             |
+|    approx_kl            | 0.030001668 |
+|    clip_fraction        | 0.382       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.7       |
+|    explained_variance   | 0.799       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.538      |
+|    n_updates            | 1215        |
+|    policy_gradient_loss | -0.0901     |
+|    std                  | 2.72        |
+|    value_loss           | 0.024       |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 449         |
+|    ep_rew_mean          | 2.9759078   |
+| time/                   |             |
+|    fps                  | 229         |
+|    iterations           | 6           |
+|    time_elapsed         | 107         |
+|    total_timesteps      | 5070848     |
+| train/                  |             |
+|    approx_kl            | 0.034329638 |
+|    clip_fraction        | 0.423       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.8       |
+|    explained_variance   | 0.936       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.555      |
+|    n_updates            | 1230        |
+|    policy_gradient_loss | -0.0969     |
+|    std                  | 2.74        |
+|    value_loss           | 0.0147      |
+-----------------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 449        |
+|    ep_rew_mean          | 2.9759078  |
+| time/                   |            |
+|    fps                  | 226        |
+|    iterations           | 7          |
+|    time_elapsed         | 126        |
+|    total_timesteps      | 5074944    |
+| train/                  |            |
+|    approx_kl            | 0.04215638 |
+|    clip_fraction        | 0.451      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -21.9      |
+|    explained_variance   | 0.811      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.537     |
+|    n_updates            | 1245       |
+|    policy_gradient_loss | -0.0842    |
+|    std                  | 2.76       |
+|    value_loss           | 0.0223     |
+----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 547         |
+|    ep_rew_mean          | 2.9819613   |
+| time/                   |             |
+|    fps                  | 224         |
+|    iterations           | 8           |
+|    time_elapsed         | 145         |
+|    total_timesteps      | 5079040     |
+| train/                  |             |
+|    approx_kl            | 0.046823226 |
+|    clip_fraction        | 0.505       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22         |
+|    explained_variance   | 0.843       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.571      |
+|    n_updates            | 1260        |
+|    policy_gradient_loss | -0.108      |
+|    std                  | 2.78        |
+|    value_loss           | 0.00819     |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 558         |
+|    ep_rew_mean          | 3.044444    |
+| time/                   |             |
+|    fps                  | 222         |
+|    iterations           | 9           |
+|    time_elapsed         | 165         |
+|    total_timesteps      | 5083136     |
+| train/                  |             |
+|    approx_kl            | 0.052595314 |
+|    clip_fraction        | 0.524       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.1       |
+|    explained_variance   | 0.96        |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.559      |
+|    n_updates            | 1275        |
+|    policy_gradient_loss | -0.105      |
+|    std                  | 2.82        |
+|    value_loss           | 0.00389     |
+-----------------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 558        |
+|    ep_rew_mean          | 3.044444   |
+| time/                   |            |
+|    fps                  | 221        |
+|    iterations           | 10         |
+|    time_elapsed         | 185        |
+|    total_timesteps      | 5087232    |
+| train/                  |            |
+|    approx_kl            | 0.04730013 |
+|    clip_fraction        | 0.517      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.2      |
+|    explained_variance   | 0.886      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.574     |
+|    n_updates            | 1290       |
+|    policy_gradient_loss | -0.102     |
+|    std                  | 2.84       |
+|    value_loss           | 0.0121     |
+----------------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 654        |
+|    ep_rew_mean          | 3.4917626  |
+| time/                   |            |
+|    fps                  | 219        |
+|    iterations           | 11         |
+|    time_elapsed         | 204        |
+|    total_timesteps      | 5091328    |
+| train/                  |            |
+|    approx_kl            | 0.03797015 |
+|    clip_fraction        | 0.431      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.3      |
+|    explained_variance   | 0.83       |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.565     |
+|    n_updates            | 1305       |
+|    policy_gradient_loss | -0.0872    |
+|    std                  | 2.88       |
+|    value_loss           | 0.00487    |
+----------------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 673        |
+|    ep_rew_mean          | 3.5982306  |
+| time/                   |            |
+|    fps                  | 219        |
+|    iterations           | 12         |
+|    time_elapsed         | 224        |
+|    total_timesteps      | 5095424    |
+| train/                  |            |
+|    approx_kl            | 0.04562588 |
+|    clip_fraction        | 0.448      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.4      |
+|    explained_variance   | 0.847      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.542     |
+|    n_updates            | 1320       |
+|    policy_gradient_loss | -0.0757    |
+|    std                  | 2.94       |
+|    value_loss           | 0.0103     |
+----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 673         |
+|    ep_rew_mean          | 3.5982306   |
+| time/                   |             |
+|    fps                  | 218         |
+|    iterations           | 13          |
+|    time_elapsed         | 244         |
+|    total_timesteps      | 5099520     |
+| train/                  |             |
+|    approx_kl            | 0.054817595 |
+|    clip_fraction        | 0.479       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.5       |
+|    explained_variance   | 0.866       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.541      |
+|    n_updates            | 1335        |
+|    policy_gradient_loss | -0.0884     |
+|    std                  | 2.97        |
+|    value_loss           | 0.0161      |
+-----------------------------------------
+Training verification for visual:
+  Episodes completed: 0
+  Mean reward: 0.000
+  Mean length: 0.0
+  Success rate: 0.000
+  WARNING: No episodes completed during training!
+training episode rewards: []
+saved student model to meta_teacher_student_logs/temp_student_model_episode_0.zip
+
+evaluating student performance (5 episodes)...
+episode 1: length=10001, reward=-5.788, success=False
+episode 2: length=10001, reward=-5.788, success=False
+episode 3: length=10001, reward=-5.788, success=False
+performance summary:
+success rate: 0.000 (0/5)
+average reward: -5.788
+average episode length: 10001.0
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 10001 steps, reward: 32.797
+Reset #2: goal intervention applied (success: True)
+episode 2: 10001 steps, reward: -4.442
+Reset #3: goal intervention applied (success: True)
+episode 3: 10001 steps, reward: 59.364
+total data points collected: 50005
+average episode length: 10001.0
+average episode reward: 16.415
+termination reasons: ['max_length', 'max_length', 'max_length', 'max_length', 'max_length']
+success rate: 0/5
+tensor shapes - states: torch.Size([50005, 56]), actions: torch.Size([50005, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.6941', '8.2222', '7.3892', '7.7608', '8.1667']
+Training reward models...
+Reward model losses: ['0.0062', '0.1796', '0.0252', '1.2898', '2.0538']
+Training state VAE models...
+Training state VAE models...
+State VAE losses: ['1.3687', '1.3061', '1.0904', '1.3522', '1.2533']
+Training action VAE models...
+Action VAE losses: ['1.3162', '1.2916', '1.2430', '1.3873', '1.3377']
+CM score components:
+transition disagreement: 0.4416
+reward disagreement: 0.5064
+state disagreement: 0.5218
+action disagreement: 0.5381
+total CM score: 2.0079
+goal is complete. CM score: 2.0079
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 10001 steps, reward: -2.881
+Reset #2: mass intervention applied (success: True)
+episode 2: 10001 steps, reward: 16.183
+Reset #3: mass intervention applied (success: True)
+episode 3: 10001 steps, reward: -1.569
+total data points collected: 50005
+average episode length: 10001.0
+average episode reward: 1.689
+termination reasons: ['max_length', 'max_length', 'max_length', 'max_length', 'max_length']
+success rate: 0/5
+tensor shapes - states: torch.Size([50005, 56]), actions: torch.Size([50005, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.7529', '7.2748', '7.9162', '7.6451', '6.8259']
+Training reward models...
+Reward model losses: ['0.5648', '0.3951', '0.0179', '0.1775', '0.1967']
+Training state VAE models...
+Training state VAE models...
+State VAE losses: ['1.3786', '1.1544', '1.0985', '1.1547', '1.2717']
+Training action VAE models...
+Action VAE losses: ['1.2619', '1.3100', '1.2488', '1.3636', '1.3184']
+CM score components:
+transition disagreement: 0.4419
+reward disagreement: 0.2921
+state disagreement: 0.4818
+action disagreement: 0.5290
+total CM score: 1.7448
+mass is complete. CM score: 1.7448
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 10001 steps, reward: 98.382
+Reset #2: friction intervention applied (success: True)
+Traceback (most recent call last):
+  File "meta_teacher_student.py", line 887, in <module>
+    main()
+  File "meta_teacher_student.py", line 849, in main
+    S_prime_teacher = get_teacher_state(student_model, args.task, INTERVENTIONS, device=device, seed=args.seed)
+  File "meta_teacher_student.py", line 498, in get_teacher_state
+    cm_score = evaluate_cm_score(intervened_env, student_model, device=device, intervention_type=intervention['type'])
+  File "meta_teacher_student.py", line 225, in evaluate_cm_score
+    next_obs, rew, done, info = env.step(act)
+  File "meta_teacher_student.py", line 182, in step
+    result = self.base_env.step(action)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/causal_world/envs/causalworld.py", line 275, in step
+    reward = self._task.get_reward()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/causal_world/task_generators/base_task.py", line 690, in get_reward
+    desired_goal=self._current_desired_goal)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/causal_world/task_generators/pushing.py", line 225, in _calculate_dense_rewards
+    current_angle_diff = 2 * np.arccos(np.clip(quat_diff[:, 3], -1., 1.))
+  File "<__array_function__ internals>", line 6, in clip
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/numpy/core/fromnumeric.py", line 2115, in clip
+    return _wrapfunc(a, 'clip', a_min, a_max, out=out, **kwargs)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/numpy/core/fromnumeric.py", line 57, in _wrapfunc
+    return bound(*args, **kwds)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/numpy/core/_methods.py", line 134, in _clip
+    if _clip_dep_is_scalar_nan(min):
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/numpy/core/_methods.py", line 97, in _clip_dep_is_scalar_nan
+    return um.isnan(a)
+KeyboardInterrupt

@@ -1,0 +1,18 @@
+{"time":"2025-07-08T14:42:24.472992871-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-08T14:42:24.47303687-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250708_144224-99xgm3qz/logs/debug-core.log"}
+{"time":"2025-07-08T14:42:24.692709159-04:00","level":"INFO","msg":"created new stream","id":"99xgm3qz"}
+{"time":"2025-07-08T14:42:24.692826002-04:00","level":"INFO","msg":"stream: started","id":"99xgm3qz"}
+{"time":"2025-07-08T14:42:24.692912674-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"99xgm3qz"}
+{"time":"2025-07-08T14:42:24.69301478-04:00","level":"INFO","msg":"handler: started","stream_id":"99xgm3qz"}
+{"time":"2025-07-08T14:42:24.693205934-04:00","level":"INFO","msg":"sender: started","stream_id":"99xgm3qz"}
+{"time":"2025-07-08T14:42:25.002040484-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-08T14:42:43.245996323-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-08T15:30:38.772547645-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-08T15:30:38.773625841-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-08T15:30:39.774487852-04:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"saving job artifact","runtime_seconds":0.795058068},{"desc":"uploading model.zip","runtime_seconds":0.314357331,"progress":"1.9MB/1.9MB"}],"total_operations":2}}
+{"time":"2025-07-08T15:30:41.283024298-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-08T15:30:42.391356124-04:00","level":"INFO","msg":"stream: closing","id":"99xgm3qz"}
+{"time":"2025-07-08T15:30:42.39140152-04:00","level":"INFO","msg":"handler: closed","stream_id":"99xgm3qz"}
+{"time":"2025-07-08T15:30:42.39142338-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"99xgm3qz"}
+{"time":"2025-07-08T15:30:42.391438465-04:00","level":"INFO","msg":"sender: closed","stream_id":"99xgm3qz"}
+{"time":"2025-07-08T15:30:42.391527861-04:00","level":"INFO","msg":"stream: closed","id":"99xgm3qz"}

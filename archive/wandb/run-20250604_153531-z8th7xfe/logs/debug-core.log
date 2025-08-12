@@ -1,0 +1,14 @@
+{"time":"2025-06-04T15:35:31.3200422-04:00","level":"INFO","msg":"started logging, with flags","port-filename":"C:\\Users\\Admin\\AppData\\Local\\Temp\\tmp_kc1vksd\\port-14312.txt","pid":14312,"debug":false,"disable-analytics":false}
+{"time":"2025-06-04T15:35:31.3200422-04:00","level":"INFO","msg":"FeatureState","shutdownOnParentExitEnabled":false}
+{"time":"2025-06-04T15:35:31.3251929-04:00","level":"INFO","msg":"Will exit if parent process dies.","ppid":14312}
+{"time":"2025-06-04T15:35:31.3251929-04:00","level":"INFO","msg":"server is running","addr":{"IP":"127.0.0.1","Port":58763,"Zone":""}}
+{"time":"2025-06-04T15:35:31.4562491-04:00","level":"INFO","msg":"connection: ManageConnectionData: new connection created","id":"127.0.0.1:58764"}
+{"time":"2025-06-04T15:35:31.8407499-04:00","level":"INFO","msg":"handleInformInit: received","streamId":"z8th7xfe","id":"127.0.0.1:58764"}
+{"time":"2025-06-04T15:35:32.0218817-04:00","level":"INFO","msg":"handleInformInit: stream started","streamId":"z8th7xfe","id":"127.0.0.1:58764"}
+{"time":"2025-06-04T16:16:58.0554805-04:00","level":"INFO","msg":"handleInformTeardown: server teardown initiated","id":"127.0.0.1:58764"}
+{"time":"2025-06-04T16:16:58.0559911-04:00","level":"INFO","msg":"server is shutting down"}
+{"time":"2025-06-04T16:16:58.0559911-04:00","level":"INFO","msg":"connection: Close: initiating connection closure","id":"127.0.0.1:58764"}
+{"time":"2025-06-04T16:16:58.0565983-04:00","level":"INFO","msg":"connection: Close: connection successfully closed","id":"127.0.0.1:58764"}
+{"time":"2025-06-04T16:16:59.8664471-04:00","level":"INFO","msg":"handleInformTeardown: server shutdown complete","id":"127.0.0.1:58764"}
+{"time":"2025-06-04T16:16:59.8664471-04:00","level":"INFO","msg":"connection: ManageConnectionData: connection closed","id":"127.0.0.1:58764"}
+{"time":"2025-06-04T16:16:59.8664471-04:00","level":"INFO","msg":"server is closed"}

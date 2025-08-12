@@ -1,0 +1,22 @@
+{"time":"2025-07-16T15:52:58.038918046-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-16T15:52:58.038945982-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250716_155258-h1jd1gc4/logs/debug-core.log"}
+{"time":"2025-07-16T15:52:58.250325688-04:00","level":"INFO","msg":"created new stream","id":"h1jd1gc4"}
+{"time":"2025-07-16T15:52:58.250389592-04:00","level":"INFO","msg":"stream: started","id":"h1jd1gc4"}
+{"time":"2025-07-16T15:52:58.25043883-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"h1jd1gc4"}
+{"time":"2025-07-16T15:52:58.250459083-04:00","level":"INFO","msg":"sender: started","stream_id":"h1jd1gc4"}
+{"time":"2025-07-16T15:52:58.250559863-04:00","level":"INFO","msg":"handler: started","stream_id":"h1jd1gc4"}
+{"time":"2025-07-16T15:52:58.560175643-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-16T15:53:47.33110547-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-16T15:59:08.349598182-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/ppo_pushing_sb3/PPO_0","logDir":"/home/kpatherya3/causal-core-su25/ppo_pushing_sb3/PPO_0","namespace":""}
+{"time":"2025-07-16T16:02:31.433332294-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/ppo_pushing_sb3/PPO_0","logDir":"/home/kpatherya3/causal-core-su25/ppo_pushing_sb3/PPO_0","namespace":""}
+{"time":"2025-07-16T16:02:31.434669317-04:00","level":"ERROR","msg":"tensorboard: error creating symlink","target":"/home/kpatherya3/causal-core-su25/ppo_pushing_sb3/PPO_0/events.out.tfevents.1752695617.v-ger.3231052.0","symlink":"/home/kpatherya3/causal-core-su25/wandb/run-20250716_155258-h1jd1gc4/files/events.out.tfevents.1752695617.v-ger.3231052.0","error":"symlink /home/kpatherya3/causal-core-su25/ppo_pushing_sb3/PPO_0/events.out.tfevents.1752695617.v-ger.3231052.0 /home/kpatherya3/causal-core-su25/wandb/run-20250716_155258-h1jd1gc4/files/events.out.tfevents.1752695617.v-ger.3231052.0: file exists"}
+{"time":"2025-07-16T16:02:31.445221631-04:00","level":"ERROR","msg":"tensorboard: error creating symlink","target":"/home/kpatherya3/causal-core-su25/ppo_pushing_sb3/PPO_0/events.out.tfevents.1752695948.v-ger.3231052.1","symlink":"/home/kpatherya3/causal-core-su25/wandb/run-20250716_155258-h1jd1gc4/files/events.out.tfevents.1752695948.v-ger.3231052.1","error":"symlink /home/kpatherya3/causal-core-su25/ppo_pushing_sb3/PPO_0/events.out.tfevents.1752695948.v-ger.3231052.1 /home/kpatherya3/causal-core-su25/wandb/run-20250716_155258-h1jd1gc4/files/events.out.tfevents.1752695948.v-ger.3231052.1: file exists"}
+{"time":"2025-07-16T16:02:33.4111244-04:00","level":"ERROR","msg":"tensorboard: error creating symlink","target":"/home/kpatherya3/causal-core-su25/ppo_pushing_sb3/PPO_0/events.out.tfevents.1752696151.v-ger.3231052.2","symlink":"/home/kpatherya3/causal-core-su25/wandb/run-20250716_155258-h1jd1gc4/files/events.out.tfevents.1752696151.v-ger.3231052.2","error":"symlink /home/kpatherya3/causal-core-su25/ppo_pushing_sb3/PPO_0/events.out.tfevents.1752696151.v-ger.3231052.2 /home/kpatherya3/causal-core-su25/wandb/run-20250716_155258-h1jd1gc4/files/events.out.tfevents.1752696151.v-ger.3231052.2: file exists"}
+{"time":"2025-07-16T16:02:55.645627569-04:00","level":"INFO","msg":"stream: closing","id":"h1jd1gc4"}
+{"time":"2025-07-16T16:02:55.645689029-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-16T16:02:55.646912561-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-16T16:02:56.235276375-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-16T16:02:56.368245859-04:00","level":"INFO","msg":"handler: closed","stream_id":"h1jd1gc4"}
+{"time":"2025-07-16T16:02:56.368302639-04:00","level":"INFO","msg":"sender: closed","stream_id":"h1jd1gc4"}
+{"time":"2025-07-16T16:02:56.368298868-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"h1jd1gc4"}
+{"time":"2025-07-16T16:02:56.368458802-04:00","level":"INFO","msg":"stream: closed","id":"h1jd1gc4"}

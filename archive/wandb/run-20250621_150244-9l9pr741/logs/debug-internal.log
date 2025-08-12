@@ -1,0 +1,16 @@
+{"time":"2025-06-21T15:02:44.03625739-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-06-21T15:02:44.036280577-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250621_150244-9l9pr741/logs/debug-core.log"}
+{"time":"2025-06-21T15:02:44.251574459-04:00","level":"INFO","msg":"created new stream","id":"9l9pr741"}
+{"time":"2025-06-21T15:02:44.251708273-04:00","level":"INFO","msg":"stream: started","id":"9l9pr741"}
+{"time":"2025-06-21T15:02:44.251742844-04:00","level":"INFO","msg":"sender: started","stream_id":"9l9pr741"}
+{"time":"2025-06-21T15:02:44.251746615-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"9l9pr741"}
+{"time":"2025-06-21T15:02:44.251812405-04:00","level":"INFO","msg":"handler: started","stream_id":"9l9pr741"}
+{"time":"2025-06-21T15:02:44.464528201-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-06-21T15:02:45.627426187-04:00","level":"INFO","msg":"stream: closing","id":"9l9pr741"}
+{"time":"2025-06-21T15:02:45.627461177-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-06-21T15:02:45.628290112-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-06-21T15:02:47.26760836-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-06-21T15:02:47.381124925-04:00","level":"INFO","msg":"handler: closed","stream_id":"9l9pr741"}
+{"time":"2025-06-21T15:02:47.381199166-04:00","level":"INFO","msg":"sender: closed","stream_id":"9l9pr741"}
+{"time":"2025-06-21T15:02:47.381193578-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"9l9pr741"}
+{"time":"2025-06-21T15:02:47.381331653-04:00","level":"INFO","msg":"stream: closed","id":"9l9pr741"}

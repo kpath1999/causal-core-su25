@@ -1,0 +1,101 @@
+2025-07-16 16:19:44,480 3266759 INFO Random seed set to 0
+2025-07-16 16:19:44,480 3266759 INFO 🔍 Auto-determined pretrained path: ppo_pushing_sb3/final_model.zip
+2025-07-16 16:19:46,819 3266759 INFO Loaded student PPO from ppo_pushing_sb3/final_model.zip
+2025-07-16 16:39:39,235 3266759 INFO Meta-Episode 1/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-16 17:01:56,459 3266759 INFO Meta-Episode 2/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-16 17:17:52,454 3266759 INFO Meta-Episode 3/30: Teacher chose 'visual', Reward: 1.0000, Student Success: 1.000
+2025-07-16 17:34:48,091 3266759 INFO Meta-Episode 4/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-16 17:52:52,446 3266759 INFO Meta-Episode 5/30: Teacher chose 'visual', Reward: 1.0000, Student Success: 1.000
+2025-07-16 18:06:53,902 3266759 INFO Meta-Episode 6/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 1.000
+2025-07-16 18:20:17,007 3266759 INFO Meta-Episode 7/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 1.000
+2025-07-16 18:34:48,136 3266759 INFO Meta-Episode 8/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 1.000
+2025-07-16 18:51:16,110 3266759 INFO Meta-Episode 9/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-16 19:04:38,772 3266759 INFO Meta-Episode 10/30: Teacher chose 'visual', Reward: 1.0000, Student Success: 1.000
+2025-07-16 19:21:11,697 3266759 INFO Meta-Episode 11/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-16 19:42:17,553 3266759 INFO Meta-Episode 12/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-16 19:58:59,971 3266759 INFO Meta-Episode 13/30: Teacher chose 'visual', Reward: 1.0000, Student Success: 1.000
+2025-07-16 20:17:27,794 3266759 INFO Meta-Episode 14/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-16 20:32:10,160 3266759 INFO Meta-Episode 15/30: Teacher chose 'visual', Reward: 1.0000, Student Success: 1.000
+2025-07-16 20:42:03,196 3266759 INFO Meta-Episode 16/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 1.000
+2025-07-16 20:58:23,070 3266759 INFO Meta-Episode 17/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-16 21:18:30,676 3266759 INFO Meta-Episode 18/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-16 21:39:38,905 3266759 INFO Meta-Episode 19/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-16 22:00:35,383 3266759 INFO Meta-Episode 20/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-16 22:20:55,634 3266759 INFO Meta-Episode 21/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-16 22:43:29,876 3266759 INFO Meta-Episode 22/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-16 23:06:13,842 3266759 INFO Meta-Episode 23/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 00:11:14,785 3817156 INFO Random seed set to 0
+2025-07-17 00:11:14,785 3817156 INFO 🔍 Auto-determined pretrained path: ppo_pushing_sb3/final_model.zip
+2025-07-17 00:11:17,226 3817156 INFO Loaded student PPO from ppo_pushing_sb3/final_model.zip
+2025-07-17 00:31:02,977 3817156 INFO Meta-Episode 1/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-17 00:31:02,977 3817156 INFO Meta-Episode 1: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 00:37:00,839 3847906 INFO Random seed set to 0
+2025-07-17 00:37:00,839 3847906 INFO 🔍 Auto-determined pretrained path: ppo_pushing_sb3/final_model.zip
+2025-07-17 00:37:03,187 3847906 INFO Loaded student PPO from ppo_pushing_sb3/final_model.zip
+2025-07-17 00:57:08,634 3847906 INFO Meta-Episode 1/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-17 00:57:08,635 3847906 INFO Meta-Episode 1: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 01:19:25,484 3847906 INFO Meta-Episode 2/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 01:19:25,485 3847906 INFO Meta-Episode 2: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 01:35:20,133 3847906 INFO Meta-Episode 3/30: Teacher chose 'visual', Reward: 1.0000, Student Success: 1.000
+2025-07-17 01:35:20,133 3847906 INFO Meta-Episode 3: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 01:52:16,905 3847906 INFO Meta-Episode 4/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-17 01:52:16,906 3847906 INFO Meta-Episode 4: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 02:10:22,222 3847906 INFO Meta-Episode 5/30: Teacher chose 'visual', Reward: 1.0000, Student Success: 1.000
+2025-07-17 02:10:22,223 3847906 INFO Meta-Episode 5: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 02:24:22,807 3847906 INFO Meta-Episode 6/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 1.000
+2025-07-17 02:24:22,808 3847906 INFO Meta-Episode 6: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 02:37:45,444 3847906 INFO Meta-Episode 7/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 1.000
+2025-07-17 02:37:45,445 3847906 INFO Meta-Episode 7: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 02:52:16,139 3847906 INFO Meta-Episode 8/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 1.000
+2025-07-17 02:52:16,140 3847906 INFO Meta-Episode 8: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 03:08:44,280 3847906 INFO Meta-Episode 9/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-17 03:08:44,281 3847906 INFO Meta-Episode 9: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 03:22:06,777 3847906 INFO Meta-Episode 10/30: Teacher chose 'visual', Reward: 1.0000, Student Success: 1.000
+2025-07-17 03:22:06,778 3847906 INFO Meta-Episode 10: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 03:38:40,569 3847906 INFO Meta-Episode 11/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-17 03:38:40,570 3847906 INFO Meta-Episode 11: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 03:59:45,697 3847906 INFO Meta-Episode 12/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 03:59:45,697 3847906 INFO Meta-Episode 12: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 04:16:27,024 3847906 INFO Meta-Episode 13/30: Teacher chose 'visual', Reward: 1.0000, Student Success: 1.000
+2025-07-17 04:16:27,024 3847906 INFO Meta-Episode 13: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 04:34:51,784 3847906 INFO Meta-Episode 14/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-17 04:34:51,785 3847906 INFO Meta-Episode 14: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 04:49:31,753 3847906 INFO Meta-Episode 15/30: Teacher chose 'visual', Reward: 1.0000, Student Success: 1.000
+2025-07-17 04:49:31,754 3847906 INFO Meta-Episode 15: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 04:59:24,475 3847906 INFO Meta-Episode 16/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 1.000
+2025-07-17 04:59:24,476 3847906 INFO Meta-Episode 16: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 05:15:45,015 3847906 INFO Meta-Episode 17/30: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+2025-07-17 05:15:45,015 3847906 INFO Meta-Episode 17: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 05:35:53,544 3847906 INFO Meta-Episode 18/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 05:35:53,545 3847906 INFO Meta-Episode 18: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 05:56:59,130 3847906 INFO Meta-Episode 19/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 05:56:59,130 3847906 INFO Meta-Episode 19: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 06:17:52,686 3847906 INFO Meta-Episode 20/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 06:17:52,686 3847906 INFO Meta-Episode 20: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 06:38:10,168 3847906 INFO Meta-Episode 21/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 06:38:10,169 3847906 INFO Meta-Episode 21: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 07:00:41,291 3847906 INFO Meta-Episode 22/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 07:00:41,292 3847906 INFO Meta-Episode 22: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 07:23:25,333 3847906 INFO Meta-Episode 23/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 07:23:25,334 3847906 INFO Meta-Episode 23: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 07:45:10,132 3847906 INFO Meta-Episode 24/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 07:45:10,133 3847906 INFO Meta-Episode 24: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 08:07:53,726 3847906 INFO Meta-Episode 25/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 08:07:53,726 3847906 INFO Meta-Episode 25: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 08:32:22,599 3847906 INFO Meta-Episode 26/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 08:32:22,599 3847906 INFO Meta-Episode 26: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 08:57:11,893 3847906 INFO Meta-Episode 27/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 08:57:11,894 3847906 INFO Meta-Episode 27: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 09:21:58,994 3847906 INFO Meta-Episode 28/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 09:21:58,995 3847906 INFO Meta-Episode 28: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 09:47:06,611 3847906 INFO Meta-Episode 29/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 09:47:06,612 3847906 INFO Meta-Episode 29: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 10:12:39,068 3847906 INFO Meta-Episode 30/30: Teacher chose 'visual', Reward: 0.0000, Student Success: 0.000
+2025-07-17 10:12:39,069 3847906 INFO Meta-Episode 30: Stagnation check - steps_since_change=0, patience_remaining=50000
+2025-07-17 10:12:42,651 3847906 INFO Meta-RL Teacher-Student curriculum training complete.
+2025-07-17 15:11:32,155 687867 INFO Random seed set to 0
+2025-07-17 15:11:32,155 687867 INFO 🔍 Auto-determined pretrained path: ppo_pushing_sb3/final_model.zip
+2025-07-17 15:11:33,401 687867 INFO Loaded student PPO from ppo_pushing_sb3/final_model.zip
+2025-07-17 15:25:15,667 703968 INFO Random seed set to 0
+2025-07-17 15:25:15,667 703968 INFO 🔍 Auto-determined pretrained path: ppo_pushing_sb3/final_model.zip
+2025-07-17 15:25:16,902 703968 INFO Loaded student PPO from ppo_pushing_sb3/final_model.zip

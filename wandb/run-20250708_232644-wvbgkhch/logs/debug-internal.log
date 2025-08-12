@@ -1,0 +1,44 @@
+{"time":"2025-07-08T23:26:44.281525645-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-08T23:26:44.281554-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250708_232644-wvbgkhch/logs/debug-core.log"}
+{"time":"2025-07-08T23:26:44.493892191-04:00","level":"INFO","msg":"created new stream","id":"wvbgkhch"}
+{"time":"2025-07-08T23:26:44.493970203-04:00","level":"INFO","msg":"stream: started","id":"wvbgkhch"}
+{"time":"2025-07-08T23:26:44.494087046-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"wvbgkhch"}
+{"time":"2025-07-08T23:26:44.494133909-04:00","level":"INFO","msg":"handler: started","stream_id":"wvbgkhch"}
+{"time":"2025-07-08T23:26:44.49428204-04:00","level":"INFO","msg":"sender: started","stream_id":"wvbgkhch"}
+{"time":"2025-07-08T23:26:44.786046733-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-08T23:27:43.506364173-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-08T23:28:36.985517318-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_5","namespace":"PPO_5"}
+{"time":"2025-07-08T23:28:36.98564359-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:29:36.632127425-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_6","namespace":"PPO_6"}
+{"time":"2025-07-08T23:29:36.632256141-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:30:36.506597685-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_7","namespace":"PPO_7"}
+{"time":"2025-07-08T23:30:36.506710687-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:31:37.941891449-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_8","namespace":"PPO_8"}
+{"time":"2025-07-08T23:31:37.941996559-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:32:38.709691235-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_9","namespace":"PPO_9"}
+{"time":"2025-07-08T23:32:38.709817088-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:33:42.822943318-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_10","namespace":"PPO_10"}
+{"time":"2025-07-08T23:33:42.82307385-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:34:49.897741714-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_11","namespace":"PPO_11"}
+{"time":"2025-07-08T23:34:49.897860513-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:35:59.707771181-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_12","namespace":"PPO_12"}
+{"time":"2025-07-08T23:35:59.707914074-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:37:07.986699753-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_13","namespace":"PPO_13"}
+{"time":"2025-07-08T23:37:07.986841738-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:38:11.676004416-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_14","namespace":"PPO_14"}
+{"time":"2025-07-08T23:38:11.676233004-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:39:22.423506369-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_15","namespace":"PPO_15"}
+{"time":"2025-07-08T23:39:22.423639345-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:40:33.768499324-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_16","namespace":"PPO_16"}
+{"time":"2025-07-08T23:40:33.768653462-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:41:46.31869941-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_17","namespace":"PPO_17"}
+{"time":"2025-07-08T23:42:52.168563601-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_18","namespace":"PPO_18"}
+{"time":"2025-07-08T23:42:52.168736736-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:43:46.630936872-04:00","level":"INFO","msg":"stream: closing","id":"wvbgkhch"}
+{"time":"2025-07-08T23:43:46.630987995-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-08T23:43:46.632272011-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-08T23:43:48.43768873-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-08T23:43:48.55581828-04:00","level":"INFO","msg":"handler: closed","stream_id":"wvbgkhch"}
+{"time":"2025-07-08T23:43:48.555908654-04:00","level":"INFO","msg":"sender: closed","stream_id":"wvbgkhch"}
+{"time":"2025-07-08T23:43:48.555904393-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"wvbgkhch"}
+{"time":"2025-07-08T23:43:48.55611161-04:00","level":"INFO","msg":"stream: closed","id":"wvbgkhch"}

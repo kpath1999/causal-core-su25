@@ -1,0 +1,243 @@
+2025-07-08 14:40:04,092 1890873 INFO [ARGS] Namespace(eval_freq=100000, log_dir='simple_curriculum_on_ppo', max_episode_length=250, num_envs=16, pretrained_path=None, seed=0, skip_frame=3, task='pushing', timesteps=3000000, train=False, use_wandb=True)
+2025-07-08 14:40:04,093 1890873 INFO [PRETRAINED] Using pretrained model path: ppo_pushing_sb3/final_model.zip
+2025-07-08 14:40:05,225 1890873 INFO [WANDB] Initialized with project: simple-curriculum-ppo-pushing and run name: simple_curriculum_ppo_pushing_seed0
+2025-07-08 14:40:05,226 1890873 INFO [LOGDIR] Log directory: simple_curriculum_on_ppo
+2025-07-08 14:40:05,226 1890873 INFO [ENV] Creating 16 parallel training environments for task: pushing
+2025-07-08 14:40:09,767 1891228 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:09,767 1891228 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:09,767 1891228 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:09,768 1891228 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:09,768 1891228 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:09,768 1891228 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:09,768 1891228 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:09,880 1891229 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:09,880 1891229 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:09,880 1891229 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:09,880 1891229 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:09,880 1891229 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:09,880 1891229 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:09,880 1891229 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:09,909 1891221 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:09,909 1891221 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:09,910 1891221 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:09,910 1891221 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:09,910 1891221 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:09,910 1891221 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:09,910 1891221 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,061 1891250 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,061 1891250 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,061 1891250 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,062 1891250 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,062 1891250 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,062 1891250 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,062 1891250 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,126 1891227 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,127 1891227 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,127 1891227 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,127 1891227 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,127 1891227 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,127 1891227 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,127 1891227 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,143 1891223 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,144 1891223 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,144 1891223 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,144 1891223 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,144 1891223 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,144 1891223 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,144 1891223 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,229 1891225 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,229 1891225 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,229 1891225 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,229 1891225 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,229 1891225 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,229 1891225 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,229 1891225 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,274 1891253 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,274 1891253 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,274 1891253 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,274 1891253 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,274 1891253 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,275 1891253 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,275 1891253 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,275 1891234 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,275 1891234 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,275 1891234 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,275 1891234 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,275 1891234 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,275 1891234 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,275 1891234 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,276 1891231 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,276 1891231 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,276 1891231 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,276 1891231 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,277 1891231 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,277 1891231 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,277 1891231 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,325 1891224 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,326 1891224 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,326 1891224 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,326 1891224 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,326 1891224 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,326 1891224 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,326 1891224 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,347 1891243 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,347 1891243 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,347 1891243 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,347 1891243 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,347 1891243 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,347 1891243 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,347 1891243 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,381 1891222 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,381 1891222 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,381 1891222 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,381 1891222 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,381 1891222 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,381 1891222 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,381 1891222 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,499 1891239 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,499 1891239 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,499 1891239 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,499 1891239 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,499 1891239 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,499 1891239 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,500 1891239 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,599 1891256 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,600 1891256 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,599 1891226 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:40:10,600 1891256 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,600 1891256 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,600 1891226 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:40:10,600 1891226 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:40:10,600 1891256 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,600 1891226 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:40:10,600 1891256 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,600 1891226 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:40:10,600 1891256 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,600 1891226 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:40:10,600 1891226 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:40:10,601 1890873 INFO [ENV] Creating evaluation environment for task: pushing
+2025-07-08 14:40:10,685 1890873 INFO [MODEL] PPO model loaded from: ppo_pushing_sb3/final_model.zip
+2025-07-08 14:42:23,698 1894921 INFO [ARGS] Namespace(eval_freq=100000, log_dir='simple_curriculum_on_ppo', max_episode_length=250, num_envs=16, pretrained_path=None, seed=0, skip_frame=3, task='pushing', timesteps=3000000, train=False, use_wandb=True)
+2025-07-08 14:42:23,698 1894921 INFO [PRETRAINED] Using pretrained model path: ppo_pushing_sb3/final_model.zip
+2025-07-08 14:42:25,165 1894921 INFO [WANDB] Initialized with project: simple-curriculum-ppo-pushing and run name: simple_curriculum_ppo_pushing_seed0
+2025-07-08 14:42:25,166 1894921 INFO [LOGDIR] Log directory: simple_curriculum_on_ppo
+2025-07-08 14:42:25,166 1894921 INFO [ENV] Creating 16 parallel training environments for task: pushing
+2025-07-08 14:42:28,532 1895266 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:28,532 1895266 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:28,532 1895266 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:28,532 1895266 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:28,532 1895266 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:28,532 1895266 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:28,532 1895266 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:28,727 1895267 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:28,727 1895267 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:28,727 1895267 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:28,727 1895267 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:28,727 1895267 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:28,727 1895267 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:28,727 1895267 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:28,729 1895306 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:28,729 1895306 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:28,729 1895306 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:28,729 1895306 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:28,729 1895306 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:28,729 1895306 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:28,729 1895306 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:28,806 1895272 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:28,807 1895272 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:28,807 1895272 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:28,807 1895272 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:28,807 1895272 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:28,807 1895272 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:28,807 1895272 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:28,813 1895277 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:28,813 1895277 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:28,813 1895277 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:28,813 1895277 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:28,813 1895277 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:28,813 1895277 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:28,813 1895277 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:28,871 1895271 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:28,872 1895271 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:28,872 1895271 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:28,872 1895271 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:28,872 1895271 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:28,872 1895271 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:28,872 1895271 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:28,878 1895274 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:28,878 1895274 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:28,878 1895274 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:28,878 1895274 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:28,879 1895274 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:28,879 1895274 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:28,879 1895274 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:28,911 1895286 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:28,912 1895286 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:28,912 1895286 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:28,912 1895286 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:28,912 1895286 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:28,912 1895286 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:28,912 1895286 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:28,914 1895292 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:28,914 1895292 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:28,914 1895292 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:28,914 1895292 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:28,915 1895292 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:28,915 1895292 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:28,915 1895292 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:28,952 1895281 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:28,953 1895281 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:28,953 1895281 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:28,953 1895281 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:28,953 1895281 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:28,953 1895281 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:28,953 1895281 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:29,039 1895265 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:29,039 1895265 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:29,039 1895265 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:29,039 1895265 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:29,039 1895265 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:29,039 1895265 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:29,039 1895265 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:29,046 1895269 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:29,047 1895269 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:29,047 1895269 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:29,047 1895269 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:29,047 1895269 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:29,047 1895269 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:29,047 1895269 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:29,145 1895290 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:29,145 1895290 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:29,146 1895290 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:29,146 1895290 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:29,146 1895290 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:29,146 1895290 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:29,146 1895290 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:29,155 1895302 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:29,155 1895302 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:29,155 1895302 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:29,155 1895302 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:29,155 1895302 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:29,155 1895302 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:29,155 1895302 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:29,278 1895287 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:29,278 1895287 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:29,278 1895287 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:29,279 1895287 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:29,279 1895287 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:29,279 1895287 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:29,279 1895287 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:29,279 1895297 INFO [CURRICULUM] Intervention schedule:
+2025-07-08 14:42:29,279 1895297 INFO   - Actor 0 (GoalInterventionActorPolicy): episodes 0 to 100000, every 1 episode(s)
+2025-07-08 14:42:29,279 1895297 INFO   - Actor 1 (PhysicalPropertiesInterventionActorPolicy): episodes 100000 to 200000, every 1 episode(s)
+2025-07-08 14:42:29,279 1895297 INFO   - Actor 2 (VisualInterventionActorPolicy): episodes 200000 to 300000, every 1 episode(s)
+2025-07-08 14:42:29,279 1895297 INFO   - Actor 3 (JointsInterventionActorPolicy): episodes 300000 to 400000, every 1 episode(s)
+2025-07-08 14:42:29,279 1895297 INFO   - Actor 4 (RigidPoseInterventionActorPolicy): episodes 400000 to 500000, every 1 episode(s)
+2025-07-08 14:42:29,279 1895297 INFO   - Actor 5 (RandomInterventionActorPolicy): episodes 500000 to 1000000, every 1 episode(s)
+2025-07-08 14:42:29,281 1894921 INFO [ENV] Creating evaluation environment for task: pushing
+2025-07-08 14:42:29,362 1894921 INFO [MODEL] PPO model loaded from: ppo_pushing_sb3/final_model.zip
+2025-07-08 14:42:33,098 1894921 INFO [CALLBACKS] Callbacks set up: ['CheckpointCallback', 'EvalCallback', 'WandbCallback']
+2025-07-08 14:42:33,099 1894921 INFO [TRAIN] Starting training for 3000000 timesteps...
+2025-07-08 15:30:38,749 1894921 INFO [TRAIN] Training complete.
+2025-07-08 15:30:38,769 1894921 INFO [SAVE] Model saved to: simple_curriculum_on_ppo/simple_curriculum_on_ppo
+2025-07-08 15:30:42,391 1894921 INFO Simple Curriculum on PPO training completed. Model saved to simple_curriculum_on_ppo

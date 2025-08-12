@@ -1,0 +1,18 @@
+{"time":"2025-06-30T15:01:52.642476623-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-06-30T15:01:52.642504559-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250630_150152-tfdhkbah/logs/debug-core.log"}
+{"time":"2025-06-30T15:01:53.856595541-04:00","level":"INFO","msg":"created new stream","id":"tfdhkbah"}
+{"time":"2025-06-30T15:01:53.856646594-04:00","level":"INFO","msg":"stream: started","id":"tfdhkbah"}
+{"time":"2025-06-30T15:01:53.856678791-04:00","level":"INFO","msg":"sender: started","stream_id":"tfdhkbah"}
+{"time":"2025-06-30T15:01:53.856675438-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"tfdhkbah"}
+{"time":"2025-06-30T15:01:53.856722231-04:00","level":"INFO","msg":"handler: started","stream_id":"tfdhkbah"}
+{"time":"2025-06-30T15:01:54.066612359-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-06-30T15:02:09.320701496-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-06-30T15:27:43.757081986-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-06-30T15:27:43.758287012-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-06-30T15:27:44.757903954-04:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"saving job artifact","runtime_seconds":0.852249993}],"total_operations":1}}
+{"time":"2025-06-30T15:27:45.748688879-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-06-30T15:27:46.888463914-04:00","level":"INFO","msg":"stream: closing","id":"tfdhkbah"}
+{"time":"2025-06-30T15:27:46.888511684-04:00","level":"INFO","msg":"handler: closed","stream_id":"tfdhkbah"}
+{"time":"2025-06-30T15:27:46.888547722-04:00","level":"INFO","msg":"sender: closed","stream_id":"tfdhkbah"}
+{"time":"2025-06-30T15:27:46.88853969-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"tfdhkbah"}
+{"time":"2025-06-30T15:27:46.888679232-04:00","level":"INFO","msg":"stream: closed","id":"tfdhkbah"}

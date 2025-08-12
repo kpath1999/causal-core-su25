@@ -1,0 +1,17 @@
+{"time":"2025-06-21T15:10:21.490257409-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-06-21T15:10:21.490280596-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250621_151021-dlzrp5rt/logs/debug-core.log"}
+{"time":"2025-06-21T15:10:21.702711094-04:00","level":"INFO","msg":"created new stream","id":"dlzrp5rt"}
+{"time":"2025-06-21T15:10:21.702771227-04:00","level":"INFO","msg":"stream: started","id":"dlzrp5rt"}
+{"time":"2025-06-21T15:10:21.702851613-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"dlzrp5rt"}
+{"time":"2025-06-21T15:10:21.702884298-04:00","level":"INFO","msg":"sender: started","stream_id":"dlzrp5rt"}
+{"time":"2025-06-21T15:10:21.702978862-04:00","level":"INFO","msg":"handler: started","stream_id":"dlzrp5rt"}
+{"time":"2025-06-21T15:10:21.957609603-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-06-21T15:10:34.167183757-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-06-21T15:54:54.639095576-04:00","level":"INFO","msg":"stream: closing","id":"dlzrp5rt"}
+{"time":"2025-06-21T15:54:54.639157594-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-06-21T15:54:54.64001244-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-06-21T15:54:56.593386234-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-06-21T15:54:56.7476869-04:00","level":"INFO","msg":"handler: closed","stream_id":"dlzrp5rt"}
+{"time":"2025-06-21T15:54:56.747768753-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"dlzrp5rt"}
+{"time":"2025-06-21T15:54:56.747782022-04:00","level":"INFO","msg":"sender: closed","stream_id":"dlzrp5rt"}
+{"time":"2025-06-21T15:54:56.747895583-04:00","level":"INFO","msg":"stream: closed","id":"dlzrp5rt"}

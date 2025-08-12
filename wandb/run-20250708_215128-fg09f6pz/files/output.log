@@ -1,0 +1,23 @@
+[AutoCaLC-CPDRL] Evaluating intervention: goal
+autocalc_cpdrl.py:127: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:230.)
+  states = torch.tensor([d[0] for d in data], dtype=torch.float32).to(device)
+  Reward: -0.1181, CM: 2.4715
+[AutoCaLC-CPDRL] Evaluating intervention: mass
+  Reward: -0.1572, CM: 2.2041
+[AutoCaLC-CPDRL] Evaluating intervention: friction
+  Reward: 0.0354, CM: 2.4826
+[AutoCaLC-CPDRL] Evaluating intervention: visual
+  Reward: -0.2156, CM: 2.5768
+[AutoCaLC-CPDRL] Evaluating intervention: joints
+Traceback (most recent call last):
+  File "autocalc_cpdrl.py", line 425, in <module>
+    main()
+  File "autocalc_cpdrl.py", line 337, in main
+    avg_reward, cm_score, cm_details = evaluate_intervention(args.task, intervention, device, seed=args.seed)
+  File "autocalc_cpdrl.py", line 243, in evaluate_intervention
+    env = make_env_with_intervention(task_name, intervention, seed=seed)
+  File "autocalc_cpdrl.py", line 235, in make_env_with_intervention
+    actor.initialize(env)
+  File "autocalc_cpdrl.py", line 37, in initialize
+    self._joint_lower_limits = intervention_space['joint_positions'].low
+AttributeError: 'numpy.ndarray' object has no attribute 'low'

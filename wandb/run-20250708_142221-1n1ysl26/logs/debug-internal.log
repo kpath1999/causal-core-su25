@@ -1,0 +1,18 @@
+{"time":"2025-07-08T14:22:21.700842119-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-08T14:22:21.700874804-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250708_142221-1n1ysl26/logs/debug-core.log"}
+{"time":"2025-07-08T14:22:21.913988306-04:00","level":"INFO","msg":"created new stream","id":"1n1ysl26"}
+{"time":"2025-07-08T14:22:21.914071555-04:00","level":"INFO","msg":"stream: started","id":"1n1ysl26"}
+{"time":"2025-07-08T14:22:21.914290156-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"1n1ysl26"}
+{"time":"2025-07-08T14:22:21.914373406-04:00","level":"INFO","msg":"handler: started","stream_id":"1n1ysl26"}
+{"time":"2025-07-08T14:22:21.914290156-04:00","level":"INFO","msg":"sender: started","stream_id":"1n1ysl26"}
+{"time":"2025-07-08T14:22:22.288644165-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-08T14:22:40.981484144-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-08T15:02:11.723518448-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-08T15:02:11.724982723-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-08T15:02:12.725017248-04:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"uploading model.zip","runtime_seconds":0.11124811,"progress":"1.9MB/1.9MB"},{"desc":"uploading autocalcdual_curriculum/autocalc_curriculum_dualphase_2/events.out.tfevents.1751998950.v-ger.1870943.0","runtime_seconds":0.111227367,"progress":"530.7KB/530.7KB"}],"total_operations":2}}
+{"time":"2025-07-08T15:02:12.927354728-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-08T15:02:14.202732673-04:00","level":"INFO","msg":"stream: closing","id":"1n1ysl26"}
+{"time":"2025-07-08T15:02:14.202774368-04:00","level":"INFO","msg":"handler: closed","stream_id":"1n1ysl26"}
+{"time":"2025-07-08T15:02:14.202794761-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"1n1ysl26"}
+{"time":"2025-07-08T15:02:14.20288269-04:00","level":"INFO","msg":"sender: closed","stream_id":"1n1ysl26"}
+{"time":"2025-07-08T15:02:14.202970689-04:00","level":"INFO","msg":"stream: closed","id":"1n1ysl26"}

@@ -1,0 +1,3103 @@
+
+==================================================
+starting meta-rl teacher-student training
+   task: pushing
+   meta-episodes: 10
+   student training steps: 10000
+==================================================
+INFO:root:Loaded student PPO from ppo_pushing_sb3/final_model.zip
+
+==================================================
+initial evaluation
+==================================================
+
+evaluating student performance (5 episodes)...
+episode 1: length=27, reward=-0.773, success=True
+episode 2: length=27, reward=-0.773, success=True
+episode 3: length=27, reward=-0.773, success=True
+performance summary:
+success rate: 1.000 (5/5)
+average reward: -0.773
+average episode length: 27.0
+initial student success rate: 1.000
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: 1.979
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -0.388
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: 1.538
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 0.717
+meta_teacher_student.py:190: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:230.)
+  states = torch.tensor([d[0] for d in data], dtype=torch.float32).to(device)
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4610', '7.8249', '7.3516', '7.0114', '7.6092']
+Training reward models...
+Reward model losses: ['0.3474', '0.1904', '0.0224', '0.9451', '0.0054']
+Training state VAE models...
+State VAE losses: ['147241.5438', '167849.9625', '168503.8469', '180875.4188', '150813.3813']
+Training action VAE models...
+Action VAE losses: ['4496.3992', '8122.9940', '3809.4184', '6432.7371', '4358.3354']
+CM score components:
+transition disagreement: 0.3890
+reward disagreement: 0.3890
+state disagreement: 0.3890
+action disagreement: 0.3890
+total CM score: 0.3890
+goal is complete. CM score: 2.3915
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: 1.507
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: 1.895
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: 1.607
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 1.478
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.2598', '7.1052', '7.8831', '7.4238', '7.5755']
+Training reward models...
+Reward model losses: ['0.0103', '0.2632', '0.0033', '0.0146', '0.0041']
+Training state VAE models...
+State VAE losses: ['159153.3687', '119133.4000', '191112.8156', '172155.3281', '93211.5312']
+Training action VAE models...
+Action VAE losses: ['5433.9841', '6042.7117', '6516.3863', '6356.1573', '5970.4442']
+CM score components:
+transition disagreement: 0.4411
+reward disagreement: 0.4411
+state disagreement: 0.4411
+action disagreement: 0.4411
+total CM score: 0.4411
+mass is complete. CM score: 2.1974
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: 1.548
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: 1.015
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: 0.978
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 1.326
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.2443', '6.5370', '7.4429', '7.3495', '7.3739']
+Training reward models...
+Reward model losses: ['0.0938', '0.0045', '0.1223', '0.0217', '1.1376']
+Training state VAE models...
+State VAE losses: ['140848.9719', '139242.5406', '179904.0906', '160322.5969', '231708.9094']
+Training action VAE models...
+Action VAE losses: ['5192.3523', '8029.4825', '4997.3114', '6111.2271', '6495.8878']
+CM score components:
+transition disagreement: 0.4033
+reward disagreement: 0.4033
+state disagreement: 0.4033
+action disagreement: 0.4033
+total CM score: 0.4033
+friction is complete. CM score: 2.5179
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: 1.020
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: 1.020
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: 1.020
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 1.020
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.7884', '7.9159', '7.0145', '7.8459', '7.7676']
+Training reward models...
+Reward model losses: ['0.0087', '0.0087', '0.0036', '0.7941', '0.1853']
+Training state VAE models...
+State VAE losses: ['160740.9094', '154554.8438', '107327.4547', '170776.5031', '202285.1844']
+Training action VAE models...
+Action VAE losses: ['5901.0185', '6538.8626', '6335.6922', '5712.7200', '5025.3359']
+CM score components:
+transition disagreement: 0.4462
+reward disagreement: 0.4462
+state disagreement: 0.4462
+action disagreement: 0.4462
+total CM score: 0.4462
+visual is complete. CM score: 2.4164
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: 1.924
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: 0.421
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -2.125
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.245
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.3258', '7.1231', '7.5323', '7.4235', '6.7009']
+Training reward models...
+Reward model losses: ['0.0490', '0.1671', '0.1138', '0.5334', '0.3102']
+Training state VAE models...
+State VAE losses: ['156311.1688', '133938.8016', '152488.1219', '207208.1594', '197505.9406']
+Training action VAE models...
+Action VAE losses: ['5846.1985', '5485.8674', '6736.4156', '8033.7312', '7390.9057']
+CM score components:
+transition disagreement: 0.4449
+reward disagreement: 0.4449
+state disagreement: 0.4449
+action disagreement: 0.4449
+total CM score: 0.4449
+pose is complete. CM score: 2.4023
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: 1.835
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -2.905
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -0.311
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 0.941
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4117', '7.7375', '7.4417', '7.4585', '7.7575']
+Training reward models...
+Reward model losses: ['0.0974', '0.1030', '0.0823', '0.1158', '0.0702']
+Training state VAE models...
+State VAE losses: ['140923.6688', '156474.9531', '123769.1844', '159610.4031', '137356.6359']
+Training action VAE models...
+Action VAE losses: ['6926.6377', '6289.4946', '6356.4026', '5703.2236', '7222.2416']
+CM score components:
+transition disagreement: 0.4195
+reward disagreement: 0.4195
+state disagreement: 0.4195
+action disagreement: 0.4195
+total CM score: 0.4195
+random is complete. CM score: 2.1805
+IntervenedCausalWorld created with visual intervention
+Reset #1: visual intervention applied (success: True)
+Logging to ppo_pushing_sb3/PPO_0
+Reset #2: visual intervention applied (success: True)
+Reset #3: visual intervention applied (success: True)
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 251       |
+|    ep_rew_mean     | 2.2542775 |
+| time/              |           |
+|    fps             | 300       |
+|    iterations      | 1         |
+|    time_elapsed    | 13        |
+|    total_timesteps | 5050368   |
+----------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 2.2542775  |
+| time/                   |            |
+|    fps                  | 187        |
+|    iterations           | 2          |
+|    time_elapsed         | 43         |
+|    total_timesteps      | 5054464    |
+| train/                  |            |
+|    approx_kl            | 0.10082798 |
+|    clip_fraction        | 0.546      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -21.7      |
+|    explained_variance   | 0.623      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.219     |
+|    n_updates            | 1170       |
+|    policy_gradient_loss | -0.0405    |
+|    std                  | 2.71       |
+|    value_loss           | 1.08       |
+----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 2.2542775   |
+| time/                   |             |
+|    fps                  | 166         |
+|    iterations           | 3           |
+|    time_elapsed         | 73          |
+|    total_timesteps      | 5058560     |
+| train/                  |             |
+|    approx_kl            | 0.060207773 |
+|    clip_fraction        | 0.492       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.8       |
+|    explained_variance   | 0.857       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.511      |
+|    n_updates            | 1185        |
+|    policy_gradient_loss | -0.0717     |
+|    std                  | 2.73        |
+|    value_loss           | 0.143       |
+-----------------------------------------
+
+evaluating student performance (5 episodes)...
+episode 1: length=251, reward=-1.984, success=False
+episode 2: length=251, reward=-1.984, success=False
+episode 3: length=251, reward=-1.984, success=False
+performance summary:
+success rate: 0.000 (0/5)
+average reward: -1.984
+average episode length: 251.0
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: -1.224
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -3.196
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -0.453
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.691
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.5039', '6.8961', '7.3977', '7.7452', '7.3186']
+Training reward models...
+Reward model losses: ['0.1625', '0.1913', '0.4556', '0.0257', '0.0248']
+Training state VAE models...
+State VAE losses: ['171456.6031', '197195.2656', '178622.6406', '130268.7078', '118118.1141']
+Training action VAE models...
+Action VAE losses: ['15808.6705', '13303.7258', '12082.0914', '14636.0494', '12329.1465']
+CM score components:
+transition disagreement: 0.4008
+reward disagreement: 0.4008
+state disagreement: 0.4008
+action disagreement: 0.4008
+total CM score: 0.4008
+goal is complete. CM score: 2.3276
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: -4.591
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: -5.171
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: -4.419
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -4.638
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.1031', '8.4443', '7.5915', '7.6683', '8.3660']
+Training reward models...
+Reward model losses: ['0.1961', '0.1561', '0.6491', '0.1320', '0.0278']
+Training state VAE models...
+State VAE losses: ['141738.2281', '191680.6938', '173237.2906', '159562.3469', '136560.6594']
+Training action VAE models...
+Action VAE losses: ['15473.7537', '13322.2773', '18108.3848', '20540.7543', '22292.6832']
+CM score components:
+transition disagreement: 0.4430
+reward disagreement: 0.4430
+state disagreement: 0.4430
+action disagreement: 0.4430
+total CM score: 0.4430
+mass is complete. CM score: 2.4061
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -1.933
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -2.999
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -3.125
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.384
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.7692', '8.0222', '7.2950', '8.0507', '7.3543']
+Training reward models...
+Reward model losses: ['0.0564', '0.1115', '0.0289', '0.0150', '0.1532']
+Training state VAE models...
+State VAE losses: ['142241.0641', '124268.9156', '136487.9531', '161854.0406', '150907.1938']
+Training action VAE models...
+Action VAE losses: ['13241.5900', '12703.9973', '15189.4029', '11981.4422', '10171.8760']
+CM score components:
+transition disagreement: 0.3967
+reward disagreement: 0.3967
+state disagreement: 0.3967
+action disagreement: 0.3967
+total CM score: 0.3967
+friction is complete. CM score: 2.1223
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -1.984
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -1.984
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -1.984
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.984
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.7295', '6.7934', '7.2133', '7.6861', '6.9093']
+Training reward models...
+Reward model losses: ['0.1031', '0.0419', '0.1973', '0.0213', '0.1013']
+Training state VAE models...
+State VAE losses: ['183745.1125', '197864.1187', '97599.4500', '135338.2062', '192118.5156']
+Training action VAE models...
+Action VAE losses: ['12612.5381', '13904.8979', '11416.7398', '12053.4879', '12292.5930']
+CM score components:
+transition disagreement: 0.3864
+reward disagreement: 0.3864
+state disagreement: 0.3864
+action disagreement: 0.3864
+total CM score: 0.3864
+visual is complete. CM score: 2.1839
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -2.526
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: -1.544
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -3.207
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.783
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.8553', '7.3188', '7.4857', '8.1063', '7.5866']
+Training reward models...
+Reward model losses: ['0.3273', '0.2816', '0.0175', '0.0136', '0.1088']
+Training state VAE models...
+State VAE losses: ['180121.8438', '231840.8281', '187195.9688', '135938.7313', '121682.3938']
+Training action VAE models...
+Action VAE losses: ['14290.5557', '11892.9883', '14376.2064', '13209.1178', '12596.1645']
+CM score components:
+transition disagreement: 0.4195
+reward disagreement: 0.4195
+state disagreement: 0.4195
+action disagreement: 0.4195
+total CM score: 0.4195
+pose is complete. CM score: 2.3467
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: -3.323
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -2.490
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -2.452
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.502
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.5643', '7.5752', '7.6049', '7.2039', '7.4481']
+Training reward models...
+Reward model losses: ['0.0822', '0.0905', '1.1416', '1.2234', '0.0602']
+Training state VAE models...
+State VAE losses: ['151110.0531', '181445.3687', '150098.8500', '139974.0047', '180457.6875']
+Training action VAE models...
+Action VAE losses: ['17383.7660', '13403.9855', '14212.7582', '16387.7729', '14942.7691']
+CM score components:
+transition disagreement: 0.3511
+reward disagreement: 0.3511
+state disagreement: 0.3511
+action disagreement: 0.3511
+total CM score: 0.3511
+random is complete. CM score: 2.5834
+INFO:root:Meta-Episode 1/10: Teacher chose 'visual', Reward: -1.0000, Student Success: 0.000
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: -1.224
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -3.196
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -0.453
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.691
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4527', '7.3335', '7.2492', '7.3982', '6.4913']
+Training reward models...
+Reward model losses: ['0.2529', '0.1999', '1.9404', '0.1183', '0.0117']
+Training state VAE models...
+State VAE losses: ['134423.3828', '119333.2828', '87162.4500', '175275.1781', '105324.3578']
+Training action VAE models...
+Action VAE losses: ['17401.5652', '15580.8338', '15384.6537', '13891.7695', '13714.1441']
+CM score components:
+transition disagreement: 0.3823
+reward disagreement: 0.3823
+state disagreement: 0.3823
+action disagreement: 0.3823
+total CM score: 0.3823
+goal is complete. CM score: 2.4855
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: -4.591
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: -5.171
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: -4.419
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -4.638
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.2276', '7.5150', '7.7704', '6.9669', '7.1973']
+Training reward models...
+Reward model losses: ['0.0503', '0.1287', '0.0255', '0.0192', '0.0940']
+Training state VAE models...
+State VAE losses: ['154587.5844', '141625.4406', '110965.6641', '146060.8469', '129887.4641']
+Training action VAE models...
+Action VAE losses: ['16358.7303', '19536.0699', '15813.4047', '12029.2471', '18783.4000']
+CM score components:
+transition disagreement: 0.3889
+reward disagreement: 0.3889
+state disagreement: 0.3889
+action disagreement: 0.3889
+total CM score: 0.3889
+mass is complete. CM score: 2.1354
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -1.933
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -2.999
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -3.125
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.384
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.6611', '7.3389', '7.2018', '6.9043', '7.0331']
+Training reward models...
+Reward model losses: ['0.2441', '0.0406', '0.0309', '0.0465', '0.0415']
+Training state VAE models...
+State VAE losses: ['196622.4562', '140907.3375', '177126.1469', '142701.9906', '78710.6266']
+Training action VAE models...
+Action VAE losses: ['11243.0773', '12276.2031', '14910.3838', '14802.3572', '17428.4941']
+CM score components:
+transition disagreement: 0.3811
+reward disagreement: 0.3811
+state disagreement: 0.3811
+action disagreement: 0.3811
+total CM score: 0.3811
+friction is complete. CM score: 2.2124
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -1.984
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -1.984
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -1.984
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.984
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.5096', '7.7822', '7.3399', '7.4287', '7.2912']
+Training reward models...
+Reward model losses: ['0.0086', '0.1045', '0.2151', '2.0334', '0.0102']
+Training state VAE models...
+State VAE losses: ['212463.9750', '151036.4719', '116005.2375', '164145.9719', '140814.7594']
+Training action VAE models...
+Action VAE losses: ['13241.7840', '11648.3020', '10680.0041', '11185.8902', '11820.3680']
+CM score components:
+transition disagreement: 0.3920
+reward disagreement: 0.3920
+state disagreement: 0.3920
+action disagreement: 0.3920
+total CM score: 0.3920
+visual is complete. CM score: 2.5854
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -2.526
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: -1.544
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -3.207
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.783
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.9250', '8.1211', '8.4764', '7.2065', '7.8509']
+Training reward models...
+Reward model losses: ['0.0480', '0.1035', '0.1354', '0.0470', '0.0256']
+Training state VAE models...
+State VAE losses: ['88289.5641', '182637.0000', '166635.2219', '198704.7750', '112494.4312']
+Training action VAE models...
+Action VAE losses: ['13030.6234', '13440.6006', '14041.8092', '13406.2354', '16050.2908']
+CM score components:
+transition disagreement: 0.4375
+reward disagreement: 0.4375
+state disagreement: 0.4375
+action disagreement: 0.4375
+total CM score: 0.4375
+pose is complete. CM score: 2.2344
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: -3.323
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -2.490
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -2.452
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.502
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.5198', '7.6016', '8.1080', '7.7280', '8.2674']
+Training reward models...
+Reward model losses: ['0.0822', '0.6875', '0.2890', '0.0738', '0.1179']
+Training state VAE models...
+State VAE losses: ['195795.3156', '146400.2469', '217822.7687', '133197.7781', '138524.8547']
+Training action VAE models...
+Action VAE losses: ['11813.8293', '14357.7889', '12194.8088', '15610.0996', '13986.5385']
+CM score components:
+transition disagreement: 0.4727
+reward disagreement: 0.4727
+state disagreement: 0.4727
+action disagreement: 0.4727
+total CM score: 0.4727
+random is complete. CM score: 2.4953
+IntervenedCausalWorld created with pose intervention
+Reset #1: pose intervention applied (success: True)
+Logging to ppo_pushing_sb3/PPO_0
+Reset #2: pose intervention applied (success: True)
+Reset #3: pose intervention applied (success: True)
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 251       |
+|    ep_rew_mean     | 2.2542775 |
+| time/              |           |
+|    fps             | 317       |
+|    iterations      | 1         |
+|    time_elapsed    | 12        |
+|    total_timesteps | 5062656   |
+----------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 2.2542775   |
+| time/                   |             |
+|    fps                  | 186         |
+|    iterations           | 2           |
+|    time_elapsed         | 44          |
+|    total_timesteps      | 5066752     |
+| train/                  |             |
+|    approx_kl            | 0.052904844 |
+|    clip_fraction        | 0.453       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.9       |
+|    explained_variance   | 0.867       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.437      |
+|    n_updates            | 1215        |
+|    policy_gradient_loss | -0.0516     |
+|    std                  | 2.75        |
+|    value_loss           | 0.215       |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 2.2542775   |
+| time/                   |             |
+|    fps                  | 170         |
+|    iterations           | 3           |
+|    time_elapsed         | 72          |
+|    total_timesteps      | 5070848     |
+| train/                  |             |
+|    approx_kl            | 0.049149275 |
+|    clip_fraction        | 0.442       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22         |
+|    explained_variance   | 0.9         |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.51       |
+|    n_updates            | 1230        |
+|    policy_gradient_loss | -0.0677     |
+|    std                  | 2.78        |
+|    value_loss           | 0.0565      |
+-----------------------------------------
+
+evaluating student performance (5 episodes)...
+episode 1: length=251, reward=-0.552, success=False
+episode 2: length=251, reward=-0.552, success=False
+episode 3: length=251, reward=-0.552, success=False
+performance summary:
+success rate: 0.000 (0/5)
+average reward: -0.552
+average episode length: 251.0
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: -4.479
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -3.593
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -3.656
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.462
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.2321', '7.9071', '7.6594', '7.9109', '7.1011']
+Training reward models...
+Reward model losses: ['0.0709', '0.0515', '0.1486', '0.0248', '0.0083']
+Training state VAE models...
+State VAE losses: ['227908.9031', '197040.1219', '91884.9047', '183982.9750', '120583.0844']
+Training action VAE models...
+Action VAE losses: ['15188.2830', '11335.1311', '10523.1313', '13739.1160', '9819.8506']
+CM score components:
+transition disagreement: 0.4512
+reward disagreement: 0.4512
+state disagreement: 0.4512
+action disagreement: 0.4512
+total CM score: 0.4512
+goal is complete. CM score: 2.2714
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: -3.118
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: -4.253
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: -2.932
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.182
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['8.1578', '6.6104', '8.1706', '7.4017', '7.3679']
+Training reward models...
+Reward model losses: ['0.0121', '0.2343', '0.4743', '0.0271', '0.0433']
+Training state VAE models...
+State VAE losses: ['163679.4906', '183024.6125', '121562.9781', '210014.5969', '117424.5875']
+Training action VAE models...
+Action VAE losses: ['16725.0563', '15338.4172', '14890.3232', '14849.3250', '14821.3299']
+CM score components:
+transition disagreement: 0.4204
+reward disagreement: 0.4204
+state disagreement: 0.4204
+action disagreement: 0.4204
+total CM score: 0.4204
+mass is complete. CM score: 2.2650
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -4.830
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -2.806
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -2.012
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.854
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['8.0918', '7.8292', '7.0593', '6.5667', '7.6401']
+Training reward models...
+Reward model losses: ['0.0344', '0.0252', '0.4578', '0.9772', '0.0596']
+Training state VAE models...
+State VAE losses: ['190081.8406', '137205.0797', '177510.2406', '116302.5547', '135991.1656']
+Training action VAE models...
+Action VAE losses: ['13937.7855', '12426.6492', '14652.7301', '17653.6324', '10800.0740']
+CM score components:
+transition disagreement: 0.4249
+reward disagreement: 0.4249
+state disagreement: 0.4249
+action disagreement: 0.4249
+total CM score: 0.4249
+friction is complete. CM score: 2.4189
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -0.552
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -0.552
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -0.552
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.552
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.8941', '6.5461', '7.4957', '6.9696', '7.7910']
+Training reward models...
+Reward model losses: ['0.6482', '0.6452', '0.1129', '0.0442', '0.0549']
+Training state VAE models...
+State VAE losses: ['125617.0875', '201385.8563', '184558.3031', '175329.2750', '172108.5906']
+Training action VAE models...
+Action VAE losses: ['14349.5588', '12814.8646', '10999.2355', '13220.0594', '13542.8053']
+CM score components:
+transition disagreement: 0.3868
+reward disagreement: 0.3868
+state disagreement: 0.3868
+action disagreement: 0.3868
+total CM score: 0.3868
+visual is complete. CM score: 2.5531
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -3.455
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: -1.798
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -4.252
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.329
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.8990', '7.4648', '7.3545', '7.8945', '6.9487']
+Training reward models...
+Reward model losses: ['0.5367', '0.1683', '0.2236', '0.4572', '0.1269']
+Training state VAE models...
+State VAE losses: ['160131.6531', '167143.8375', '143610.3375', '155120.4469', '142642.6969']
+Training action VAE models...
+Action VAE losses: ['15516.5635', '18021.2887', '13005.8744', '12259.7469', '14860.6945']
+CM score components:
+transition disagreement: 0.4287
+reward disagreement: 0.4287
+state disagreement: 0.4287
+action disagreement: 0.4287
+total CM score: 0.4287
+pose is complete. CM score: 2.3182
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: -1.482
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -2.453
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -2.687
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.044
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.5953', '7.8485', '7.6538', '6.7271', '7.1811']
+Training reward models...
+Reward model losses: ['0.4881', '0.0503', '0.5652', '0.0595', '0.6047']
+Training state VAE models...
+State VAE losses: ['191660.0469', '169429.8687', '252560.8156', '174828.1500', '166681.4688']
+Training action VAE models...
+Action VAE losses: ['14827.5355', '16923.5633', '14024.7006', '16408.2160', '15041.2445']
+CM score components:
+transition disagreement: 0.3924
+reward disagreement: 0.3924
+state disagreement: 0.3924
+action disagreement: 0.3924
+total CM score: 0.3924
+random is complete. CM score: 2.5039
+INFO:root:Meta-Episode 2/10: Teacher chose 'pose', Reward: 0.0000, Student Success: 0.000
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: -4.479
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -3.593
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -3.656
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.462
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.7503', '8.2149', '7.9366', '7.8132', '7.3010']
+Training reward models...
+Reward model losses: ['0.0351', '0.0079', '0.0184', '0.3531', '0.0538']
+Training state VAE models...
+State VAE losses: ['132402.7156', '181453.3031', '192978.2094', '206196.0781', '152737.0656']
+Training action VAE models...
+Action VAE losses: ['16174.5279', '14324.5434', '11454.1320', '14512.5092', '10570.5832']
+CM score components:
+transition disagreement: 0.4446
+reward disagreement: 0.4446
+state disagreement: 0.4446
+action disagreement: 0.4446
+total CM score: 0.4446
+goal is complete. CM score: 2.3356
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: -3.118
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: -4.253
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: -2.932
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.182
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.3860', '7.6428', '7.7914', '6.9485', '6.6588']
+Training reward models...
+Reward model losses: ['0.0086', '0.2173', '0.3262', '0.3016', '0.0516']
+Training state VAE models...
+State VAE losses: ['184345.4250', '206621.4000', '114277.6781', '153265.7938', '128603.7219']
+Training action VAE models...
+Action VAE losses: ['13023.6812', '15621.4385', '16540.0029', '13689.8803', '13282.7971']
+CM score components:
+transition disagreement: 0.4223
+reward disagreement: 0.4223
+state disagreement: 0.4223
+action disagreement: 0.4223
+total CM score: 0.4223
+mass is complete. CM score: 2.3592
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -4.830
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -2.806
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -2.012
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.854
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['8.1067', '7.2234', '7.2870', '7.8976', '7.1720']
+Training reward models...
+Reward model losses: ['0.0505', '0.0417', '0.0308', '0.0634', '0.2376']
+Training state VAE models...
+State VAE losses: ['173196.6844', '148966.0688', '161937.5625', '216220.7906', '113561.5781']
+Training action VAE models...
+Action VAE losses: ['15405.9348', '13824.3061', '13540.5906', '11954.1078', '17519.1090']
+CM score components:
+transition disagreement: 0.4305
+reward disagreement: 0.4305
+state disagreement: 0.4305
+action disagreement: 0.4305
+total CM score: 0.4305
+friction is complete. CM score: 2.3187
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -0.552
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -0.552
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -0.552
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.552
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.6439', '7.5009', '7.1511', '7.6156', '7.8200']
+Training reward models...
+Reward model losses: ['0.0084', '0.7327', '0.0907', '1.2489', '0.0517']
+Training state VAE models...
+State VAE losses: ['190134.1562', '122937.9141', '216044.3687', '159933.3188', '162794.8281']
+Training action VAE models...
+Action VAE losses: ['12875.5605', '14071.0355', '13003.2180', '12728.8988', '14840.8076']
+CM score components:
+transition disagreement: 0.4137
+reward disagreement: 0.4137
+state disagreement: 0.4137
+action disagreement: 0.4137
+total CM score: 0.4137
+visual is complete. CM score: 2.6398
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -3.455
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: -1.798
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -4.252
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.329
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.1629', '7.1716', '7.8828', '7.6123', '7.7441']
+Training reward models...
+Reward model losses: ['0.1782', '0.0683', '0.0176', '0.0263', '0.0197']
+Training state VAE models...
+State VAE losses: ['146020.1594', '142086.7281', '147283.3094', '200227.7875', '176665.3531']
+Training action VAE models...
+Action VAE losses: ['15519.0154', '16129.8479', '13504.7740', '16986.0672', '18400.4750']
+CM score components:
+transition disagreement: 0.4097
+reward disagreement: 0.4097
+state disagreement: 0.4097
+action disagreement: 0.4097
+total CM score: 0.4097
+pose is complete. CM score: 2.3321
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: -1.482
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -2.453
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -2.687
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.044
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.3961', '7.1165', '8.4193', '7.6517', '7.6677']
+Training reward models...
+Reward model losses: ['0.2726', '0.1675', '0.0478', '0.0907', '0.0582']
+Training state VAE models...
+State VAE losses: ['91130.7344', '187645.8656', '154881.4156', '133604.5672', '153377.8531']
+Training action VAE models...
+Action VAE losses: ['16230.3031', '14105.8566', '14945.4420', '15413.4148', '13312.5096']
+CM score components:
+transition disagreement: 0.4384
+reward disagreement: 0.4384
+state disagreement: 0.4384
+action disagreement: 0.4384
+total CM score: 0.4384
+random is complete. CM score: 2.1855
+IntervenedCausalWorld created with friction intervention
+Reset #1: friction intervention applied (success: True)
+Logging to ppo_pushing_sb3/PPO_0
+Reset #2: friction intervention applied (success: True)
+Reset #3: friction intervention applied (success: True)
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 251       |
+|    ep_rew_mean     | 2.2542775 |
+| time/              |           |
+|    fps             | 299       |
+|    iterations      | 1         |
+|    time_elapsed    | 13        |
+|    total_timesteps | 5074944   |
+----------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 2.2542775   |
+| time/                   |             |
+|    fps                  | 195         |
+|    iterations           | 2           |
+|    time_elapsed         | 41          |
+|    total_timesteps      | 5079040     |
+| train/                  |             |
+|    approx_kl            | 0.070262656 |
+|    clip_fraction        | 0.475       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.1       |
+|    explained_variance   | 0.849       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.547      |
+|    n_updates            | 1260        |
+|    policy_gradient_loss | -0.0895     |
+|    std                  | 2.81        |
+|    value_loss           | 0.019       |
+-----------------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 2.2542775  |
+| time/                   |            |
+|    fps                  | 168        |
+|    iterations           | 3          |
+|    time_elapsed         | 73         |
+|    total_timesteps      | 5083136    |
+| train/                  |            |
+|    approx_kl            | 0.05589749 |
+|    clip_fraction        | 0.507      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.1      |
+|    explained_variance   | 0.915      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.562     |
+|    n_updates            | 1275       |
+|    policy_gradient_loss | -0.101     |
+|    std                  | 2.83       |
+|    value_loss           | 0.0167     |
+----------------------------------------
+
+evaluating student performance (5 episodes)...
+episode 1: length=251, reward=-2.727, success=False
+episode 2: length=251, reward=-2.727, success=False
+episode 3: length=251, reward=-2.727, success=False
+performance summary:
+success rate: 0.000 (0/5)
+average reward: -2.727
+average episode length: 251.0
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: -0.298
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -3.140
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -2.613
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.968
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4827', '7.4754', '7.2550', '7.9261', '7.3346']
+Training reward models...
+Reward model losses: ['0.0110', '0.0112', '0.0494', '0.2190', '0.0099']
+Training state VAE models...
+State VAE losses: ['114893.7844', '174003.5688', '137521.0562', '232812.8875', '153204.9562']
+Training action VAE models...
+Action VAE losses: ['15607.0803', '12009.4404', '10791.2586', '15316.8666', '15354.1484']
+CM score components:
+transition disagreement: 0.4067
+reward disagreement: 0.4067
+state disagreement: 0.4067
+action disagreement: 0.4067
+total CM score: 0.4067
+goal is complete. CM score: 2.2642
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: -0.343
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: -1.061
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: -2.744
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.771
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4233', '7.9750', '7.2534', '7.1663', '7.3247']
+Training reward models...
+Reward model losses: ['0.1500', '0.1046', '0.3443', '0.1327', '0.0690']
+Training state VAE models...
+State VAE losses: ['194945.9625', '131133.0078', '118008.7437', '140009.1187', '161135.9594']
+Training action VAE models...
+Action VAE losses: ['14766.3584', '12338.4609', '15570.7857', '14380.6154', '15499.9359']
+CM score components:
+transition disagreement: 0.3794
+reward disagreement: 0.3794
+state disagreement: 0.3794
+action disagreement: 0.3794
+total CM score: 0.3794
+mass is complete. CM score: 2.1990
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -2.701
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -2.822
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -2.714
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.517
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['8.1016', '7.0595', '7.1965', '7.6479', '7.3700']
+Training reward models...
+Reward model losses: ['0.0435', '0.8150', '0.0963', '0.0295', '0.0925']
+Training state VAE models...
+State VAE losses: ['120223.0016', '166092.7094', '157497.5906', '148759.3687', '180902.8500']
+Training action VAE models...
+Action VAE losses: ['14053.0146', '16595.8287', '12183.8385', '9915.4053', '12367.6721']
+CM score components:
+transition disagreement: 0.4123
+reward disagreement: 0.4123
+state disagreement: 0.4123
+action disagreement: 0.4123
+total CM score: 0.4123
+friction is complete. CM score: 2.3708
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -2.727
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -2.727
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -2.727
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.727
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4285', '7.5667', '7.8017', '6.9546', '7.6895']
+Training reward models...
+Reward model losses: ['1.2771', '0.0331', '1.6293', '0.2327', '0.5955']
+Training state VAE models...
+State VAE losses: ['240753.0656', '181993.5969', '145046.8531', '93128.5000', '146085.1031']
+Training action VAE models...
+Action VAE losses: ['13323.6951', '16678.9533', '11967.6258', '13104.5406', '11139.4219']
+CM score components:
+transition disagreement: 0.4163
+reward disagreement: 0.4163
+state disagreement: 0.4163
+action disagreement: 0.4163
+total CM score: 0.4163
+visual is complete. CM score: 2.8049
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -4.194
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: 0.251
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -4.099
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.524
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['8.0690', '7.0112', '6.7419', '7.3323', '7.5685']
+Training reward models...
+Reward model losses: ['0.2128', '0.0382', '0.0619', '0.0668', '0.6037']
+Training state VAE models...
+State VAE losses: ['169983.3219', '93660.6906', '215528.8625', '134469.0984', '127970.2656']
+Training action VAE models...
+Action VAE losses: ['12875.2645', '13311.7318', '11000.3412', '17460.5398', '12673.8955']
+CM score components:
+transition disagreement: 0.4316
+reward disagreement: 0.4316
+state disagreement: 0.4316
+action disagreement: 0.4316
+total CM score: 0.4316
+pose is complete. CM score: 2.3640
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: -2.185
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -3.460
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -3.537
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.976
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.1886', '8.0641', '7.1021', '7.7782', '7.7045']
+Training reward models...
+Reward model losses: ['0.1708', '0.1697', '0.1678', '0.5092', '0.2113']
+Training state VAE models...
+State VAE losses: ['179931.3188', '140719.5094', '106347.1016', '217323.1187', '129650.9406']
+Training action VAE models...
+Action VAE losses: ['15508.9348', '15930.3137', '16217.7668', '14753.6143', '13769.9975']
+CM score components:
+transition disagreement: 0.4509
+reward disagreement: 0.4509
+state disagreement: 0.4509
+action disagreement: 0.4509
+total CM score: 0.4509
+random is complete. CM score: 2.3151
+INFO:root:Meta-Episode 3/10: Teacher chose 'friction', Reward: 0.0000, Student Success: 0.000
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: -0.298
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -3.140
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -2.613
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.968
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.6686', '7.6391', '7.5677', '7.0979', '7.1406']
+Training reward models...
+Reward model losses: ['0.0073', '0.0118', '0.0979', '0.0129', '0.0319']
+Training state VAE models...
+State VAE losses: ['148130.3469', '174424.9906', '140560.3062', '186397.1063', '194474.5063']
+Training action VAE models...
+Action VAE losses: ['16466.9266', '14514.2137', '14569.9727', '13475.2496', '13857.6437']
+CM score components:
+transition disagreement: 0.4051
+reward disagreement: 0.4051
+state disagreement: 0.4051
+action disagreement: 0.4051
+total CM score: 0.4051
+goal is complete. CM score: 2.2688
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: -0.343
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: -1.061
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: -2.744
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.771
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.3202', '6.6002', '6.4021', '8.0183', '7.7890']
+Training reward models...
+Reward model losses: ['0.0197', '0.9369', '0.0110', '0.0140', '0.0549']
+Training state VAE models...
+State VAE losses: ['204369.0375', '114880.9125', '128974.0453', '150050.4562', '161944.1500']
+Training action VAE models...
+Action VAE losses: ['14666.1471', '15106.1217', '16790.2375', '15301.9805', '15597.7205']
+CM score components:
+transition disagreement: 0.4213
+reward disagreement: 0.4213
+state disagreement: 0.4213
+action disagreement: 0.4213
+total CM score: 0.4213
+mass is complete. CM score: 2.4210
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -2.701
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -2.822
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -2.714
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.517
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.8543', '7.7501', '7.5016', '7.6487', '8.1445']
+Training reward models...
+Reward model losses: ['0.2223', '0.0085', '0.0542', '0.0632', '0.3608']
+Training state VAE models...
+State VAE losses: ['150295.9000', '153303.6250', '140633.2609', '223710.7062', '118128.6656']
+Training action VAE models...
+Action VAE losses: ['15080.5271', '11192.8760', '15372.4455', '9790.0307', '12066.9684']
+CM score components:
+transition disagreement: 0.3921
+reward disagreement: 0.3921
+state disagreement: 0.3921
+action disagreement: 0.3921
+total CM score: 0.3921
+friction is complete. CM score: 2.2796
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -2.727
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -2.727
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -2.727
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.727
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.4842', '8.0877', '7.2716', '7.2595', '7.7829']
+Training reward models...
+Reward model losses: ['0.0182', '0.6712', '0.7558', '0.0130', '0.0067']
+Training state VAE models...
+State VAE losses: ['119258.0469', '130939.7000', '197775.8000', '104732.3828', '124098.0766']
+Training action VAE models...
+Action VAE losses: ['13835.8043', '15034.4674', '12395.1996', '15480.8145', '14733.2516']
+CM score components:
+transition disagreement: 0.3913
+reward disagreement: 0.3913
+state disagreement: 0.3913
+action disagreement: 0.3913
+total CM score: 0.3913
+visual is complete. CM score: 2.3117
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -4.194
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: 0.251
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -4.099
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.524
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.5116', '7.3434', '6.9073', '6.8871', '6.9146']
+Training reward models...
+Reward model losses: ['0.0550', '0.2940', '0.0667', '0.0358', '0.1833']
+Training state VAE models...
+State VAE losses: ['180603.1812', '153349.3344', '219375.4406', '177671.5781', '142189.0438']
+Training action VAE models...
+Action VAE losses: ['13188.1238', '13604.5002', '15091.8529', '12893.9111', '14821.9740']
+CM score components:
+transition disagreement: 0.3973
+reward disagreement: 0.3973
+state disagreement: 0.3973
+action disagreement: 0.3973
+total CM score: 0.3973
+pose is complete. CM score: 2.2333
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: -2.185
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -3.460
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -3.537
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.976
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.5114', '8.0423', '8.3685', '7.5034', '8.2171']
+Training reward models...
+Reward model losses: ['0.1798', '0.2913', '1.1485', '0.1769', '0.4118']
+Training state VAE models...
+State VAE losses: ['141847.9781', '157421.4937', '171716.6031', '132061.2453', '145706.7125']
+Training action VAE models...
+Action VAE losses: ['13891.0307', '12614.4336', '15932.3195', '13699.6973', '14383.1000']
+CM score components:
+transition disagreement: 0.4555
+reward disagreement: 0.4555
+state disagreement: 0.4555
+action disagreement: 0.4555
+total CM score: 0.4555
+random is complete. CM score: 2.4878
+IntervenedCausalWorld created with visual intervention
+Reset #1: visual intervention applied (success: True)
+Logging to ppo_pushing_sb3/PPO_0
+Reset #2: visual intervention applied (success: True)
+Reset #3: visual intervention applied (success: True)
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 251       |
+|    ep_rew_mean     | 2.2542775 |
+| time/              |           |
+|    fps             | 315       |
+|    iterations      | 1         |
+|    time_elapsed    | 12        |
+|    total_timesteps | 5087232   |
+----------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 2.2542775  |
+| time/                   |            |
+|    fps                  | 199        |
+|    iterations           | 2          |
+|    time_elapsed         | 41         |
+|    total_timesteps      | 5091328    |
+| train/                  |            |
+|    approx_kl            | 0.06237407 |
+|    clip_fraction        | 0.5        |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.3      |
+|    explained_variance   | 0.833      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.553     |
+|    n_updates            | 1305       |
+|    policy_gradient_loss | -0.0874    |
+|    std                  | 2.89       |
+|    value_loss           | 0.0262     |
+----------------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 2.2542775  |
+| time/                   |            |
+|    fps                  | 179        |
+|    iterations           | 3          |
+|    time_elapsed         | 68         |
+|    total_timesteps      | 5095424    |
+| train/                  |            |
+|    approx_kl            | 0.07850756 |
+|    clip_fraction        | 0.493      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.4      |
+|    explained_variance   | 0.895      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.565     |
+|    n_updates            | 1320       |
+|    policy_gradient_loss | -0.0945    |
+|    std                  | 2.92       |
+|    value_loss           | 0.0118     |
+----------------------------------------
+
+evaluating student performance (5 episodes)...
+episode 1: length=23, reward=-1.332, success=True
+episode 2: length=23, reward=-1.332, success=True
+episode 3: length=23, reward=-1.332, success=True
+performance summary:
+success rate: 1.000 (5/5)
+average reward: -1.332
+average episode length: 23.0
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: -0.161
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -1.743
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -0.926
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.205
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.0493', '7.5944', '7.5092', '7.3207', '7.6689']
+Training reward models...
+Reward model losses: ['0.1072', '0.3000', '0.0147', '0.0132', '0.0089']
+Training state VAE models...
+State VAE losses: ['161402.4406', '151874.2781', '174746.3156', '148082.8594', '214965.2969']
+Training action VAE models...
+Action VAE losses: ['14579.6582', '13902.4795', '11411.5908', '15212.5375', '15719.3199']
+CM score components:
+transition disagreement: 0.4222
+reward disagreement: 0.4222
+state disagreement: 0.4222
+action disagreement: 0.4222
+total CM score: 0.4222
+goal is complete. CM score: 2.3005
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: -0.556
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: -1.698
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: -0.973
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.023
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.9637', '7.3620', '7.8557', '6.7496', '7.3952']
+Training reward models...
+Reward model losses: ['1.0296', '0.4395', '0.6484', '0.0081', '0.6797']
+Training state VAE models...
+State VAE losses: ['146313.3781', '158526.9594', '121450.6234', '141798.4906', '116911.4047']
+Training action VAE models...
+Action VAE losses: ['14269.4975', '13395.4188', '14551.6877', '13312.3219', '15150.5658']
+CM score components:
+transition disagreement: 0.4070
+reward disagreement: 0.4070
+state disagreement: 0.4070
+action disagreement: 0.4070
+total CM score: 0.4070
+mass is complete. CM score: 2.5135
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -1.789
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -1.679
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -1.794
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.767
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.8791', '8.0385', '6.9427', '7.3608', '7.0455']
+Training reward models...
+Reward model losses: ['0.0334', '0.0085', '0.0200', '0.0112', '0.0861']
+Training state VAE models...
+State VAE losses: ['158087.7219', '129248.4969', '237783.0438', '153000.6250', '153803.2594']
+Training action VAE models...
+Action VAE losses: ['13859.0297', '15489.8154', '13188.4775', '14291.1406', '14196.6693']
+CM score components:
+transition disagreement: 0.4286
+reward disagreement: 0.4286
+state disagreement: 0.4286
+action disagreement: 0.4286
+total CM score: 0.4286
+friction is complete. CM score: 2.2050
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -1.759
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -1.759
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -1.759
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.759
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['8.3256', '7.9448', '7.1542', '7.7896', '7.0238']
+Training reward models...
+Reward model losses: ['0.0054', '0.0575', '0.0240', '0.2032', '0.3070']
+Training state VAE models...
+State VAE losses: ['144972.4625', '161671.3781', '171621.0938', '154820.1906', '175372.9188']
+Training action VAE models...
+Action VAE losses: ['14635.8186', '14272.4846', '18436.9840', '19330.8605', '15337.4389']
+CM score components:
+transition disagreement: 0.3778
+reward disagreement: 0.3778
+state disagreement: 0.3778
+action disagreement: 0.3778
+total CM score: 0.3778
+visual is complete. CM score: 2.3542
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -2.961
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: -3.128
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -4.095
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.222
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.1659', '7.9651', '7.6986', '7.9211', '8.4559']
+Training reward models...
+Reward model losses: ['0.0740', '0.3985', '0.0889', '0.9024', '0.0382']
+Training state VAE models...
+State VAE losses: ['180806.7188', '125202.5500', '168619.4406', '151350.2031', '135261.8594']
+Training action VAE models...
+Action VAE losses: ['11640.2293', '14504.8652', '14118.9236', '15630.7098', '13956.7471']
+CM score components:
+transition disagreement: 0.4095
+reward disagreement: 0.4095
+state disagreement: 0.4095
+action disagreement: 0.4095
+total CM score: 0.4095
+pose is complete. CM score: 2.3763
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: -1.644
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -3.668
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -2.334
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.623
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.1182', '7.4346', '6.6208', '7.4817', '7.9065']
+Training reward models...
+Reward model losses: ['0.1708', '0.0727', '0.0659', '0.0679', '0.0718']
+Training state VAE models...
+State VAE losses: ['203317.7250', '140394.7547', '147906.0219', '190050.3719', '170042.0031']
+Training action VAE models...
+Action VAE losses: ['14146.9211', '14338.1031', '11684.5141', '12325.8350', '12633.7418']
+CM score components:
+transition disagreement: 0.4206
+reward disagreement: 0.4206
+state disagreement: 0.4206
+action disagreement: 0.4206
+total CM score: 0.4206
+random is complete. CM score: 2.2350
+INFO:root:Meta-Episode 4/10: Teacher chose 'visual', Reward: 1.0000, Student Success: 1.000
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: -0.161
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -1.743
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -0.926
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.205
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.8136', '7.5196', '7.1992', '7.4586', '7.7439']
+Training reward models...
+Reward model losses: ['1.2778', '0.6464', '0.0765', '0.7889', '0.0434']
+Training state VAE models...
+State VAE losses: ['141699.5594', '120296.1891', '157971.2906', '123284.7859', '135504.4672']
+Training action VAE models...
+Action VAE losses: ['15858.3998', '10491.9590', '13432.6479', '13032.2881', '13592.4096']
+CM score components:
+transition disagreement: 0.4393
+reward disagreement: 0.4393
+state disagreement: 0.4393
+action disagreement: 0.4393
+total CM score: 0.4393
+goal is complete. CM score: 2.5348
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: -0.556
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: -1.698
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: -0.973
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.023
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.6671', '8.1443', '7.2755', '7.2318', '7.8328']
+Training reward models...
+Reward model losses: ['0.4761', '0.4571', '0.0214', '0.0121', '0.2121']
+Training state VAE models...
+State VAE losses: ['165464.0344', '103744.3875', '203130.7750', '188121.5719', '94303.5234']
+Training action VAE models...
+Action VAE losses: ['16738.3824', '18732.9855', '13567.5996', '13021.7225', '13765.9162']
+CM score components:
+transition disagreement: 0.3816
+reward disagreement: 0.3816
+state disagreement: 0.3816
+action disagreement: 0.3816
+total CM score: 0.3816
+mass is complete. CM score: 2.3551
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -1.789
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -1.679
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -1.794
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.767
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.1222', '6.9242', '7.0293', '7.2827', '7.3729']
+Training reward models...
+Reward model losses: ['0.0226', '0.0196', '0.0272', '0.0213', '0.0126']
+Training state VAE models...
+State VAE losses: ['142435.4797', '184612.3563', '200009.7469', '180082.4000', '208373.1344']
+Training action VAE models...
+Action VAE losses: ['14026.2080', '16547.3746', '16930.0656', '15034.2330', '14678.6277']
+CM score components:
+transition disagreement: 0.3819
+reward disagreement: 0.3819
+state disagreement: 0.3819
+action disagreement: 0.3819
+total CM score: 0.3819
+friction is complete. CM score: 2.3113
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -1.759
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -1.759
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -1.759
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.759
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.8319', '8.0386', '6.6963', '7.8531', '6.9572']
+Training reward models...
+Reward model losses: ['0.0091', '0.0101', '0.3295', '0.0199', '0.0151']
+Training state VAE models...
+State VAE losses: ['142326.6187', '144005.1000', '105280.3813', '124377.8344', '85400.7609']
+Training action VAE models...
+Action VAE losses: ['16878.1926', '17178.6512', '13609.7105', '16049.1846', '17443.0426']
+CM score components:
+transition disagreement: 0.4483
+reward disagreement: 0.4483
+state disagreement: 0.4483
+action disagreement: 0.4483
+total CM score: 0.4483
+visual is complete. CM score: 2.2386
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -2.961
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: -3.128
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -4.095
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.222
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.2221', '7.9240', '7.4099', '6.6046', '7.2572']
+Training reward models...
+Reward model losses: ['0.0385', '0.0215', '0.1871', '0.0134', '0.1491']
+Training state VAE models...
+State VAE losses: ['134121.3438', '229546.8438', '150121.1250', '88702.3000', '171725.8156']
+Training action VAE models...
+Action VAE losses: ['14983.2859', '13834.7459', '19598.3180', '15725.6979', '16852.5771']
+CM score components:
+transition disagreement: 0.4354
+reward disagreement: 0.4354
+state disagreement: 0.4354
+action disagreement: 0.4354
+total CM score: 0.4354
+pose is complete. CM score: 2.2191
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: -1.644
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -3.668
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -2.334
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.623
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.2238', '7.2136', '6.9859', '7.3633', '7.5203']
+Training reward models...
+Reward model losses: ['0.0657', '0.2962', '0.8726', '0.0989', '0.1069']
+Training state VAE models...
+State VAE losses: ['110046.0391', '138018.3687', '201599.5031', '192081.0750', '213716.5688']
+Training action VAE models...
+Action VAE losses: ['12562.6170', '14723.8717', '13229.6818', '13560.8625', '14824.3922']
+CM score components:
+transition disagreement: 0.4331
+reward disagreement: 0.4331
+state disagreement: 0.4331
+action disagreement: 0.4331
+total CM score: 0.4331
+random is complete. CM score: 2.5064
+IntervenedCausalWorld created with mass intervention
+Reset #1: mass intervention applied (success: True)
+Logging to ppo_pushing_sb3/PPO_0
+Reset #2: mass intervention applied (success: True)
+Reset #3: mass intervention applied (success: True)
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 251       |
+|    ep_rew_mean     | 2.2542775 |
+| time/              |           |
+|    fps             | 304       |
+|    iterations      | 1         |
+|    time_elapsed    | 13        |
+|    total_timesteps | 5099520   |
+----------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 2.2542775  |
+| time/                   |            |
+|    fps                  | 214        |
+|    iterations           | 2          |
+|    time_elapsed         | 38         |
+|    total_timesteps      | 5103616    |
+| train/                  |            |
+|    approx_kl            | 0.07453078 |
+|    clip_fraction        | 0.53       |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.6      |
+|    explained_variance   | 0.758      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.572     |
+|    n_updates            | 1350       |
+|    policy_gradient_loss | -0.1       |
+|    std                  | 3          |
+|    value_loss           | 0.0105     |
+----------------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 2.2542775  |
+| time/                   |            |
+|    fps                  | 188        |
+|    iterations           | 3          |
+|    time_elapsed         | 65         |
+|    total_timesteps      | 5107712    |
+| train/                  |            |
+|    approx_kl            | 0.07163707 |
+|    clip_fraction        | 0.531      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.7      |
+|    explained_variance   | 0.843      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.584     |
+|    n_updates            | 1365       |
+|    policy_gradient_loss | -0.105     |
+|    std                  | 3.01       |
+|    value_loss           | 0.0099     |
+----------------------------------------
+
+evaluating student performance (5 episodes)...
+episode 1: length=251, reward=-0.350, success=False
+episode 2: length=251, reward=-0.350, success=False
+episode 3: length=251, reward=-0.350, success=False
+performance summary:
+success rate: 0.000 (0/5)
+average reward: -0.350
+average episode length: 251.0
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: 0.427
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -1.966
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -0.396
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.766
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.1410', '7.6354', '7.1305', '7.2919', '7.2794']
+Training reward models...
+Reward model losses: ['0.0052', '0.0070', '1.2461', '0.1346', '0.0978']
+Training state VAE models...
+State VAE losses: ['145618.7969', '130480.4375', '149719.2344', '99760.3109', '207756.6594']
+Training action VAE models...
+Action VAE losses: ['24543.2898', '12384.7219', '14101.9408', '12827.9350', '15947.3461']
+CM score components:
+transition disagreement: 0.4223
+reward disagreement: 0.4223
+state disagreement: 0.4223
+action disagreement: 0.4223
+total CM score: 0.4223
+goal is complete. CM score: 2.4612
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: 0.706
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: 0.832
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: 0.916
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 0.740
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4028', '8.0500', '6.9881', '7.2363', '7.5956']
+Training reward models...
+Reward model losses: ['0.0133', '1.9471', '0.0431', '0.0042', '0.0084']
+Training state VAE models...
+State VAE losses: ['94176.2188', '162334.6344', '148925.0406', '105741.7516', '152454.1531']
+Training action VAE models...
+Action VAE losses: ['16229.7301', '16208.9238', '24717.2578', '13586.9047', '13803.5432']
+CM score components:
+transition disagreement: 0.3703
+reward disagreement: 0.3703
+state disagreement: 0.3703
+action disagreement: 0.3703
+total CM score: 0.3703
+mass is complete. CM score: 2.5576
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -0.350
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -0.350
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -0.350
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.350
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4973', '6.9982', '7.0965', '7.4320', '7.4838']
+Training reward models...
+Reward model losses: ['0.0169', '0.2020', '0.0610', '0.6477', '0.1566']
+Training state VAE models...
+State VAE losses: ['105512.5844', '177691.0969', '185770.9562', '127208.4344', '161796.4844']
+Training action VAE models...
+Action VAE losses: ['13274.3373', '9426.0654', '13430.1729', '12350.0402', '19504.5105']
+CM score components:
+transition disagreement: 0.4294
+reward disagreement: 0.4294
+state disagreement: 0.4294
+action disagreement: 0.4294
+total CM score: 0.4294
+friction is complete. CM score: 2.3988
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -0.350
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -0.350
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -0.350
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.350
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.7747', '8.6391', '7.4183', '7.3070', '7.0792']
+Training reward models...
+Reward model losses: ['0.7147', '0.6466', '0.2702', '0.3882', '0.0166']
+Training state VAE models...
+State VAE losses: ['196493.0281', '151983.6812', '176604.5938', '212954.8219', '203383.5562']
+Training action VAE models...
+Action VAE losses: ['18004.5668', '14532.8602', '21340.0848', '14191.8744', '18990.3500']
+CM score components:
+transition disagreement: 0.4647
+reward disagreement: 0.4647
+state disagreement: 0.4647
+action disagreement: 0.4647
+total CM score: 0.4647
+visual is complete. CM score: 2.6891
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -3.475
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: -1.926
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -4.770
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.403
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.7135', '7.2547', '7.2721', '7.0178', '6.9350']
+Training reward models...
+Reward model losses: ['0.3249', '0.0317', '0.3221', '1.7086', '0.0653']
+Training state VAE models...
+State VAE losses: ['146958.3125', '176420.7344', '174663.8469', '116908.5766', '165959.1750']
+Training action VAE models...
+Action VAE losses: ['13093.2412', '16211.2715', '13092.4566', '14513.5359', '13953.1336']
+CM score components:
+transition disagreement: 0.4281
+reward disagreement: 0.4281
+state disagreement: 0.4281
+action disagreement: 0.4281
+total CM score: 0.4281
+pose is complete. CM score: 2.6174
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: -1.953
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -2.081
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -0.724
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.767
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.8351', '6.9481', '7.1880', '8.1646', '7.3347']
+Training reward models...
+Reward model losses: ['0.4714', '0.5774', '0.1016', '0.0585', '0.0899']
+Training state VAE models...
+State VAE losses: ['170301.3906', '164007.1469', '179492.8062', '92652.0688', '130309.1984']
+Training action VAE models...
+Action VAE losses: ['14274.0791', '15132.0475', '14817.0191', '13881.5922', '12996.5486']
+CM score components:
+transition disagreement: 0.4412
+reward disagreement: 0.4412
+state disagreement: 0.4412
+action disagreement: 0.4412
+total CM score: 0.4412
+random is complete. CM score: 2.4369
+INFO:root:Meta-Episode 5/10: Teacher chose 'mass', Reward: -1.0000, Student Success: 0.000
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: 0.427
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -1.966
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -0.396
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.766
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.7167', '7.7492', '6.9608', '7.6891', '7.8886']
+Training reward models...
+Reward model losses: ['0.3562', '0.0813', '0.0584', '0.1377', '0.1413']
+Training state VAE models...
+State VAE losses: ['187333.0812', '145588.5844', '201265.0656', '117845.8547', '188019.0469']
+Training action VAE models...
+Action VAE losses: ['12966.3607', '18154.7543', '18112.9414', '14945.7086', '18375.4988']
+CM score components:
+transition disagreement: 0.4312
+reward disagreement: 0.4312
+state disagreement: 0.4312
+action disagreement: 0.4312
+total CM score: 0.4312
+goal is complete. CM score: 2.3773
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: 0.706
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: 0.832
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: 0.916
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 0.740
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.8377', '7.2883', '7.3669', '7.2840', '6.9904']
+Training reward models...
+Reward model losses: ['0.0081', '0.0205', '0.0573', '0.4263', '0.4792']
+Training state VAE models...
+State VAE losses: ['229218.1625', '138634.5812', '122161.6641', '206094.1031', '144155.4781']
+Training action VAE models...
+Action VAE losses: ['10754.0947', '12346.5111', '11301.1658', '17929.3012', '12526.0418']
+CM score components:
+transition disagreement: 0.4346
+reward disagreement: 0.4346
+state disagreement: 0.4346
+action disagreement: 0.4346
+total CM score: 0.4346
+mass is complete. CM score: 2.3801
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -0.350
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -0.350
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -0.350
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.350
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.5091', '7.9707', '7.6108', '7.7499', '7.0793']
+Training reward models...
+Reward model losses: ['0.8943', '0.7180', '0.0116', '0.0478', '2.0651']
+Training state VAE models...
+State VAE losses: ['128677.7406', '146861.4719', '203389.9906', '189853.7344', '185758.0312']
+Training action VAE models...
+Action VAE losses: ['14324.1691', '18626.9230', '15514.9381', '14292.8025', '13870.1229']
+CM score components:
+transition disagreement: 0.4802
+reward disagreement: 0.4802
+state disagreement: 0.4802
+action disagreement: 0.4802
+total CM score: 0.4802
+friction is complete. CM score: 2.9146
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -0.350
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -0.350
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -0.350
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.350
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.5697', '7.4175', '8.1141', '8.2184', '7.0205']
+Training reward models...
+Reward model losses: ['0.0343', '1.1319', '0.2610', '0.0666', '0.0221']
+Training state VAE models...
+State VAE losses: ['168572.7969', '185533.4344', '120280.7875', '227244.3844', '155214.5781']
+Training action VAE models...
+Action VAE losses: ['12163.8123', '15071.5926', '10226.6252', '15312.0932', '10696.5422']
+CM score components:
+transition disagreement: 0.4145
+reward disagreement: 0.4145
+state disagreement: 0.4145
+action disagreement: 0.4145
+total CM score: 0.4145
+visual is complete. CM score: 2.4880
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -3.475
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: -1.926
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -4.770
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -3.403
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.7568', '7.6582', '6.7363', '7.9584', '8.0955']
+Training reward models...
+Reward model losses: ['0.0211', '0.0362', '0.0172', '0.1705', '0.0180']
+Training state VAE models...
+State VAE losses: ['172489.2750', '120421.3297', '145815.2687', '186461.3406', '193873.5125']
+Training action VAE models...
+Action VAE losses: ['13044.9799', '15019.2062', '19783.1574', '15631.1756', '16308.9041']
+CM score components:
+transition disagreement: 0.3924
+reward disagreement: 0.3924
+state disagreement: 0.3924
+action disagreement: 0.3924
+total CM score: 0.3924
+pose is complete. CM score: 2.1650
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: -1.953
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -2.081
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -0.724
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.767
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4704', '6.9334', '7.1754', '8.7395', '7.6811']
+Training reward models...
+Reward model losses: ['0.0311', '0.1523', '0.1087', '0.2023', '0.1778']
+Training state VAE models...
+State VAE losses: ['142965.0219', '177236.5781', '131706.4547', '178526.4156', '143221.1406']
+Training action VAE models...
+Action VAE losses: ['14494.0721', '16146.8432', '17887.7367', '14385.7650', '16245.4100']
+CM score components:
+transition disagreement: 0.4510
+reward disagreement: 0.4510
+state disagreement: 0.4510
+action disagreement: 0.4510
+total CM score: 0.4510
+random is complete. CM score: 2.3200
+IntervenedCausalWorld created with friction intervention
+Reset #1: friction intervention applied (success: True)
+Logging to ppo_pushing_sb3/PPO_0
+Reset #2: friction intervention applied (success: True)
+Reset #3: friction intervention applied (success: True)
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 251       |
+|    ep_rew_mean     | 2.2542775 |
+| time/              |           |
+|    fps             | 314       |
+|    iterations      | 1         |
+|    time_elapsed    | 13        |
+|    total_timesteps | 5111808   |
+----------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 2.2542775   |
+| time/                   |             |
+|    fps                  | 206         |
+|    iterations           | 2           |
+|    time_elapsed         | 39          |
+|    total_timesteps      | 5115904     |
+| train/                  |             |
+|    approx_kl            | 0.091275364 |
+|    clip_fraction        | 0.571       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.8       |
+|    explained_variance   | 0.83        |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.586      |
+|    n_updates            | 1395        |
+|    policy_gradient_loss | -0.107      |
+|    std                  | 3.05        |
+|    value_loss           | 0.0117      |
+-----------------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 2.2542775  |
+| time/                   |            |
+|    fps                  | 193        |
+|    iterations           | 3          |
+|    time_elapsed         | 63         |
+|    total_timesteps      | 5120000    |
+| train/                  |            |
+|    approx_kl            | 0.07415956 |
+|    clip_fraction        | 0.566      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.9      |
+|    explained_variance   | 0.76       |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.57      |
+|    n_updates            | 1410       |
+|    policy_gradient_loss | -0.105     |
+|    std                  | 3.08       |
+|    value_loss           | 0.0213     |
+----------------------------------------
+
+evaluating student performance (5 episodes)...
+episode 1: length=251, reward=0.426, success=False
+episode 2: length=251, reward=0.426, success=False
+episode 3: length=251, reward=0.426, success=False
+performance summary:
+success rate: 0.000 (0/5)
+average reward: 0.426
+average episode length: 251.0
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: 1.558
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -0.717
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -0.190
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.232
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.3525', '8.1076', '7.0900', '7.2456', '7.4142']
+Training reward models...
+Reward model losses: ['0.0448', '0.3931', '0.0107', '0.1159', '0.0415']
+Training state VAE models...
+State VAE losses: ['203990.7750', '149152.8094', '263264.9969', '185192.1406', '123547.6078']
+Training action VAE models...
+Action VAE losses: ['9365.7242', '11492.6816', '11582.3910', '10372.8418', '12223.7387']
+CM score components:
+transition disagreement: 0.4093
+reward disagreement: 0.4093
+state disagreement: 0.4093
+action disagreement: 0.4093
+total CM score: 0.4093
+goal is complete. CM score: 2.2616
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: 1.134
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: 0.982
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: 1.066
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 1.118
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4967', '6.8555', '7.2703', '6.7359', '7.5298']
+Training reward models...
+Reward model losses: ['0.0073', '0.0214', '0.0324', '0.0159', '0.0188']
+Training state VAE models...
+State VAE losses: ['155061.9562', '120575.3656', '127919.0625', '178349.9281', '111185.3281']
+Training action VAE models...
+Action VAE losses: ['12197.8871', '14229.5682', '16527.0791', '10761.6373', '11320.6207']
+CM score components:
+transition disagreement: 0.4620
+reward disagreement: 0.4620
+state disagreement: 0.4620
+action disagreement: 0.4620
+total CM score: 0.4620
+mass is complete. CM score: 2.2093
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: 0.429
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: 0.426
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: 0.417
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 0.426
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4196', '7.8133', '7.6883', '7.4354', '6.9569']
+Training reward models...
+Reward model losses: ['0.3969', '0.0325', '0.2099', '0.0111', '0.0058']
+Training state VAE models...
+State VAE losses: ['160151.1469', '139719.3531', '163111.0875', '156310.0000', '147207.8813']
+Training action VAE models...
+Action VAE losses: ['8722.3400', '12733.5404', '9852.6375', '11060.0760', '10746.8900']
+CM score components:
+transition disagreement: 0.3884
+reward disagreement: 0.3884
+state disagreement: 0.3884
+action disagreement: 0.3884
+total CM score: 0.3884
+friction is complete. CM score: 2.1852
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: 0.426
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: 0.426
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: 0.426
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 0.426
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.1690', '6.6743', '7.1731', '7.3391', '7.6472']
+Training reward models...
+Reward model losses: ['0.5054', '0.0048', '0.5988', '0.0276', '0.0097']
+Training state VAE models...
+State VAE losses: ['130658.4094', '147056.3719', '195564.3531', '177963.0219', '120279.4406']
+Training action VAE models...
+Action VAE losses: ['10223.0244', '10205.3955', '14172.8234', '8845.9176', '10656.1996']
+CM score components:
+transition disagreement: 0.4300
+reward disagreement: 0.4300
+state disagreement: 0.4300
+action disagreement: 0.4300
+total CM score: 0.4300
+visual is complete. CM score: 2.4788
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -3.705
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: 0.353
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -2.788
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.595
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.0642', '7.9033', '7.0925', '6.9400', '7.4381']
+Training reward models...
+Reward model losses: ['0.2945', '0.1673', '0.1124', '0.5139', '0.3968']
+Training state VAE models...
+State VAE losses: ['126652.5375', '181951.3656', '202547.4375', '228869.7031', '125565.0078']
+Training action VAE models...
+Action VAE losses: ['10683.3840', '13488.5207', '14153.2990', '17126.5578', '11273.2785']
+CM score components:
+transition disagreement: 0.4179
+reward disagreement: 0.4179
+state disagreement: 0.4179
+action disagreement: 0.4179
+total CM score: 0.4179
+pose is complete. CM score: 2.3775
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: 0.356
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -2.638
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -1.004
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.663
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.6591', '7.6589', '7.8901', '7.5370', '6.8864']
+Training reward models...
+Reward model losses: ['0.4067', '0.9616', '0.0281', '0.0219', '0.0341']
+Training state VAE models...
+State VAE losses: ['110717.5938', '165929.6063', '171720.0906', '191420.8219', '156611.2125']
+Training action VAE models...
+Action VAE losses: ['13622.1502', '9259.4785', '10416.8348', '12092.7371', '9622.9484']
+CM score components:
+transition disagreement: 0.4247
+reward disagreement: 0.4247
+state disagreement: 0.4247
+action disagreement: 0.4247
+total CM score: 0.4247
+random is complete. CM score: 2.4762
+INFO:root:Meta-Episode 6/10: Teacher chose 'friction', Reward: 0.0000, Student Success: 0.000
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: 1.558
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -0.717
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -0.190
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.232
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.2421', '7.0210', '6.7649', '7.4191', '7.6829']
+Training reward models...
+Reward model losses: ['0.0112', '0.0101', '0.0052', '0.0124', '0.0860']
+Training state VAE models...
+State VAE losses: ['161050.3813', '188900.9500', '128117.4266', '195216.4719', '125509.1578']
+Training action VAE models...
+Action VAE losses: ['11360.8816', '9952.2004', '16073.3412', '11659.1520', '10152.5176']
+CM score components:
+transition disagreement: 0.4094
+reward disagreement: 0.4094
+state disagreement: 0.4094
+action disagreement: 0.4094
+total CM score: 0.4094
+goal is complete. CM score: 2.1979
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: 1.134
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: 0.982
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: 1.066
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 1.118
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.8840', '7.7307', '7.4559', '6.9610', '8.6226']
+Training reward models...
+Reward model losses: ['0.2621', '1.1392', '0.0190', '0.0089', '0.2335']
+Training state VAE models...
+State VAE losses: ['220376.8781', '188009.7906', '158390.5469', '169012.6063', '156394.4875']
+Training action VAE models...
+Action VAE losses: ['12707.7977', '12340.8674', '15092.0957', '12314.9678', '12917.7141']
+CM score components:
+transition disagreement: 0.4146
+reward disagreement: 0.4146
+state disagreement: 0.4146
+action disagreement: 0.4146
+total CM score: 0.4146
+mass is complete. CM score: 2.5159
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: 0.429
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: 0.426
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: 0.417
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 0.426
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.8553', '7.4227', '6.5632', '7.5222', '6.5378']
+Training reward models...
+Reward model losses: ['0.3062', '0.0070', '0.1969', '0.0319', '0.0266']
+Training state VAE models...
+State VAE losses: ['134738.5547', '179963.9000', '178681.2437', '105125.0203', '146973.9000']
+Training action VAE models...
+Action VAE losses: ['9672.4426', '7373.0883', '10312.9717', '11898.3699', '8650.3730']
+CM score components:
+transition disagreement: 0.3678
+reward disagreement: 0.3678
+state disagreement: 0.3678
+action disagreement: 0.3678
+total CM score: 0.3678
+friction is complete. CM score: 2.2168
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: 0.426
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: 0.426
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: 0.426
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: 0.426
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.1628', '6.8163', '6.6594', '7.7698', '7.0632']
+Training reward models...
+Reward model losses: ['0.0725', '0.3682', '0.0162', '0.0055', '0.0397']
+Training state VAE models...
+State VAE losses: ['127058.7000', '147150.8656', '161851.3875', '152819.3625', '119214.6125']
+Training action VAE models...
+Action VAE losses: ['17528.9523', '9992.7213', '11365.2133', '8918.1016', '11247.9574']
+CM score components:
+transition disagreement: 0.3934
+reward disagreement: 0.3934
+state disagreement: 0.3934
+action disagreement: 0.3934
+total CM score: 0.3934
+visual is complete. CM score: 2.1133
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -3.705
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: 0.353
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -2.788
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.595
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.9592', '7.3507', '7.7845', '7.3260', '7.1475']
+Training reward models...
+Reward model losses: ['0.1921', '0.1720', '0.1959', '0.2287', '0.0179']
+Training state VAE models...
+State VAE losses: ['159955.7656', '141987.5531', '129971.2266', '162917.4281', '117928.6078']
+Training action VAE models...
+Action VAE losses: ['13220.9479', '13793.7598', '12208.3322', '11059.4867', '12340.7455']
+CM score components:
+transition disagreement: 0.4119
+reward disagreement: 0.4119
+state disagreement: 0.4119
+action disagreement: 0.4119
+total CM score: 0.4119
+pose is complete. CM score: 2.2731
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: 0.356
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -2.638
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -1.004
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.663
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.0859', '8.0734', '7.1876', '7.3214', '7.6497']
+Training reward models...
+Reward model losses: ['0.0464', '0.1841', '0.1386', '0.0308', '0.3872']
+Training state VAE models...
+State VAE losses: ['137614.9609', '140319.5641', '95047.1297', '175722.3250', '160516.7250']
+Training action VAE models...
+Action VAE losses: ['9164.0371', '10719.6996', '11608.1748', '12632.5971', '9545.3711']
+CM score components:
+transition disagreement: 0.4548
+reward disagreement: 0.4548
+state disagreement: 0.4548
+action disagreement: 0.4548
+total CM score: 0.4548
+random is complete. CM score: 2.2088
+IntervenedCausalWorld created with goal intervention
+Reset #1: goal intervention applied (success: True)
+Logging to ppo_pushing_sb3/PPO_0
+Reset #2: goal intervention applied (success: True)
+Reset #3: goal intervention applied (success: True)
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 251       |
+|    ep_rew_mean     | 2.2542775 |
+| time/              |           |
+|    fps             | 332       |
+|    iterations      | 1         |
+|    time_elapsed    | 12        |
+|    total_timesteps | 5124096   |
+----------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 2.2542775  |
+| time/                   |            |
+|    fps                  | 228        |
+|    iterations           | 2          |
+|    time_elapsed         | 35         |
+|    total_timesteps      | 5128192    |
+| train/                  |            |
+|    approx_kl            | 0.06795812 |
+|    clip_fraction        | 0.525      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -23.1      |
+|    explained_variance   | 0.729      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.565     |
+|    n_updates            | 1440       |
+|    policy_gradient_loss | -0.0913    |
+|    std                  | 3.18       |
+|    value_loss           | 0.00743    |
+----------------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 2.2542775  |
+| time/                   |            |
+|    fps                  | 209        |
+|    iterations           | 3          |
+|    time_elapsed         | 58         |
+|    total_timesteps      | 5132288    |
+| train/                  |            |
+|    approx_kl            | 0.07364313 |
+|    clip_fraction        | 0.57       |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -23.2      |
+|    explained_variance   | 0.712      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.58      |
+|    n_updates            | 1455       |
+|    policy_gradient_loss | -0.103     |
+|    std                  | 3.22       |
+|    value_loss           | 0.0144     |
+----------------------------------------
+
+evaluating student performance (5 episodes)...
+episode 1: length=251, reward=-2.569, success=False
+episode 2: length=251, reward=-2.569, success=False
+episode 3: length=251, reward=-2.569, success=False
+performance summary:
+success rate: 0.000 (0/5)
+average reward: -2.569
+average episode length: 251.0
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: -3.595
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -5.975
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -2.012
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.649
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.6677', '7.3551', '7.7813', '7.3079', '6.1719']
+Training reward models...
+Reward model losses: ['0.1578', '0.2032', '1.0734', '0.4105', '0.1382']
+Training state VAE models...
+State VAE losses: ['141582.2219', '138791.9234', '201445.3062', '104450.8031', '159117.6469']
+Training action VAE models...
+Action VAE losses: ['13646.1010', '12869.5861', '11458.1334', '12434.6262', '13510.3633']
+CM score components:
+transition disagreement: 0.4237
+reward disagreement: 0.4237
+state disagreement: 0.4237
+action disagreement: 0.4237
+total CM score: 0.4237
+goal is complete. CM score: 2.3385
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: -0.950
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: -2.622
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: -1.192
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.243
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['8.2557', '7.1319', '7.2775', '7.0789', '7.2573']
+Training reward models...
+Reward model losses: ['0.0214', '0.8264', '0.0997', '0.1669', '0.1559']
+Training state VAE models...
+State VAE losses: ['151588.4062', '182505.7219', '229545.3094', '175689.0906', '134187.5234']
+Training action VAE models...
+Action VAE losses: ['14572.0596', '13033.3025', '13755.2516', '10612.9373', '14848.4525']
+CM score components:
+transition disagreement: 0.4091
+reward disagreement: 0.4091
+state disagreement: 0.4091
+action disagreement: 0.4091
+total CM score: 0.4091
+mass is complete. CM score: 2.4430
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -2.555
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -2.575
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -2.557
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.558
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.5679', '7.2294', '7.2268', '7.0788', '7.4169']
+Training reward models...
+Reward model losses: ['0.0054', '0.3391', '0.1860', '0.1355', '0.4314']
+Training state VAE models...
+State VAE losses: ['190126.8219', '93086.0000', '131595.2328', '207606.7250', '193340.6969']
+Training action VAE models...
+Action VAE losses: ['12729.3014', '16118.5244', '12155.0693', '14169.6037', '11949.6416']
+CM score components:
+transition disagreement: 0.4023
+reward disagreement: 0.4023
+state disagreement: 0.4023
+action disagreement: 0.4023
+total CM score: 0.4023
+friction is complete. CM score: 2.3002
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -2.569
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -2.569
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -2.569
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.569
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.0925', '7.9567', '7.4845', '8.0068', '6.7382']
+Training reward models...
+Reward model losses: ['0.0913', '0.0408', '0.4669', '0.5403', '0.0283']
+Training state VAE models...
+State VAE losses: ['143263.3547', '168858.7781', '162002.5938', '155685.0469', '154597.4469']
+Training action VAE models...
+Action VAE losses: ['12556.0812', '10498.6895', '16010.9996', '13428.1309', '14402.1236']
+CM score components:
+transition disagreement: 0.3951
+reward disagreement: 0.3951
+state disagreement: 0.3951
+action disagreement: 0.3951
+total CM score: 0.3951
+visual is complete. CM score: 2.3616
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -3.282
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: -1.582
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -2.121
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -1.883
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.5907', '8.2074', '7.7113', '7.1105', '7.6660']
+Training reward models...
+Reward model losses: ['0.0244', '0.0525', '0.0174', '0.0542', '0.0770']
+Training state VAE models...
+State VAE losses: ['153293.1063', '201421.4375', '119204.8141', '191178.6969', '110918.1687']
+Training action VAE models...
+Action VAE losses: ['12946.2861', '15715.6822', '15887.0609', '15578.8627', '14408.6830']
+CM score components:
+transition disagreement: 0.4215
+reward disagreement: 0.4215
+state disagreement: 0.4215
+action disagreement: 0.4215
+total CM score: 0.4215
+pose is complete. CM score: 2.2609
+Processing intervention 6/6: random
+IntervenedCausalWorld created with random intervention
+Evaluating CM score for random intervention...
+Reset #1: random intervention applied (success: True)
+episode 1: 251 steps, reward: -2.575
+Reset #2: random intervention applied (success: True)
+episode 2: 251 steps, reward: -1.058
+Reset #3: random intervention applied (success: True)
+episode 3: 251 steps, reward: -0.512
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -0.256
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.7553', '6.9924', '7.4240', '7.5150', '7.9534']
+Training reward models...
+Reward model losses: ['0.0202', '0.0481', '0.0885', '0.0625', '0.1251']
+Training state VAE models...
+State VAE losses: ['189594.2031', '201246.6031', '112581.2000', '144294.9344', '140425.7734']
+Training action VAE models...
+Action VAE losses: ['18052.9707', '16242.5523', '17791.9016', '16547.3012', '14022.3770']
+CM score components:
+transition disagreement: 0.3717
+reward disagreement: 0.3717
+state disagreement: 0.3717
+action disagreement: 0.3717
+total CM score: 0.3717
+random is complete. CM score: 2.1619
+INFO:root:Meta-Episode 7/10: Teacher chose 'goal', Reward: 0.0000, Student Success: 0.000
+Computing teacher state (CM scores for all interventions)...
+Processing intervention 1/6: goal
+IntervenedCausalWorld created with goal intervention
+Evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 251 steps, reward: -3.595
+Reset #2: goal intervention applied (success: True)
+episode 2: 251 steps, reward: -5.975
+Reset #3: goal intervention applied (success: True)
+episode 3: 251 steps, reward: -2.012
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.649
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.4117', '7.6172', '7.2529', '7.1013', '7.6074']
+Training reward models...
+Reward model losses: ['0.1141', '0.1171', '0.3928', '0.9922', '0.2968']
+Training state VAE models...
+State VAE losses: ['181225.9344', '193568.5500', '148272.7625', '156777.5031', '136171.7766']
+Training action VAE models...
+Action VAE losses: ['12340.1113', '15846.9369', '13423.4445', '13336.4053', '15242.7492']
+CM score components:
+transition disagreement: 0.4187
+reward disagreement: 0.4187
+state disagreement: 0.4187
+action disagreement: 0.4187
+total CM score: 0.4187
+goal is complete. CM score: 2.3602
+Processing intervention 2/6: mass
+IntervenedCausalWorld created with mass intervention
+Evaluating CM score for mass intervention...
+Reset #1: mass intervention applied (success: True)
+episode 1: 251 steps, reward: -0.950
+Reset #2: mass intervention applied (success: True)
+episode 2: 251 steps, reward: -2.622
+Reset #3: mass intervention applied (success: True)
+episode 3: 251 steps, reward: -1.192
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.243
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.9177', '7.3494', '7.9886', '7.7858', '7.6600']
+Training reward models...
+Reward model losses: ['0.0320', '0.7169', '1.1645', '0.7710', '0.7322']
+Training state VAE models...
+State VAE losses: ['191965.2188', '159267.6094', '166748.4875', '142291.5812', '174864.0844']
+Training action VAE models...
+Action VAE losses: ['12444.9020', '14919.9920', '13273.9668', '15683.1439', '13013.2445']
+CM score components:
+transition disagreement: 0.4471
+reward disagreement: 0.4471
+state disagreement: 0.4471
+action disagreement: 0.4471
+total CM score: 0.4471
+mass is complete. CM score: 2.6893
+Processing intervention 3/6: friction
+IntervenedCausalWorld created with friction intervention
+Evaluating CM score for friction intervention...
+Reset #1: friction intervention applied (success: True)
+episode 1: 251 steps, reward: -2.555
+Reset #2: friction intervention applied (success: True)
+episode 2: 251 steps, reward: -2.575
+Reset #3: friction intervention applied (success: True)
+episode 3: 251 steps, reward: -2.557
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.558
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['7.6309', '8.0699', '7.9356', '7.8196', '7.6899']
+Training reward models...
+Reward model losses: ['0.0370', '0.3009', '2.2660', '0.0745', '0.0087']
+Training state VAE models...
+State VAE losses: ['142119.8547', '151951.9250', '157030.1531', '176818.7437', '160975.4406']
+Training action VAE models...
+Action VAE losses: ['11826.5574', '11165.1857', '12535.6865', '12418.8391', '18176.9613']
+CM score components:
+transition disagreement: 0.4319
+reward disagreement: 0.4319
+state disagreement: 0.4319
+action disagreement: 0.4319
+total CM score: 0.4319
+friction is complete. CM score: 2.6822
+Processing intervention 4/6: visual
+IntervenedCausalWorld created with visual intervention
+Evaluating CM score for visual intervention...
+Reset #1: visual intervention applied (success: True)
+episode 1: 251 steps, reward: -2.569
+Reset #2: visual intervention applied (success: True)
+episode 2: 251 steps, reward: -2.569
+Reset #3: visual intervention applied (success: True)
+episode 3: 251 steps, reward: -2.569
+total data points collected: 1255
+average episode length: 251.0
+average episode reward: -2.569
+tensor shapes - states: torch.Size([1255, 56]), actions: torch.Size([1255, 9])
+Creating ensembles (obs_dim=56, act_dim=9, hidden_dim=64)
+Training transition models...
+Transition model losses: ['6.4425', '7.1017', '7.5513', '7.5425', '7.8783']
+Training reward models...
+Reward model losses: ['0.0210', '0.4721', '0.0261', '0.0474', '0.1517']
+Training state VAE models...
+State VAE losses: ['138547.8406', '140679.6891', '130052.6766', '154513.7906', '185970.0187']
+Training action VAE models...
+Action VAE losses: ['13828.8486', '13505.2551', '12836.0039', '12824.0063', '11372.6033']
+CM score components:
+transition disagreement: 0.4475
+reward disagreement: 0.4475
+state disagreement: 0.4475
+action disagreement: 0.4475
+total CM score: 0.4475
+visual is complete. CM score: 2.2578
+Processing intervention 5/6: pose
+IntervenedCausalWorld created with pose intervention
+Evaluating CM score for pose intervention...
+Reset #1: pose intervention applied (success: True)
+episode 1: 251 steps, reward: -3.282
+Reset #2: pose intervention applied (success: True)
+episode 2: 251 steps, reward: -1.582
+Reset #3: pose intervention applied (success: True)
+episode 3: 251 steps, reward: -2.121
+Traceback (most recent call last):
+  File "meta_teacher_student.py", line 597, in <module>
+    main()
+  File "meta_teacher_student.py", line 559, in main
+    S_teacher = get_teacher_state(student_model, args.task, INTERVENTIONS, device=device, seed=args.seed)
+  File "meta_teacher_student.py", line 315, in get_teacher_state
+    cm_score = evaluate_cm_score(intervened_env, student_model, device=device, intervention_type=intervention['type'])
+  File "meta_teacher_student.py", line 168, in evaluate_cm_score
+    obs = env.reset()
+  File "meta_teacher_student.py", line 122, in reset
+    obs = self.base_env.reset()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/causal_world/envs/causalworld.py", line 357, in reset
+    self._task.reset_task()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/causal_world/task_generators/base_task.py", line 857, in reset_task
+    self.restore_state(self._current_starting_state)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/causal_world/task_generators/base_task.py", line 203, in restore_state
+    self._create_world_func()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/causal_world/envs/causalworld.py", line 775, in _create_world
+    physicsClientId=client)
+KeyboardInterrupt

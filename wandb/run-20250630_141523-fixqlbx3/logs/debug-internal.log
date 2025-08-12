@@ -1,0 +1,18 @@
+{"time":"2025-06-30T14:15:23.547242436-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-06-30T14:15:23.547276937-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250630_141523-fixqlbx3/logs/debug-core.log"}
+{"time":"2025-06-30T14:15:24.767793035-04:00","level":"INFO","msg":"created new stream","id":"fixqlbx3"}
+{"time":"2025-06-30T14:15:24.767876773-04:00","level":"INFO","msg":"stream: started","id":"fixqlbx3"}
+{"time":"2025-06-30T14:15:24.767902335-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"fixqlbx3"}
+{"time":"2025-06-30T14:15:24.767937884-04:00","level":"INFO","msg":"sender: started","stream_id":"fixqlbx3"}
+{"time":"2025-06-30T14:15:24.767980416-04:00","level":"INFO","msg":"handler: started","stream_id":"fixqlbx3"}
+{"time":"2025-06-30T14:15:25.061836928-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-06-30T14:15:39.938883555-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-06-30T15:33:08.925581053-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-06-30T15:33:08.926260461-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-06-30T15:33:09.926407264-04:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"saving job artifact","runtime_seconds":0.88319961}],"total_operations":1}}
+{"time":"2025-06-30T15:33:10.907250599-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-06-30T15:33:12.006538574-04:00","level":"INFO","msg":"stream: closing","id":"fixqlbx3"}
+{"time":"2025-06-30T15:33:12.006565602-04:00","level":"INFO","msg":"handler: closed","stream_id":"fixqlbx3"}
+{"time":"2025-06-30T15:33:12.006585018-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"fixqlbx3"}
+{"time":"2025-06-30T15:33:12.006679093-04:00","level":"INFO","msg":"sender: closed","stream_id":"fixqlbx3"}
+{"time":"2025-06-30T15:33:12.006693829-04:00","level":"INFO","msg":"stream: closed","id":"fixqlbx3"}

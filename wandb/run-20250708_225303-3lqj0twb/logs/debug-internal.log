@@ -1,0 +1,19 @@
+{"time":"2025-07-08T22:53:03.519773644-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-08T22:53:03.519803047-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250708_225303-3lqj0twb/logs/debug-core.log"}
+{"time":"2025-07-08T22:53:03.73455255-04:00","level":"INFO","msg":"created new stream","id":"3lqj0twb"}
+{"time":"2025-07-08T22:53:03.734653819-04:00","level":"INFO","msg":"stream: started","id":"3lqj0twb"}
+{"time":"2025-07-08T22:53:03.73473232-04:00","level":"INFO","msg":"sender: started","stream_id":"3lqj0twb"}
+{"time":"2025-07-08T22:53:03.734719609-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"3lqj0twb"}
+{"time":"2025-07-08T22:53:03.73473232-04:00","level":"INFO","msg":"handler: started","stream_id":"3lqj0twb"}
+{"time":"2025-07-08T22:53:03.945101852-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-08T22:54:14.319707222-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-08T23:03:52.028908673-04:00","level":"INFO","msg":"tensorboard: inferred root directory","rootDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs","logDir":"/home/kpatherya3/causal-core-su25/autocalc_cpdrl_logs/PPO_2","namespace":"PPO_2"}
+{"time":"2025-07-08T23:03:52.029058131-04:00","level":"WARN","msg":"tensorboard: error while looking for next tfevents file","error":"tensorboard: directory is empty"}
+{"time":"2025-07-08T23:07:47.173391003-04:00","level":"INFO","msg":"stream: closing","id":"3lqj0twb"}
+{"time":"2025-07-08T23:07:47.173454-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-08T23:07:47.174573821-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-08T23:07:48.96647369-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-08T23:07:49.057835429-04:00","level":"INFO","msg":"handler: closed","stream_id":"3lqj0twb"}
+{"time":"2025-07-08T23:07:49.057898425-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"3lqj0twb"}
+{"time":"2025-07-08T23:07:49.057936768-04:00","level":"INFO","msg":"sender: closed","stream_id":"3lqj0twb"}
+{"time":"2025-07-08T23:07:49.05812408-04:00","level":"INFO","msg":"stream: closed","id":"3lqj0twb"}

@@ -1,0 +1,712 @@
+2025-07-08 15:31:11,953 1994086 INFO [WANDB] Initialized with project: adaptive-curriculum-ppo-pushing and run name: adaptive_curriculum_ppo_pushing_seed0
+2025-07-08 15:31:11,953 1994086 INFO [LOGDIR] Log directory: adaptive_curriculum_on_ppo
+2025-07-08 15:31:11,953 1994086 INFO [CURRICULUM] Interventions: ['GoalInterventionActorPolicy', 'PhysicalPropertiesInterventionActorPolicy', 'VisualInterventionActorPolicy', 'JointsInterventionActorPolicy', 'RigidPoseInterventionActorPolicy', 'RandomInterventionActorPolicy']
+[ADAPTIVE] Initialized with 6 interventions.
+2025-07-08 15:31:11,980 1994086 INFO [ENV] Creating 16 parallel training environments for task: pushing
+2025-07-08 15:31:16,149 1994086 INFO [ENV] Creating evaluation environment for task: pushing
+2025-07-08 15:31:16,240 1994086 INFO [MODEL] PPO model loaded from: ppo_pushing_sb3/final_model.zip
+2025-07-08 15:31:20,559 1994086 INFO [CALLBACKS] Callbacks set up: ['CheckpointCallback', 'EvalCallback', 'AdaptiveCurriculumCallback', 'WandbCallback']
+2025-07-08 15:31:20,560 1994086 INFO [TRAIN] Starting training for 3000000 timesteps...
+Logging to adaptive_curriculum_on_ppo/adaptive_curriculum_on_ppo_2
+/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/callbacks.py:337: UserWarning: Training and eval env are not of the same type<stable_baselines3.common.vec_env.vec_monitor.VecMonitor object at 0x7f7651906410> != <stable_baselines3.common.vec_env.dummy_vec_env.DummyVecEnv object at 0x7f7651944510>
+  warnings.warn("Training and eval env are not of the same type" f"{self.training_env} != {self.eval_env}")
+[ADAPTIVE] Episode 1 reward: 0.044508
+[34m[1mwandb[0m: [33mWARNING[0m Step cannot be set when using tensorboard syncing. Please use `run.define_metric(...)` to define a custom metric to log your step values.
+-----------------------------------
+| rollout/           |            |
+|    ep_len_mean     | 251        |
+|    ep_rew_mean     | 0.44771796 |
+| time/              |            |
+|    fps             | 1720       |
+|    iterations      | 1          |
+|    time_elapsed    | 2          |
+|    total_timesteps | 4096       |
+-----------------------------------
+[ADAPTIVE] Episode 2 reward: -0.019474
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.54302555  |
+| time/                   |             |
+|    fps                  | 1329        |
+|    iterations           | 2           |
+|    time_elapsed         | 6           |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.020774283 |
+|    clip_fraction        | 0.214       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.6       |
+|    explained_variance   | 0.319       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.444      |
+|    n_updates            | 1170        |
+|    policy_gradient_loss | -0.0292     |
+|    std                  | 2.67        |
+|    value_loss           | 0.125       |
+-----------------------------------------
+[ADAPTIVE] Episode 3 reward: 0.058256
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.50937486  |
+| time/                   |             |
+|    fps                  | 1333        |
+|    iterations           | 3           |
+|    time_elapsed         | 9           |
+|    total_timesteps      | 12288       |
+| train/                  |             |
+|    approx_kl            | 0.015857464 |
+|    clip_fraction        | 0.181       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.6       |
+|    explained_variance   | 0.64        |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.452      |
+|    n_updates            | 1185        |
+|    policy_gradient_loss | -0.0331     |
+|    std                  | 2.69        |
+|    value_loss           | 0.0826      |
+-----------------------------------------
+[ADAPTIVE] Episode 4 reward: 0.022794
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.71154886  |
+| time/                   |             |
+|    fps                  | 1322        |
+|    iterations           | 4           |
+|    time_elapsed         | 12          |
+|    total_timesteps      | 16384       |
+| train/                  |             |
+|    approx_kl            | 0.012181164 |
+|    clip_fraction        | 0.138       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.7       |
+|    explained_variance   | 0.65        |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.416      |
+|    n_updates            | 1200        |
+|    policy_gradient_loss | -0.0275     |
+|    std                  | 2.7         |
+|    value_loss           | 0.115       |
+-----------------------------------------
+[ADAPTIVE] Episode 5 reward: 0.065724
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.7426218   |
+| time/                   |             |
+|    fps                  | 1266        |
+|    iterations           | 5           |
+|    time_elapsed         | 16          |
+|    total_timesteps      | 20480       |
+| train/                  |             |
+|    approx_kl            | 0.013972141 |
+|    clip_fraction        | 0.163       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.7       |
+|    explained_variance   | 0.686       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.458      |
+|    n_updates            | 1215        |
+|    policy_gradient_loss | -0.0345     |
+|    std                  | 2.71        |
+|    value_loss           | 0.0794      |
+-----------------------------------------
+[ADAPTIVE] Episode 6 reward: 0.046310
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.8336002   |
+| time/                   |             |
+|    fps                  | 1266        |
+|    iterations           | 6           |
+|    time_elapsed         | 19          |
+|    total_timesteps      | 24576       |
+| train/                  |             |
+|    approx_kl            | 0.020464005 |
+|    clip_fraction        | 0.237       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.8       |
+|    explained_variance   | 0.686       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.453      |
+|    n_updates            | 1230        |
+|    policy_gradient_loss | -0.0381     |
+|    std                  | 2.73        |
+|    value_loss           | 0.0914      |
+-----------------------------------------
+[ADAPTIVE] Episode 7 reward: 0.086479
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.96656466  |
+| time/                   |             |
+|    fps                  | 1268        |
+|    iterations           | 7           |
+|    time_elapsed         | 22          |
+|    total_timesteps      | 28672       |
+| train/                  |             |
+|    approx_kl            | 0.015610911 |
+|    clip_fraction        | 0.219       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.8       |
+|    explained_variance   | 0.654       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.474      |
+|    n_updates            | 1245        |
+|    policy_gradient_loss | -0.0396     |
+|    std                  | 2.75        |
+|    value_loss           | 0.0793      |
+-----------------------------------------
+[ADAPTIVE] Episode 8 reward: 0.000106
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.98293823  |
+| time/                   |             |
+|    fps                  | 1255        |
+|    iterations           | 8           |
+|    time_elapsed         | 26          |
+|    total_timesteps      | 32768       |
+| train/                  |             |
+|    approx_kl            | 0.015538834 |
+|    clip_fraction        | 0.197       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.9       |
+|    explained_variance   | 0.698       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.464      |
+|    n_updates            | 1260        |
+|    policy_gradient_loss | -0.0328     |
+|    std                  | 2.76        |
+|    value_loss           | 0.069       |
+-----------------------------------------
+[ADAPTIVE] Episode 9 reward: 0.069685
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.1524526   |
+| time/                   |             |
+|    fps                  | 1280        |
+|    iterations           | 9           |
+|    time_elapsed         | 28          |
+|    total_timesteps      | 36864       |
+| train/                  |             |
+|    approx_kl            | 0.015828885 |
+|    clip_fraction        | 0.201       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.9       |
+|    explained_variance   | 0.704       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.463      |
+|    n_updates            | 1275        |
+|    policy_gradient_loss | -0.0393     |
+|    std                  | 2.77        |
+|    value_loss           | 0.078       |
+-----------------------------------------
+[ADAPTIVE] Episode 10 reward: 0.007708
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.0824707   |
+| time/                   |             |
+|    fps                  | 1237        |
+|    iterations           | 10          |
+|    time_elapsed         | 33          |
+|    total_timesteps      | 40960       |
+| train/                  |             |
+|    approx_kl            | 0.017265957 |
+|    clip_fraction        | 0.211       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22         |
+|    explained_variance   | 0.628       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.452      |
+|    n_updates            | 1290        |
+|    policy_gradient_loss | -0.0331     |
+|    std                  | 2.79        |
+|    value_loss           | 0.0836      |
+-----------------------------------------
+[ADAPTIVE] Episode 11 reward: -0.014539
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.1893039   |
+| time/                   |             |
+|    fps                  | 1257        |
+|    iterations           | 11          |
+|    time_elapsed         | 35          |
+|    total_timesteps      | 45056       |
+| train/                  |             |
+|    approx_kl            | 0.021542298 |
+|    clip_fraction        | 0.243       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22         |
+|    explained_variance   | 0.62        |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.443      |
+|    n_updates            | 1305        |
+|    policy_gradient_loss | -0.033      |
+|    std                  | 2.81        |
+|    value_loss           | 0.11        |
+-----------------------------------------
+[ADAPTIVE] Episode 12 reward: -0.070326
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.1348537   |
+| time/                   |             |
+|    fps                  | 1243        |
+|    iterations           | 12          |
+|    time_elapsed         | 39          |
+|    total_timesteps      | 49152       |
+| train/                  |             |
+|    approx_kl            | 0.012048994 |
+|    clip_fraction        | 0.165       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.1       |
+|    explained_variance   | 0.765       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.464      |
+|    n_updates            | 1320        |
+|    policy_gradient_loss | -0.03       |
+|    std                  | 2.82        |
+|    value_loss           | 0.0722      |
+-----------------------------------------
+[ADAPTIVE] Episode 13 reward: -0.039777
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 1.0850974  |
+| time/                   |            |
+|    fps                  | 1239       |
+|    iterations           | 13         |
+|    time_elapsed         | 42         |
+|    total_timesteps      | 53248      |
+| train/                  |            |
+|    approx_kl            | 0.01477824 |
+|    clip_fraction        | 0.16       |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.1      |
+|    explained_variance   | 0.575      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.442     |
+|    n_updates            | 1335       |
+|    policy_gradient_loss | -0.038     |
+|    std                  | 2.83       |
+|    value_loss           | 0.12       |
+----------------------------------------
+[ADAPTIVE] Episode 14 reward: -0.021250
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.0364498   |
+| time/                   |             |
+|    fps                  | 1243        |
+|    iterations           | 14          |
+|    time_elapsed         | 46          |
+|    total_timesteps      | 57344       |
+| train/                  |             |
+|    approx_kl            | 0.013529695 |
+|    clip_fraction        | 0.172       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.1       |
+|    explained_variance   | 0.73        |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.453      |
+|    n_updates            | 1350        |
+|    policy_gradient_loss | -0.0357     |
+|    std                  | 2.84        |
+|    value_loss           | 0.0744      |
+-----------------------------------------
+[ADAPTIVE] Episode 15 reward: 0.016976
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.1043496   |
+| time/                   |             |
+|    fps                  | 1226        |
+|    iterations           | 15          |
+|    time_elapsed         | 50          |
+|    total_timesteps      | 61440       |
+| train/                  |             |
+|    approx_kl            | 0.019558478 |
+|    clip_fraction        | 0.226       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.2       |
+|    explained_variance   | 0.673       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.462      |
+|    n_updates            | 1365        |
+|    policy_gradient_loss | -0.0387     |
+|    std                  | 2.85        |
+|    value_loss           | 0.102       |
+-----------------------------------------
+[ADAPTIVE] Episode 16 reward: -0.020608
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.1040657   |
+| time/                   |             |
+|    fps                  | 1239        |
+|    iterations           | 16          |
+|    time_elapsed         | 52          |
+|    total_timesteps      | 65536       |
+| train/                  |             |
+|    approx_kl            | 0.016971081 |
+|    clip_fraction        | 0.222       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.2       |
+|    explained_variance   | 0.692       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.471      |
+|    n_updates            | 1380        |
+|    policy_gradient_loss | -0.0356     |
+|    std                  | 2.88        |
+|    value_loss           | 0.0724      |
+-----------------------------------------
+[ADAPTIVE] Episode 17 reward: 0.052910
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.0130414   |
+| time/                   |             |
+|    fps                  | 1222        |
+|    iterations           | 17          |
+|    time_elapsed         | 56          |
+|    total_timesteps      | 69632       |
+| train/                  |             |
+|    approx_kl            | 0.017253805 |
+|    clip_fraction        | 0.22        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.3       |
+|    explained_variance   | 0.618       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.467      |
+|    n_updates            | 1395        |
+|    policy_gradient_loss | -0.039      |
+|    std                  | 2.88        |
+|    value_loss           | 0.0941      |
+-----------------------------------------
+[ADAPTIVE] Episode 18 reward: 0.012119
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 1.1000907  |
+| time/                   |            |
+|    fps                  | 1226       |
+|    iterations           | 18         |
+|    time_elapsed         | 60         |
+|    total_timesteps      | 73728      |
+| train/                  |            |
+|    approx_kl            | 0.01577152 |
+|    clip_fraction        | 0.194      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.3      |
+|    explained_variance   | 0.65       |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.45      |
+|    n_updates            | 1410       |
+|    policy_gradient_loss | -0.0382    |
+|    std                  | 2.91       |
+|    value_loss           | 0.118      |
+----------------------------------------
+[ADAPTIVE] Episode 19 reward: -0.018569
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.141419    |
+| time/                   |             |
+|    fps                  | 1222        |
+|    iterations           | 19          |
+|    time_elapsed         | 63          |
+|    total_timesteps      | 77824       |
+| train/                  |             |
+|    approx_kl            | 0.022263343 |
+|    clip_fraction        | 0.264       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.4       |
+|    explained_variance   | 0.725       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.469      |
+|    n_updates            | 1425        |
+|    policy_gradient_loss | -0.0403     |
+|    std                  | 2.92        |
+|    value_loss           | 0.0836      |
+-----------------------------------------
+[ADAPTIVE] Episode 20 reward: 0.062665
+[ADAPTIVE] Mean reward over last 20 episodes: 0.017085
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 251        |
+|    ep_rew_mean          | 1.2471058  |
+| time/                   |            |
+|    fps                  | 1219       |
+|    iterations           | 20         |
+|    time_elapsed         | 67         |
+|    total_timesteps      | 81920      |
+| train/                  |            |
+|    approx_kl            | 0.02762944 |
+|    clip_fraction        | 0.185      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -22.5      |
+|    explained_variance   | 0.578      |
+|    learning_rate        | 0.00025    |
+|    loss                 | -0.44      |
+|    n_updates            | 1440       |
+|    policy_gradient_loss | -0.0364    |
+|    std                  | 2.95       |
+|    value_loss           | 0.121      |
+----------------------------------------
+[ADAPTIVE] Episode 21 reward: 0.063045
+[ADAPTIVE] Mean reward over last 20 episodes: 0.018012
+[ADAPTIVE] Plateau counter: 1/10
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.0500066   |
+| time/                   |             |
+|    fps                  | 1216        |
+|    iterations           | 21          |
+|    time_elapsed         | 70          |
+|    total_timesteps      | 86016       |
+| train/                  |             |
+|    approx_kl            | 0.020719958 |
+|    clip_fraction        | 0.177       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.5       |
+|    explained_variance   | 0.597       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.46       |
+|    n_updates            | 1455        |
+|    policy_gradient_loss | -0.0328     |
+|    std                  | 2.96        |
+|    value_loss           | 0.151       |
+-----------------------------------------
+[ADAPTIVE] Episode 22 reward: -0.026625
+[ADAPTIVE] Mean reward over last 20 episodes: 0.017654
+[ADAPTIVE] Plateau counter: 2/10
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.0539143   |
+| time/                   |             |
+|    fps                  | 1214        |
+|    iterations           | 22          |
+|    time_elapsed         | 74          |
+|    total_timesteps      | 90112       |
+| train/                  |             |
+|    approx_kl            | 0.022521704 |
+|    clip_fraction        | 0.2         |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.6       |
+|    explained_variance   | 0.662       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.477      |
+|    n_updates            | 1470        |
+|    policy_gradient_loss | -0.0399     |
+|    std                  | 2.97        |
+|    value_loss           | 0.0841      |
+-----------------------------------------
+[ADAPTIVE] Episode 23 reward: -0.078636
+[ADAPTIVE] Mean reward over last 20 episodes: 0.010810
+[ADAPTIVE] Plateau counter: 3/10
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.9087077   |
+| time/                   |             |
+|    fps                  | 1217        |
+|    iterations           | 23          |
+|    time_elapsed         | 77          |
+|    total_timesteps      | 94208       |
+| train/                  |             |
+|    approx_kl            | 0.015333629 |
+|    clip_fraction        | 0.164       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.6       |
+|    explained_variance   | 0.504       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.409      |
+|    n_updates            | 1485        |
+|    policy_gradient_loss | -0.028      |
+|    std                  | 2.98        |
+|    value_loss           | 0.19        |
+-----------------------------------------
+[ADAPTIVE] Episode 24 reward: -0.030189
+[ADAPTIVE] Mean reward over last 20 episodes: 0.008160
+[ADAPTIVE] Plateau counter: 4/10
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.86970985  |
+| time/                   |             |
+|    fps                  | 1216        |
+|    iterations           | 24          |
+|    time_elapsed         | 80          |
+|    total_timesteps      | 98304       |
+| train/                  |             |
+|    approx_kl            | 0.022468707 |
+|    clip_fraction        | 0.214       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.6       |
+|    explained_variance   | 0.706       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.48       |
+|    n_updates            | 1500        |
+|    policy_gradient_loss | -0.0388     |
+|    std                  | 3           |
+|    value_loss           | 0.0911      |
+-----------------------------------------
+[ADAPTIVE] Episode 25 reward: -0.021722
+[ADAPTIVE] Mean reward over last 20 episodes: 0.003788
+[ADAPTIVE] Plateau counter: 5/10
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.96936834  |
+| time/                   |             |
+|    fps                  | 1216        |
+|    iterations           | 25          |
+|    time_elapsed         | 84          |
+|    total_timesteps      | 102400      |
+| train/                  |             |
+|    approx_kl            | 0.018136121 |
+|    clip_fraction        | 0.21        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.7       |
+|    explained_variance   | 0.646       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.458      |
+|    n_updates            | 1515        |
+|    policy_gradient_loss | -0.0373     |
+|    std                  | 3.02        |
+|    value_loss           | 0.0974      |
+-----------------------------------------
+[ADAPTIVE] Episode 26 reward: -0.025693
+[ADAPTIVE] Mean reward over last 20 episodes: 0.000188
+[ADAPTIVE] Plateau counter: 6/10
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.9557821   |
+| time/                   |             |
+|    fps                  | 1215        |
+|    iterations           | 26          |
+|    time_elapsed         | 87          |
+|    total_timesteps      | 106496      |
+| train/                  |             |
+|    approx_kl            | 0.020904409 |
+|    clip_fraction        | 0.225       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.7       |
+|    explained_variance   | 0.676       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.481      |
+|    n_updates            | 1530        |
+|    policy_gradient_loss | -0.0395     |
+|    std                  | 3.04        |
+|    value_loss           | 0.0787      |
+-----------------------------------------
+[ADAPTIVE] Episode 27 reward: 0.059015
+[ADAPTIVE] Mean reward over last 20 episodes: -0.001185
+[ADAPTIVE] Plateau counter: 7/10
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.9789924   |
+| time/                   |             |
+|    fps                  | 1212        |
+|    iterations           | 27          |
+|    time_elapsed         | 91          |
+|    total_timesteps      | 110592      |
+| train/                  |             |
+|    approx_kl            | 0.014926747 |
+|    clip_fraction        | 0.186       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.8       |
+|    explained_variance   | 0.715       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.463      |
+|    n_updates            | 1545        |
+|    policy_gradient_loss | -0.039      |
+|    std                  | 3.06        |
+|    value_loss           | 0.0832      |
+-----------------------------------------
+[ADAPTIVE] Episode 28 reward: 0.081077
+[ADAPTIVE] Mean reward over last 20 episodes: 0.002863
+[ADAPTIVE] Plateau counter: 8/10
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.1057986   |
+| time/                   |             |
+|    fps                  | 1212        |
+|    iterations           | 28          |
+|    time_elapsed         | 94          |
+|    total_timesteps      | 114688      |
+| train/                  |             |
+|    approx_kl            | 0.019043531 |
+|    clip_fraction        | 0.224       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.9       |
+|    explained_variance   | 0.612       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.458      |
+|    n_updates            | 1560        |
+|    policy_gradient_loss | -0.0332     |
+|    std                  | 3.08        |
+|    value_loss           | 0.107       |
+-----------------------------------------
+[ADAPTIVE] Episode 29 reward: 0.015579
+[ADAPTIVE] Mean reward over last 20 episodes: 0.000158
+[ADAPTIVE] Plateau counter: 9/10
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 1.2044342   |
+| time/                   |             |
+|    fps                  | 1208        |
+|    iterations           | 29          |
+|    time_elapsed         | 98          |
+|    total_timesteps      | 118784      |
+| train/                  |             |
+|    approx_kl            | 0.015171533 |
+|    clip_fraction        | 0.172       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -22.9       |
+|    explained_variance   | 0.786       |
+|    learning_rate        | 0.00025     |
+|    loss                 | -0.483      |
+|    n_updates            | 1575        |
+|    policy_gradient_loss | -0.0327     |
+|    std                  | 3.1         |
+|    value_loss           | 0.0748      |
+-----------------------------------------
+[ADAPTIVE] Episode 30 reward: -0.025975
+[ADAPTIVE] Mean reward over last 20 episodes: -0.001526
+[ADAPTIVE] Plateau counter: 10/10
+Traceback (most recent call last):
+  File "reward_curriculum_on_ppo.py", line 367, in <module>
+    main()
+  File "reward_curriculum_on_ppo.py", line 355, in main
+    tb_log_name="adaptive_curriculum_on_ppo"
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/ppo/ppo.py", line 308, in learn
+    reset_num_timesteps=reset_num_timesteps,
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/on_policy_algorithm.py", line 250, in learn
+    continue_training = self.collect_rollouts(self.env, callback, self.rollout_buffer, n_rollout_steps=self.n_steps)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/on_policy_algorithm.py", line 184, in collect_rollouts
+    if callback.on_step() is False:
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/callbacks.py", line 88, in on_step
+    return self._on_step()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/callbacks.py", line 192, in _on_step
+    continue_training = callback.on_step() and continue_training
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/callbacks.py", line 88, in on_step
+    return self._on_step()
+  File "reward_curriculum_on_ppo.py", line 144, in _on_step
+    self.curriculum_manager.advance()
+  File "reward_curriculum_on_ppo.py", line 82, in advance
+    with self.current_idx.get_lock():
+AttributeError: 'ValueProxy' object has no attribute 'get_lock'

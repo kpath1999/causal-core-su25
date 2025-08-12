@@ -1,0 +1,8 @@
+{"time":"2025-07-18T22:50:11.197420919-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-18T22:50:11.197448855-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250718_225011-rjsbe3d4/logs/debug-core.log"}
+{"time":"2025-07-18T22:50:11.410398358-04:00","level":"INFO","msg":"created new stream","id":"rjsbe3d4"}
+{"time":"2025-07-18T22:50:11.410469385-04:00","level":"INFO","msg":"stream: started","id":"rjsbe3d4"}
+{"time":"2025-07-18T22:50:11.410524699-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"rjsbe3d4"}
+{"time":"2025-07-18T22:50:11.410579035-04:00","level":"INFO","msg":"handler: started","stream_id":"rjsbe3d4"}
+{"time":"2025-07-18T22:50:11.410669897-04:00","level":"INFO","msg":"sender: started","stream_id":"rjsbe3d4"}
+{"time":"2025-07-18T22:50:11.708884657-04:00","level":"INFO","msg":"Starting system monitor"}

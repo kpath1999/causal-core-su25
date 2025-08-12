@@ -1,0 +1,19 @@
+{"time":"2025-06-30T14:23:14.099657858-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-06-30T14:23:14.099681464-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250630_142314-w3d3xe7f/logs/debug-core.log"}
+{"time":"2025-06-30T14:23:15.72357147-04:00","level":"INFO","msg":"created new stream","id":"w3d3xe7f"}
+{"time":"2025-06-30T14:23:15.723669875-04:00","level":"INFO","msg":"stream: started","id":"w3d3xe7f"}
+{"time":"2025-06-30T14:23:15.723701582-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"w3d3xe7f"}
+{"time":"2025-06-30T14:23:15.723739017-04:00","level":"INFO","msg":"handler: started","stream_id":"w3d3xe7f"}
+{"time":"2025-06-30T14:23:15.723748934-04:00","level":"INFO","msg":"sender: started","stream_id":"w3d3xe7f"}
+{"time":"2025-06-30T14:23:15.986164778-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-06-30T14:23:30.795333179-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-06-30T15:35:31.164695606-04:00","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/graphql\": net/http: request canceled (Client.Timeout exceeded while awaiting headers)"}
+{"time":"2025-06-30T15:50:50.821525326-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-06-30T15:50:50.822712403-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-06-30T15:50:51.82217547-04:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"saving job artifact","runtime_seconds":0.846316569},{"desc":"uploading model.zip","runtime_seconds":0.329779132,"progress":"2.0MB/2.0MB"}],"total_operations":2}}
+{"time":"2025-06-30T15:50:52.848085906-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-06-30T15:50:53.956077658-04:00","level":"INFO","msg":"stream: closing","id":"w3d3xe7f"}
+{"time":"2025-06-30T15:50:53.9561292-04:00","level":"INFO","msg":"handler: closed","stream_id":"w3d3xe7f"}
+{"time":"2025-06-30T15:50:53.956149034-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"w3d3xe7f"}
+{"time":"2025-06-30T15:50:53.956229002-04:00","level":"INFO","msg":"sender: closed","stream_id":"w3d3xe7f"}
+{"time":"2025-06-30T15:50:53.956324613-04:00","level":"INFO","msg":"stream: closed","id":"w3d3xe7f"}

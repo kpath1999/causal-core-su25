@@ -1,0 +1,55 @@
+2025-07-21 16:13:49,203 3266388 INFO [PRETRAINED] Using pretrained model path: ppo_pushing_sb3/final_model.zip
+2025-07-21 16:13:49,204 3266388 INFO Starting with 7 interventions
+2025-07-21 16:13:49,204 3266388 INFO ===final evaluation===
+2025-07-21 16:13:59,803 3266388 INFO Final performance
+2025-07-21 16:13:59,804 3266388 INFO average reward: 3.394 +/- 0.000
+2025-07-21 16:13:59,804 3266388 INFO success rate: 1.000
+2025-07-21 16:13:59,804 3266388 INFO average episode length: 501.0
+2025-07-21 16:13:59,804 3266388 INFO initial performance: {'avg_reward': 3.393721938342554, 'reward_std': 4.440892098500626e-16, 'avg_length': 501.0, 'success_rate': 1.0, 'total_episodes': 10}
+2025-07-21 16:13:59,804 3266388 INFO CURRICULUM STAGE 1/7
+2025-07-21 16:13:59,804 3266388 INFO Remaining interventions: ['goal', 'mass', 'friction', 'visual', 'position', 'angle', 'random']
+2025-07-21 16:13:59,804 3266388 INFO
+Testing intervention 1/7: goal (CM score)
+IntervenedCausalWorld created with goal intervention
+evaluating CM score for goal intervention...
+Reset #1: goal intervention applied (success: True)
+episode 1: 501 steps, reward: -0.176
+total data points collected: 501
+average episode length: 50.1
+average episode reward: -0.018
+termination reasons: ['other']
+success rate: 0/10
+Reset #2: goal intervention applied (success: True)
+episode 2: 501 steps, reward: 2.340
+total data points collected: 1002
+average episode length: 100.2
+average episode reward: 0.216
+termination reasons: ['other', 'other']
+success rate: 0/10
+Reset #3: goal intervention applied (success: True)
+episode 3: 501 steps, reward: -0.679
+total data points collected: 1503
+average episode length: 150.3
+average episode reward: 0.149
+termination reasons: ['other', 'other', 'other']
+success rate: 0/10
+total data points collected: 2004
+average episode length: 200.4
+average episode reward: -0.008
+termination reasons: ['other', 'other', 'other', 'other']
+success rate: 0/10
+total data points collected: 2505
+average episode length: 250.5
+average episode reward: 0.141
+termination reasons: ['other', 'other', 'other', 'other', 'other']
+success rate: 0/10
+total data points collected: 3006
+average episode length: 300.6
+average episode reward: 0.376
+termination reasons: ['other', 'other', 'other', 'other', 'other', 'other']
+success rate: 0/10
+total data points collected: 3507
+average episode length: 350.7
+average episode reward: 0.420
+termination reasons: ['other', 'other', 'other', 'other', 'other', 'other', 'other']
+success rate: 0/10

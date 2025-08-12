@@ -1,0 +1,17 @@
+{"time":"2025-07-08T22:42:22.546550826-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-08T22:42:22.54658442-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250708_224222-ofulq2ci/logs/debug-core.log"}
+{"time":"2025-07-08T22:42:22.662628044-04:00","level":"INFO","msg":"created new stream","id":"ofulq2ci"}
+{"time":"2025-07-08T22:42:22.662729732-04:00","level":"INFO","msg":"stream: started","id":"ofulq2ci"}
+{"time":"2025-07-08T22:42:22.66278742-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"ofulq2ci"}
+{"time":"2025-07-08T22:42:22.662829045-04:00","level":"INFO","msg":"handler: started","stream_id":"ofulq2ci"}
+{"time":"2025-07-08T22:42:22.662792169-04:00","level":"INFO","msg":"sender: started","stream_id":"ofulq2ci"}
+{"time":"2025-07-08T22:42:22.906630069-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-08T22:43:35.670084637-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-08T22:48:44.838871059-04:00","level":"INFO","msg":"stream: closing","id":"ofulq2ci"}
+{"time":"2025-07-08T22:48:44.838929725-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-08T22:48:44.839847638-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-08T22:48:46.688089982-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-08T22:48:46.870547653-04:00","level":"INFO","msg":"handler: closed","stream_id":"ofulq2ci"}
+{"time":"2025-07-08T22:48:46.870650877-04:00","level":"INFO","msg":"sender: closed","stream_id":"ofulq2ci"}
+{"time":"2025-07-08T22:48:46.870646547-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"ofulq2ci"}
+{"time":"2025-07-08T22:48:46.870788952-04:00","level":"INFO","msg":"stream: closed","id":"ofulq2ci"}

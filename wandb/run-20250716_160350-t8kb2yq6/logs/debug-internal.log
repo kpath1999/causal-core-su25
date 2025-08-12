@@ -1,0 +1,17 @@
+{"time":"2025-07-16T16:03:51.001769478-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-16T16:03:51.001797344-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250716_160350-t8kb2yq6/logs/debug-core.log"}
+{"time":"2025-07-16T16:03:51.115315809-04:00","level":"INFO","msg":"created new stream","id":"t8kb2yq6"}
+{"time":"2025-07-16T16:03:51.115355129-04:00","level":"INFO","msg":"stream: started","id":"t8kb2yq6"}
+{"time":"2025-07-16T16:03:51.11542036-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"t8kb2yq6"}
+{"time":"2025-07-16T16:03:51.115462473-04:00","level":"INFO","msg":"handler: started","stream_id":"t8kb2yq6"}
+{"time":"2025-07-16T16:03:51.115560459-04:00","level":"INFO","msg":"sender: started","stream_id":"t8kb2yq6"}
+{"time":"2025-07-16T16:03:51.408914409-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-16T16:08:23.980674894-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-16T16:17:56.751944137-04:00","level":"INFO","msg":"stream: closing","id":"t8kb2yq6"}
+{"time":"2025-07-16T16:17:56.751997216-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-16T16:17:56.752985037-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-16T16:17:57.337373343-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-16T16:17:57.433493537-04:00","level":"INFO","msg":"handler: closed","stream_id":"t8kb2yq6"}
+{"time":"2025-07-16T16:17:57.433529505-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"t8kb2yq6"}
+{"time":"2025-07-16T16:17:57.433573015-04:00","level":"INFO","msg":"sender: closed","stream_id":"t8kb2yq6"}
+{"time":"2025-07-16T16:17:57.433621275-04:00","level":"INFO","msg":"stream: closed","id":"t8kb2yq6"}

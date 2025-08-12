@@ -1,0 +1,17 @@
+{"time":"2025-06-30T13:58:14.860150114-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-06-30T13:58:14.86018231-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250630_135814-7eyzeqvj/logs/debug-core.log"}
+{"time":"2025-06-30T13:58:15.073529455-04:00","level":"INFO","msg":"created new stream","id":"7eyzeqvj"}
+{"time":"2025-06-30T13:58:15.073584838-04:00","level":"INFO","msg":"stream: started","id":"7eyzeqvj"}
+{"time":"2025-06-30T13:58:15.07364958-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"7eyzeqvj"}
+{"time":"2025-06-30T13:58:15.073703078-04:00","level":"INFO","msg":"handler: started","stream_id":"7eyzeqvj"}
+{"time":"2025-06-30T13:58:15.074916065-04:00","level":"INFO","msg":"sender: started","stream_id":"7eyzeqvj"}
+{"time":"2025-06-30T13:58:15.360129429-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-06-30T13:58:19.836978784-04:00","level":"INFO","msg":"stream: closing","id":"7eyzeqvj"}
+{"time":"2025-06-30T13:58:19.837034167-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-06-30T13:58:19.838052789-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-06-30T13:58:29.214276178-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-06-30T13:58:30.774198753-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-06-30T13:58:30.8534508-04:00","level":"INFO","msg":"handler: closed","stream_id":"7eyzeqvj"}
+{"time":"2025-06-30T13:58:30.853505136-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"7eyzeqvj"}
+{"time":"2025-06-30T13:58:30.853524063-04:00","level":"INFO","msg":"sender: closed","stream_id":"7eyzeqvj"}
+{"time":"2025-06-30T13:58:30.853646633-04:00","level":"INFO","msg":"stream: closed","id":"7eyzeqvj"}

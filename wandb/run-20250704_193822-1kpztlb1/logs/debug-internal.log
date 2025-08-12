@@ -1,0 +1,18 @@
+{"time":"2025-07-04T19:38:22.972279503-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-04T19:38:22.972303109-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250704_193822-1kpztlb1/logs/debug-core.log"}
+{"time":"2025-07-04T19:38:23.1913813-04:00","level":"INFO","msg":"created new stream","id":"1kpztlb1"}
+{"time":"2025-07-04T19:38:23.191462175-04:00","level":"INFO","msg":"stream: started","id":"1kpztlb1"}
+{"time":"2025-07-04T19:38:23.191496676-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"1kpztlb1"}
+{"time":"2025-07-04T19:38:23.191531247-04:00","level":"INFO","msg":"sender: started","stream_id":"1kpztlb1"}
+{"time":"2025-07-04T19:38:23.191510854-04:00","level":"INFO","msg":"handler: started","stream_id":"1kpztlb1"}
+{"time":"2025-07-04T19:38:23.519675958-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-04T19:38:44.470468435-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-04T20:29:43.772382947-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-04T20:29:43.77390456-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-04T20:29:44.773564129-04:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"saving job artifact","runtime_seconds":0.886699218}],"total_operations":1}}
+{"time":"2025-07-04T20:29:45.484308104-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-04T20:29:46.594494922-04:00","level":"INFO","msg":"stream: closing","id":"1kpztlb1"}
+{"time":"2025-07-04T20:29:46.594537036-04:00","level":"INFO","msg":"handler: closed","stream_id":"1kpztlb1"}
+{"time":"2025-07-04T20:29:46.59455687-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"1kpztlb1"}
+{"time":"2025-07-04T20:29:46.59460939-04:00","level":"INFO","msg":"sender: closed","stream_id":"1kpztlb1"}
+{"time":"2025-07-04T20:29:46.594686494-04:00","level":"INFO","msg":"stream: closed","id":"1kpztlb1"}

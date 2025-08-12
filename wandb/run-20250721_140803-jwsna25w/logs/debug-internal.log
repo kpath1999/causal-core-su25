@@ -1,0 +1,17 @@
+{"time":"2025-07-21T14:08:03.660952071-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-21T14:08:03.660976725-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250721_140803-jwsna25w/logs/debug-core.log"}
+{"time":"2025-07-21T14:08:03.87590247-04:00","level":"INFO","msg":"created new stream","id":"jwsna25w"}
+{"time":"2025-07-21T14:08:03.8759985-04:00","level":"INFO","msg":"stream: started","id":"jwsna25w"}
+{"time":"2025-07-21T14:08:03.87603782-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"jwsna25w"}
+{"time":"2025-07-21T14:08:03.876087966-04:00","level":"INFO","msg":"handler: started","stream_id":"jwsna25w"}
+{"time":"2025-07-21T14:08:03.876139019-04:00","level":"INFO","msg":"sender: started","stream_id":"jwsna25w"}
+{"time":"2025-07-21T14:08:04.230249571-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-21T14:40:16.161998569-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-21T14:40:16.163250876-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-21T14:40:17.162605338-04:00","level":"INFO","msg":"handler: operation stats","stats":{}}
+{"time":"2025-07-21T14:40:17.612133156-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-21T14:40:18.768822741-04:00","level":"INFO","msg":"stream: closing","id":"jwsna25w"}
+{"time":"2025-07-21T14:40:18.768859686-04:00","level":"INFO","msg":"handler: closed","stream_id":"jwsna25w"}
+{"time":"2025-07-21T14:40:18.768880499-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"jwsna25w"}
+{"time":"2025-07-21T14:40:18.768965704-04:00","level":"INFO","msg":"sender: closed","stream_id":"jwsna25w"}
+{"time":"2025-07-21T14:40:18.768985538-04:00","level":"INFO","msg":"stream: closed","id":"jwsna25w"}

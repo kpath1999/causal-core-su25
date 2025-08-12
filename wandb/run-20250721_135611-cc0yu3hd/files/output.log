@@ -1,0 +1,19 @@
+2025-07-21 13:56:13,294 3100913 INFO [PRETRAINED] Using pretrained model path: ppo_pushing_sb3/final_model.zip
+2025-07-21 13:56:13,294 3100913 INFO Starting with 7 interventions
+2025-07-21 13:56:13,295 3100913 INFO ===final evaluation===
+2025-07-21 13:56:25,605 3100913 INFO Final performance
+2025-07-21 13:56:25,606 3100913 INFO average reward: 3.394 +/- 0.000
+2025-07-21 13:56:25,606 3100913 INFO success rate: 1.000
+2025-07-21 13:56:25,606 3100913 INFO average episode length: 501.0
+2025-07-21 13:56:25,606 3100913 INFO initial performance: {'avg_reward': 3.393721938342554, 'reward_std': 4.440892098500626e-16, 'avg_length': 501.0, 'success_rate': 1.0, 'total_episodes': 10}
+2025-07-21 13:56:25,606 3100913 INFO CURRICULUM STAGE 1/7
+2025-07-21 13:56:25,606 3100913 INFO Remaining interventions: ['goal', 'mass', 'friction', 'visual', 'position', 'angle', 'random']
+2025-07-21 13:56:25,606 3100913 INFO CURRICULUM STAGE 1/7 (no interventions)
+Traceback (most recent call last):
+  File "baselines.py", line 989, in <module>
+    main()
+  File "baselines.py", line 749, in main
+    cumulative_timesteps
+  File "baselines.py", line 484, in train_on_intervention
+    logging.info(f"=== stage {stage_num}/{total_stages}: training on {intervention['type']} intervention ===")
+TypeError: 'NoneType' object is not subscriptable

@@ -1,0 +1,148 @@
+{
+  "final_evals": {
+    "P0": {
+      "mean_full_integrated_fractional_success": 0.22550344084451115,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.0,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.0,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 1,
+      "total_interventions": 0,
+      "total_timesteps": 0,
+      "total_resets": 0
+    },
+    "P1": {
+      "mean_full_integrated_fractional_success": 0.1611362936158357,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.0,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.0,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 2,
+      "total_interventions": 1,
+      "total_timesteps": 834,
+      "total_resets": 1
+    },
+    "P2": {
+      "mean_full_integrated_fractional_success": 0.3882880323116676,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.9498446849323511,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.9998389448994447,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 3,
+      "total_interventions": 2,
+      "total_timesteps": 1668,
+      "total_resets": 2
+    },
+    "P3": {
+      "mean_full_integrated_fractional_success": 0.23762827466636008,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.0,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.0,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 4,
+      "total_interventions": 3,
+      "total_timesteps": 2502,
+      "total_resets": 3
+    },
+    "P4": {
+      "mean_full_integrated_fractional_success": 0.31109981107344103,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.026947389708514773,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.0,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 5,
+      "total_interventions": 4,
+      "total_timesteps": 3336,
+      "total_resets": 4
+    },
+    "P5": {
+      "mean_full_integrated_fractional_success": 0.2659817124669969,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.0,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.0,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 6,
+      "total_interventions": 5,
+      "total_timesteps": 4170,
+      "total_resets": 5
+    },
+    "P6": {
+      "mean_full_integrated_fractional_success": 0.0,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.0,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.0,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 7,
+      "total_interventions": 7,
+      "total_timesteps": 5004,
+      "total_resets": 6
+    },
+    "P7": {
+      "mean_full_integrated_fractional_success": 0.15027217809754115,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.02497651314047315,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.0,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 8,
+      "total_interventions": 9,
+      "total_timesteps": 5838,
+      "total_resets": 7
+    },
+    "P8": {
+      "mean_full_integrated_fractional_success": 0.12784165692452276,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.12256220987187186,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.12157872048660592,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 9,
+      "total_interventions": 11,
+      "total_timesteps": 6672,
+      "total_resets": 8
+    },
+    "P9": {
+      "mean_full_integrated_fractional_success": 0.09587836238596056,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.045574392612553846,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.040542066540933105,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 10,
+      "total_interventions": 14,
+      "total_timesteps": 7506,
+      "total_resets": 9
+    },
+    "P10": {
+      "mean_full_integrated_fractional_success": 0.0,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.0,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.0,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 11,
+      "total_interventions": 32,
+      "total_timesteps": 8340,
+      "total_resets": 10
+    },
+    "P11": {
+      "mean_full_integrated_fractional_success": 0.01844079562952724,
+      "std_full_integrated_fractional_success": 0.0,
+      "mean_last_integrated_fractional_success": 0.0,
+      "std_last_integrated_fractional_success": 0.0,
+      "mean_last_fractional_success": 0.0,
+      "std_last_fractional_success": 0.0,
+      "total_intervention_steps": 12,
+      "total_interventions": 50,
+      "total_timesteps": 9174,
+      "total_resets": 11
+    }
+  }
+}

@@ -1,0 +1,26 @@
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_setup.py:_flush():79] Current SDK version is 0.18.7
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_setup.py:_flush():79] Configure stats pid to 3525994
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_setup.py:_flush():79] Loading settings from /home/kpatherya3/.config/wandb/settings
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_setup.py:_flush():79] Loading settings from /home/kpatherya3/causal-core-su25/wandb/settings
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_setup.py:_flush():79] Loading settings from environment variables: {}
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_setup.py:_flush():79] Applying setup settings: {'mode': None, '_disable_service': None}
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_setup.py:_flush():79] Inferring run settings from compute environment: {'program_relpath': 'ppo_vanilla.py', 'program_abspath': '/home/kpatherya3/causal-core-su25/ppo_vanilla.py', 'program': 'ppo_vanilla.py'}
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_setup.py:_flush():79] Applying login settings: {}
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_init.py:_log_setup():533] Logging user logs to /home/kpatherya3/causal-core-su25/wandb/run-20250630_121721-8zw21785/logs/debug.log
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_init.py:_log_setup():534] Logging internal logs to /home/kpatherya3/causal-core-su25/wandb/run-20250630_121721-8zw21785/logs/debug-internal.log
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_init.py:init():619] calling init triggers
+2025-06-30 12:17:21,537 INFO    MainThread:3525994 [wandb_init.py:init():627] wandb.init called with sweep_config: {}
+config: {'task_name': 'pushing', 'max_episode_length': 250, 'skip_frame': 3, 'seed': 0, 'total_timesteps': 5000000, 'gamma': 0.995, 'n_steps': 4096, 'ent_coef': 0.02, 'learning_rate': 0.00025, 'vf_coef': 0.5, 'max_grad_norm': 0.5, 'gae_lambda': 0.97, 'batch_size': 512, 'n_epochs': 15}
+2025-06-30 12:17:21,538 INFO    MainThread:3525994 [wandb_init.py:init():669] starting backend
+2025-06-30 12:17:21,538 INFO    MainThread:3525994 [wandb_init.py:init():673] sending inform_init request
+2025-06-30 12:17:21,540 INFO    MainThread:3525994 [backend.py:_multiprocessing_setup():106] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2025-06-30 12:17:21,541 INFO    MainThread:3525994 [wandb_init.py:init():686] backend started and connected
+2025-06-30 12:17:21,543 INFO    MainThread:3525994 [wandb_init.py:init():781] updated telemetry
+2025-06-30 12:17:21,564 INFO    MainThread:3525994 [wandb_init.py:init():814] communicating run to backend with 90.0 second timeout
+2025-06-30 12:17:21,995 INFO    MainThread:3525994 [wandb_init.py:init():867] starting run threads in backend
+2025-06-30 12:17:22,060 INFO    MainThread:3525994 [wandb_run.py:_console_start():2456] atexit reg
+2025-06-30 12:17:22,060 INFO    MainThread:3525994 [wandb_run.py:_redirect():2305] redirect: wrap_raw
+2025-06-30 12:17:22,060 INFO    MainThread:3525994 [wandb_run.py:_redirect():2370] Wrapping output streams.
+2025-06-30 12:17:22,060 INFO    MainThread:3525994 [wandb_run.py:_redirect():2395] Redirects installed.
+2025-06-30 12:17:22,063 INFO    MainThread:3525994 [wandb_init.py:init():911] run started, returning control to user process
+2025-06-30 12:17:25,648 WARNING MsgRouterThr:3525994 [router.py:message_loop():75] message_loop has been closed

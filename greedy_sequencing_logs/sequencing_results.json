@@ -1,0 +1,109 @@
+{
+  "sequence": [
+    {
+      "stage": 1,
+      "intervention": "position",
+      "test_metrics": {
+        "avg_reward": 1.4163035423212096,
+        "reward_std": 1.7554350442031337,
+        "avg_length": 453.5,
+        "success_rate": 0.1,
+        "total_episodes": 10
+      }
+    },
+    {
+      "stage": 2,
+      "intervention": "goal",
+      "test_metrics": {
+        "avg_reward": 1.5095401048549537,
+        "reward_std": 2.653671404539428,
+        "avg_length": 453.6,
+        "success_rate": 0.1,
+        "total_episodes": 10
+      }
+    },
+    {
+      "stage": 3,
+      "intervention": "friction",
+      "test_metrics": {
+        "avg_reward": 2.2794301804908397,
+        "reward_std": 0.18465462337423647,
+        "avg_length": 501.0,
+        "success_rate": 0.0,
+        "total_episodes": 10
+      }
+    },
+    {
+      "stage": 4,
+      "intervention": "visual",
+      "test_metrics": {
+        "avg_reward": 1.6316410747022698,
+        "reward_std": 2.220446049250313e-16,
+        "avg_length": 501.0,
+        "success_rate": 0.0,
+        "total_episodes": 10
+      }
+    },
+    {
+      "stage": 5,
+      "intervention": "mass",
+      "test_metrics": {
+        "avg_reward": 2.0172426067368026,
+        "reward_std": 2.3747835889838873,
+        "avg_length": 458.4,
+        "success_rate": 0.1,
+        "total_episodes": 10
+      }
+    },
+    {
+      "stage": 6,
+      "intervention": "random",
+      "test_metrics": {
+        "avg_reward": 0.5744273013747254,
+        "reward_std": 2.387560066040932,
+        "avg_length": 457.7,
+        "success_rate": 0.1,
+        "total_episodes": 10
+      }
+    },
+    {
+      "stage": 7,
+      "intervention": "angle",
+      "test_metrics": {
+        "avg_reward": -2.336565394188125,
+        "reward_std": 1.113302495850788,
+        "avg_length": 501.0,
+        "success_rate": 0.0,
+        "total_episodes": 10
+      }
+    }
+  ],
+  "initial_performance": {
+    "avg_reward": 3.393721938342554,
+    "reward_std": 4.440892098500626e-16,
+    "avg_length": 501.0,
+    "success_rate": 1.0,
+    "total_episodes": 10
+  },
+  "final_performance": {
+    "avg_reward": -5.852612561302366,
+    "reward_std": 8.881784197001252e-16,
+    "avg_length": 501.0,
+    "success_rate": 0.0,
+    "total_episodes": 20
+  },
+  "cumulative_timesteps": 0,
+  "args": {
+    "curriculum_mode": "greedy",
+    "train": true,
+    "eval": true,
+    "task": "pushing",
+    "timesteps": 50000,
+    "pretrained_path": "ppo_pushing_sb3/final_model.zip",
+    "log_dir": "greedy_sequencing_logs",
+    "seed": 0,
+    "skip_frame": 3,
+    "use_wandb": true,
+    "test_episodes": 10
+  }
+}

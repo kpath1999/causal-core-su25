@@ -1,0 +1,18 @@
+{"time":"2025-07-04T19:35:42.675258643-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-04T19:35:42.675286579-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250704_193542-j24yvnuz/logs/debug-core.log"}
+{"time":"2025-07-04T19:35:42.891675555-04:00","level":"INFO","msg":"created new stream","id":"j24yvnuz"}
+{"time":"2025-07-04T19:35:42.891749307-04:00","level":"INFO","msg":"stream: started","id":"j24yvnuz"}
+{"time":"2025-07-04T19:35:42.891804201-04:00","level":"INFO","msg":"handler: started","stream_id":"j24yvnuz"}
+{"time":"2025-07-04T19:35:42.891837306-04:00","level":"INFO","msg":"sender: started","stream_id":"j24yvnuz"}
+{"time":"2025-07-04T19:35:42.891805598-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"j24yvnuz"}
+{"time":"2025-07-04T19:35:43.113494834-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-04T19:36:01.245135815-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-04T20:11:23.73896269-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-04T20:11:23.741524996-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-04T20:11:24.740030739-04:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"saving job artifact","runtime_seconds":0.926589717}],"total_operations":1}}
+{"time":"2025-07-04T20:11:25.504805468-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-04T20:11:26.621997562-04:00","level":"INFO","msg":"stream: closing","id":"j24yvnuz"}
+{"time":"2025-07-04T20:11:26.622044425-04:00","level":"INFO","msg":"handler: closed","stream_id":"j24yvnuz"}
+{"time":"2025-07-04T20:11:26.622063841-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"j24yvnuz"}
+{"time":"2025-07-04T20:11:26.622178309-04:00","level":"INFO","msg":"sender: closed","stream_id":"j24yvnuz"}
+{"time":"2025-07-04T20:11:26.622196817-04:00","level":"INFO","msg":"stream: closed","id":"j24yvnuz"}

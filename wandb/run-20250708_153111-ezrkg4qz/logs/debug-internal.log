@@ -1,0 +1,17 @@
+{"time":"2025-07-08T15:31:11.312162831-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-08T15:31:11.312201592-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250708_153111-ezrkg4qz/logs/debug-core.log"}
+{"time":"2025-07-08T15:31:11.528294369-04:00","level":"INFO","msg":"created new stream","id":"ezrkg4qz"}
+{"time":"2025-07-08T15:31:11.528390888-04:00","level":"INFO","msg":"stream: started","id":"ezrkg4qz"}
+{"time":"2025-07-08T15:31:11.528430138-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"ezrkg4qz"}
+{"time":"2025-07-08T15:31:11.528529032-04:00","level":"INFO","msg":"handler: started","stream_id":"ezrkg4qz"}
+{"time":"2025-07-08T15:31:11.52855641-04:00","level":"INFO","msg":"sender: started","stream_id":"ezrkg4qz"}
+{"time":"2025-07-08T15:31:11.84321093-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-08T15:31:30.604403302-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-08T15:33:00.707001019-04:00","level":"INFO","msg":"stream: closing","id":"ezrkg4qz"}
+{"time":"2025-07-08T15:33:00.707070999-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-08T15:33:00.708068739-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-08T15:33:02.473890072-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-08T15:33:02.622807393-04:00","level":"INFO","msg":"handler: closed","stream_id":"ezrkg4qz"}
+{"time":"2025-07-08T15:33:02.622902446-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"ezrkg4qz"}
+{"time":"2025-07-08T15:33:02.622919068-04:00","level":"INFO","msg":"sender: closed","stream_id":"ezrkg4qz"}
+{"time":"2025-07-08T15:33:02.623223292-04:00","level":"INFO","msg":"stream: closed","id":"ezrkg4qz"}

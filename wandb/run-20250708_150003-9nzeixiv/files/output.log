@@ -1,0 +1,33 @@
+2025-07-08 15:00:04,419 1930476 INFO [WANDB] Initialized with project: adaptive-curriculum-ppo-pushing and run name: adaptive_curriculum_ppo_pushing_seed0
+2025-07-08 15:00:04,420 1930476 INFO [LOGDIR] Log directory: adaptive_curriculum_on_ppo
+2025-07-08 15:00:04,420 1930476 INFO [CURRICULUM] Interventions: ['GoalInterventionActorPolicy', 'PhysicalPropertiesInterventionActorPolicy', 'VisualInterventionActorPolicy', 'JointsInterventionActorPolicy', 'RigidPoseInterventionActorPolicy', 'RandomInterventionActorPolicy']
+[ADAPTIVE] Initialized with 6 interventions.
+2025-07-08 15:00:04,421 1930476 INFO [ENV] Creating 16 parallel training environments for task: pushing
+2025-07-08 15:00:09,513 1930476 INFO [ENV] Creating evaluation environment for task: pushing
+2025-07-08 15:00:09,628 1930476 INFO [MODEL] PPO model loaded from: ppo_pushing_sb3/final_model.zip
+2025-07-08 15:00:11,201 1930476 INFO [CALLBACKS] Callbacks set up: ['CheckpointCallback', 'EvalCallback', 'AdaptiveCurriculumCallback', 'WandbCallback']
+2025-07-08 15:00:11,202 1930476 INFO [TRAIN] Starting training for 3000000 timesteps...
+Traceback (most recent call last):
+  File "reward_curriculum_on_ppo.py", line 328, in <module>
+    main()
+  File "reward_curriculum_on_ppo.py", line 316, in main
+    tb_log_name="adaptive_curriculum_on_ppo"
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/ppo/ppo.py", line 308, in learn
+    reset_num_timesteps=reset_num_timesteps,
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/on_policy_algorithm.py", line 243, in learn
+    total_timesteps, eval_env, callback, eval_freq, n_eval_episodes, eval_log_path, reset_num_timesteps, tb_log_name
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/base_class.py", line 429, in _setup_learn
+    self._last_obs = self.env.reset()  # pytype: disable=annotation-type-mismatch
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/vec_env/vec_monitor.py", line 70, in reset
+    obs = self.venv.reset()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/vec_env/subproc_vec_env.py", line 133, in reset
+    obs = [remote.recv() for remote in self.remotes]
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/vec_env/subproc_vec_env.py", line 133, in <listcomp>
+    obs = [remote.recv() for remote in self.remotes]
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/multiprocessing/connection.py", line 250, in recv
+    buf = self._recv_bytes()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/multiprocessing/connection.py", line 407, in _recv_bytes
+    buf = self._recv(4)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/multiprocessing/connection.py", line 383, in _recv
+    raise EOFError
+EOFError

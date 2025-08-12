@@ -1,0 +1,72 @@
+Logging to ppo_pushing_sb3_curr/ppo_sb3_curr_basic_1
+/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/callbacks.py:337: UserWarning: Training and eval env are not of the same type<stable_baselines3.common.vec_env.vec_monitor.VecMonitor object at 0x7f430c4ecb50> != <stable_baselines3.common.vec_env.dummy_vec_env.DummyVecEnv object at 0x7f4307525150>
+  warnings.warn("Training and eval env are not of the same type" f"{self.training_env} != {self.eval_env}")
+-----------------------------
+| time/              |      |
+|    fps             | 1019 |
+|    iterations      | 1    |
+|    time_elapsed    | 2    |
+|    total_timesteps | 2048 |
+-----------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.46283573  |
+| time/                   |             |
+|    fps                  | 696         |
+|    iterations           | 2           |
+|    time_elapsed         | 5           |
+|    total_timesteps      | 4096        |
+| train/                  |             |
+|    approx_kl            | 0.039077923 |
+|    clip_fraction        | 0.27        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.5       |
+|    explained_variance   | 0.196       |
+|    learning_rate        | 0.0003      |
+|    loss                 | -0.249      |
+|    n_updates            | 1170        |
+|    policy_gradient_loss | -0.0499     |
+|    std                  | 2.65        |
+|    value_loss           | 0.1         |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 251         |
+|    ep_rew_mean          | 0.46283573  |
+| time/                   |             |
+|    fps                  | 735         |
+|    iterations           | 3           |
+|    time_elapsed         | 8           |
+|    total_timesteps      | 6144        |
+| train/                  |             |
+|    approx_kl            | 0.029090412 |
+|    clip_fraction        | 0.341       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -21.6       |
+|    explained_variance   | 0.68        |
+|    learning_rate        | 0.0003      |
+|    loss                 | -0.275      |
+|    n_updates            | 1185        |
+|    policy_gradient_loss | -0.05       |
+|    std                  | 2.67        |
+|    value_loss           | 0.0422      |
+-----------------------------------------
+Traceback (most recent call last):
+  File "ppo_pushing_curr_basic.py", line 207, in <module>
+    main()
+  File "ppo_pushing_curr_basic.py", line 203, in main
+    wandb_config=wandb_config
+  File "ppo_pushing_curr_basic.py", line 151, in train_with_curriculum
+    tb_log_name="ppo_sb3_curr_basic"
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/ppo/ppo.py", line 308, in learn
+    reset_num_timesteps=reset_num_timesteps,
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/on_policy_algorithm.py", line 270, in learn
+    self.train()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/ppo/ppo.py", line 259, in train
+    loss.backward()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/torch/_tensor.py", line 489, in backward
+    self, gradient, retain_graph, create_graph, inputs=inputs
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/torch/autograd/__init__.py", line 199, in backward
+    allow_unreachable=True, accumulate_grad=True)  # Calls into the C++ engine to run the backward pass
+KeyboardInterrupt

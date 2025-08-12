@@ -1,0 +1,17 @@
+{"time":"2025-07-16T15:04:29.293039066-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-07-16T15:04:29.293062742-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250716_150429-tl4a1q26/logs/debug-core.log"}
+{"time":"2025-07-16T15:04:29.507706993-04:00","level":"INFO","msg":"created new stream","id":"tl4a1q26"}
+{"time":"2025-07-16T15:04:29.507790243-04:00","level":"INFO","msg":"stream: started","id":"tl4a1q26"}
+{"time":"2025-07-16T15:04:29.507858337-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"tl4a1q26"}
+{"time":"2025-07-16T15:04:29.507901429-04:00","level":"INFO","msg":"sender: started","stream_id":"tl4a1q26"}
+{"time":"2025-07-16T15:04:29.507913232-04:00","level":"INFO","msg":"handler: started","stream_id":"tl4a1q26"}
+{"time":"2025-07-16T15:04:29.757000986-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-07-16T15:05:19.23431933-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-07-16T15:06:09.388610142-04:00","level":"INFO","msg":"stream: closing","id":"tl4a1q26"}
+{"time":"2025-07-16T15:06:09.388700026-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-07-16T15:06:09.389580015-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-07-16T15:06:10.197220796-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-16T15:06:10.324444796-04:00","level":"INFO","msg":"handler: closed","stream_id":"tl4a1q26"}
+{"time":"2025-07-16T15:06:10.324475595-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"tl4a1q26"}
+{"time":"2025-07-16T15:06:10.324506884-04:00","level":"INFO","msg":"sender: closed","stream_id":"tl4a1q26"}
+{"time":"2025-07-16T15:06:10.324589644-04:00","level":"INFO","msg":"stream: closed","id":"tl4a1q26"}

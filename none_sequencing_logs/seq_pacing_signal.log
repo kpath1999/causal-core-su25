@@ -1,0 +1,113 @@
+2025-07-21 14:08:03,021 3116239 INFO Starting highest reward-first sequencing with args: Namespace(curriculum_mode='none', eval=True, log_dir='none_sequencing_logs', pretrained_path=None, seed=0, skip_frame=3, task='pushing', test_episodes=10, timesteps=50000, train=True, use_wandb=True)
+2025-07-21 14:08:05,958 3116239 INFO [PRETRAINED] Using pretrained model path: ppo_pushing_sb3/final_model.zip
+2025-07-21 14:08:05,960 3116239 INFO Starting with 7 interventions
+2025-07-21 14:08:05,960 3116239 INFO ===final evaluation===
+2025-07-21 14:08:16,967 3116239 INFO Final performance
+2025-07-21 14:08:16,968 3116239 INFO average reward: 3.394 +/- 0.000
+2025-07-21 14:08:16,968 3116239 INFO success rate: 1.000
+2025-07-21 14:08:16,968 3116239 INFO average episode length: 501.0
+2025-07-21 14:08:16,968 3116239 INFO initial performance: {'avg_reward': 3.393721938342554, 'reward_std': 4.440892098500626e-16, 'avg_length': 501.0, 'success_rate': 1.0, 'total_episodes': 10}
+2025-07-21 14:08:16,968 3116239 INFO CURRICULUM STAGE 1/7
+2025-07-21 14:08:16,968 3116239 INFO Remaining interventions: ['goal', 'mass', 'friction', 'visual', 'position', 'angle', 'random']
+2025-07-21 14:08:16,968 3116239 INFO CURRICULUM STAGE 1/7 (no interventions)
+2025-07-21 14:08:16,968 3116239 INFO === stage 1/7: training on none intervention ===
+2025-07-21 14:12:43,304 3116239 INFO model saved to none_sequencing_logs/model_stage_1_none
+2025-07-21 14:12:43,306 3116239 INFO 
+Completed stage 1. No intervention used.
+2025-07-21 14:12:43,306 3116239 INFO Stages remaining: 6
+2025-07-21 14:12:43,306 3116239 INFO CURRICULUM STAGE 2/7 (no interventions)
+2025-07-21 14:12:43,306 3116239 INFO === stage 2/7: training on none intervention ===
+2025-07-21 14:17:08,417 3116239 INFO model saved to none_sequencing_logs/model_stage_2_none
+2025-07-21 14:17:08,418 3116239 INFO 
+Completed stage 2. No intervention used.
+2025-07-21 14:17:08,418 3116239 INFO Stages remaining: 5
+2025-07-21 14:17:08,419 3116239 INFO CURRICULUM STAGE 3/7 (no interventions)
+2025-07-21 14:17:08,419 3116239 INFO === stage 3/7: training on none intervention ===
+2025-07-21 14:21:35,762 3116239 INFO model saved to none_sequencing_logs/model_stage_3_none
+2025-07-21 14:21:35,763 3116239 INFO 
+Completed stage 3. No intervention used.
+2025-07-21 14:21:35,763 3116239 INFO Stages remaining: 4
+2025-07-21 14:21:35,764 3116239 INFO CURRICULUM STAGE 4/7 (no interventions)
+2025-07-21 14:21:35,764 3116239 INFO === stage 4/7: training on none intervention ===
+2025-07-21 14:26:06,519 3116239 INFO model saved to none_sequencing_logs/model_stage_4_none
+2025-07-21 14:26:06,520 3116239 INFO 
+Completed stage 4. No intervention used.
+2025-07-21 14:26:06,520 3116239 INFO Stages remaining: 3
+2025-07-21 14:26:06,521 3116239 INFO CURRICULUM STAGE 5/7 (no interventions)
+2025-07-21 14:26:06,521 3116239 INFO === stage 5/7: training on none intervention ===
+2025-07-21 14:30:39,009 3116239 INFO model saved to none_sequencing_logs/model_stage_5_none
+2025-07-21 14:30:39,010 3116239 INFO 
+Completed stage 5. No intervention used.
+2025-07-21 14:30:39,010 3116239 INFO Stages remaining: 2
+2025-07-21 14:30:39,011 3116239 INFO CURRICULUM STAGE 6/7 (no interventions)
+2025-07-21 14:30:39,011 3116239 INFO === stage 6/7: training on none intervention ===
+2025-07-21 14:35:14,530 3116239 INFO model saved to none_sequencing_logs/model_stage_6_none
+2025-07-21 14:35:14,531 3116239 INFO 
+Completed stage 6. No intervention used.
+2025-07-21 14:35:14,532 3116239 INFO Stages remaining: 1
+2025-07-21 14:35:14,532 3116239 INFO CURRICULUM STAGE 7/7 (no interventions)
+2025-07-21 14:35:14,532 3116239 INFO === stage 7/7: training on none intervention ===
+2025-07-21 14:39:50,302 3116239 INFO model saved to none_sequencing_logs/model_stage_7_none
+2025-07-21 14:39:50,303 3116239 INFO 
+Completed stage 7. No intervention used.
+2025-07-21 14:39:50,304 3116239 INFO Stages remaining: 0
+2025-07-21 14:39:57,415 3116239 INFO SB3 training curves saved to none_sequencing_logs/plots/training_curves_sb3.png
+2025-07-21 14:39:57,416 3116239 INFO ===final evaluation===
+2025-07-21 14:40:12,397 3116239 INFO episode 16: reward=6.216, length=501, success=False
+2025-07-21 14:40:13,336 3116239 INFO episode 17: reward=6.216, length=501, success=False
+2025-07-21 14:40:14,271 3116239 INFO episode 18: reward=6.216, length=501, success=False
+2025-07-21 14:40:15,206 3116239 INFO episode 19: reward=6.216, length=501, success=False
+2025-07-21 14:40:16,141 3116239 INFO episode 20: reward=6.216, length=501, success=False
+2025-07-21 14:40:16,142 3116239 INFO Final performance
+2025-07-21 14:40:16,142 3116239 INFO average reward: 6.216 +/- 0.000
+2025-07-21 14:40:16,142 3116239 INFO success rate: 0.000
+2025-07-21 14:40:16,142 3116239 INFO average episode length: 501.0
+2025-07-21 14:40:16,142 3116239 INFO curriculum sequencing completed
+2025-07-21 14:40:16,143 3116239 INFO sequence order:
+2025-07-21 14:40:16,143 3116239 INFO 1. none (test_reward: None)
+2025-07-21 14:40:16,143 3116239 INFO 2. none (test_reward: None)
+2025-07-21 14:40:16,143 3116239 INFO 3. none (test_reward: None)
+2025-07-21 14:40:16,143 3116239 INFO 4. none (test_reward: None)
+2025-07-21 14:40:16,143 3116239 INFO 5. none (test_reward: None)
+2025-07-21 14:40:16,143 3116239 INFO 6. none (test_reward: None)
+2025-07-21 14:40:16,143 3116239 INFO 7. none (test_reward: None)
+2025-07-21 14:40:16,143 3116239 INFO 
+performance comparison
+2025-07-21 14:40:16,144 3116239 INFO initial: 3.394 reward, 1.000 success
+2025-07-21 14:40:16,144 3116239 INFO final: 6.216 reward, 0.000 success
+2025-07-21 14:40:16,144 3116239 INFO improvement: 2.823 reward
+2025-07-21 14:40:16,157 3116239 INFO Final model saved to none_sequencing_logs/final_model_after_sequencing.zip
+2025-07-21 14:40:16,157 3116239 INFO results saved to none_sequencing_logs/sequencing_results.json
+2025-07-21 14:40:18,861 3116239 INFO 
+First phase of evaluation:
+2025-07-21 14:40:19,308 3116239 INFO episode 1: reward = 3.63, success = 0
+2025-07-21 14:40:19,798 3116239 INFO episode 2: reward = 3.63, success = 0
+2025-07-21 14:40:20,289 3116239 INFO episode 3: reward = 3.63, success = 0
+2025-07-21 14:40:20,780 3116239 INFO episode 4: reward = 3.63, success = 0
+2025-07-21 14:40:21,272 3116239 INFO episode 5: reward = 3.63, success = 0
+2025-07-21 14:40:21,761 3116239 INFO episode 6: reward = 3.63, success = 0
+2025-07-21 14:40:22,251 3116239 INFO episode 7: reward = 3.63, success = 0
+2025-07-21 14:40:22,741 3116239 INFO episode 8: reward = 3.63, success = 0
+2025-07-21 14:40:23,230 3116239 INFO episode 9: reward = 3.63, success = 0
+2025-07-21 14:40:23,719 3116239 INFO episode 10: reward = 3.63, success = 0
+2025-07-21 14:40:23,719 3116239 INFO 
+mean reward: 3.63
+2025-07-21 14:40:23,719 3116239 INFO mean success rate: 0.00
+2025-07-21 14:40:23,719 3116239 INFO 
+Generating benchmark evaluation and visualization...
+2025-07-21 14:40:23,778 3116239 INFO Applying the following protocol now, P0
+2025-07-21 14:40:42,717 3116239 INFO Applying the following protocol now, P1
+2025-07-21 14:41:02,388 3116239 INFO Applying the following protocol now, P2
+2025-07-21 14:41:22,858 3116239 INFO Applying the following protocol now, P3
+2025-07-21 14:41:43,446 3116239 INFO Applying the following protocol now, P4
+2025-07-21 14:42:03,616 3116239 INFO Applying the following protocol now, P5
+2025-07-21 14:42:23,367 3116239 INFO Applying the following protocol now, P6
+2025-07-21 14:42:43,391 3116239 INFO Applying the following protocol now, P7
+2025-07-21 14:43:03,390 3116239 INFO Applying the following protocol now, P8
+2025-07-21 14:43:23,816 3116239 INFO Applying the following protocol now, P9
+2025-07-21 14:43:43,593 3116239 INFO Applying the following protocol now, P10
+2025-07-21 14:44:03,498 3116239 INFO Applying the following protocol now, P11
+2025-07-21 14:44:23,491 3116239 INFO 
+Evaluation Results:
+2025-07-21 14:44:23,492 3116239 INFO {'P0': {'mean_full_integrated_fractional_success': 0.22550344084451115, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.0, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.0, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 1, 'total_interventions': 0, 'total_timesteps': 0, 'total_resets': 0}, 'P1': {'mean_full_integrated_fractional_success': 0.1611362936158357, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.0, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.0, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 2, 'total_interventions': 1, 'total_timesteps': 834, 'total_resets': 1}, 'P2': {'mean_full_integrated_fractional_success': 0.3882880323116676, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.9498446849323511, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.9998389448994447, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 3, 'total_interventions': 2, 'total_timesteps': 1668, 'total_resets': 2}, 'P3': {'mean_full_integrated_fractional_success': 0.23762827466636008, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.0, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.0, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 4, 'total_interventions': 3, 'total_timesteps': 2502, 'total_resets': 3}, 'P4': {'mean_full_integrated_fractional_success': 0.31109981107344103, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.026947389708514773, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.0, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 5, 'total_interventions': 4, 'total_timesteps': 3336, 'total_resets': 4}, 'P5': {'mean_full_integrated_fractional_success': 0.2659817124669969, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.0, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.0, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 6, 'total_interventions': 5, 'total_timesteps': 4170, 'total_resets': 5}, 'P6': {'mean_full_integrated_fractional_success': 0.0, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.0, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.0, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 7, 'total_interventions': 7, 'total_timesteps': 5004, 'total_resets': 6}, 'P7': {'mean_full_integrated_fractional_success': 0.15027217809754115, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.02497651314047315, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.0, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 8, 'total_interventions': 9, 'total_timesteps': 5838, 'total_resets': 7}, 'P8': {'mean_full_integrated_fractional_success': 0.12784165692452276, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.12256220987187186, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.12157872048660592, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 9, 'total_interventions': 11, 'total_timesteps': 6672, 'total_resets': 8}, 'P9': {'mean_full_integrated_fractional_success': 0.09587836238596056, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.045574392612553846, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.040542066540933105, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 10, 'total_interventions': 14, 'total_timesteps': 7506, 'total_resets': 9}, 'P10': {'mean_full_integrated_fractional_success': 0.0, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.0, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.0, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 11, 'total_interventions': 32, 'total_timesteps': 8340, 'total_resets': 10}, 'P11': {'mean_full_integrated_fractional_success': 0.01844079562952724, 'std_full_integrated_fractional_success': 0.0, 'mean_last_integrated_fractional_success': 0.0, 'std_last_integrated_fractional_success': 0.0, 'mean_last_fractional_success': 0.0, 'std_last_fractional_success': 0.0, 'total_intervention_steps': 12, 'total_interventions': 50, 'total_timesteps': 9174, 'total_resets': 11}}
+2025-07-21 14:44:23,492 3116239 INFO final evals saved to none_sequencing_logs/benchmark_results.json

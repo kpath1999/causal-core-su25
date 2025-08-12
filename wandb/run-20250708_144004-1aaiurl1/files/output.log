@@ -1,0 +1,11 @@
+2025-07-08 14:40:05,225 1890873 INFO [WANDB] Initialized with project: simple-curriculum-ppo-pushing and run name: simple_curriculum_ppo_pushing_seed0
+2025-07-08 14:40:05,226 1890873 INFO [LOGDIR] Log directory: simple_curriculum_on_ppo
+2025-07-08 14:40:05,226 1890873 INFO [ENV] Creating 16 parallel training environments for task: pushing
+2025-07-08 14:40:10,601 1890873 INFO [ENV] Creating evaluation environment for task: pushing
+2025-07-08 14:40:10,685 1890873 INFO [MODEL] PPO model loaded from: ppo_pushing_sb3/final_model.zip
+Traceback (most recent call last):
+  File "simple_curriculum_on_ppo.py", line 240, in <module>
+    main()
+  File "simple_curriculum_on_ppo.py", line 198, in main
+    logging.info(f"[CALLBACKS] Callbacks set up: {[type(cb).__name__ for cb in callbacks]}")
+UnboundLocalError: local variable 'callbacks' referenced before assignment

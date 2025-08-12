@@ -1,0 +1,2886 @@
+🚀 Initializing GraphBasedCurriculumManager with 2000000 timesteps
+📋 Experimental design: 100 baseline episodes, 50 episodes per intervention test
+🏗️ Building intervention dependency graph...
+🔧 Created intervention node: goal_basic with params: {}
+🔧 Created intervention node: pose_position with params: {'positions': True, 'orientations': False}
+🔧 Created intervention node: pose_orientation with params: {'positions': False, 'orientations': True}
+🔧 Created intervention node: physics_friction with params: {'group': 'friction'}
+🔧 Created intervention node: physics_mass with params: {'group': 'mass'}
+🔧 Created intervention node: visual with params: {}
+🔧 Created intervention node: random_full with params: {}
+➕ Added node to graph: goal_basic
+➕ Added node to graph: pose_position
+➕ Added node to graph: pose_orientation
+➕ Added node to graph: physics_friction
+➕ Added node to graph: physics_mass
+➕ Added node to graph: visual
+➕ Added node to graph: random_full
+🔗 Setting up dependencies:
+   goal_basic → pose_position
+⚔️ Setting up conflicts:
+   physics_mass ⚔️ physics_friction
+   pose_position ⚔️ pose_orientation
+🧪 Intervention test order: ['goal_basic', 'pose_position', 'pose_orientation', 'physics_friction', 'physics_mass', 'visual', 'random_full']
+✅ Graph construction complete: 7 nodes, 5 edges
+
+🎓 CURRICULUM CONFIG GENERATION (Episode 0)
+   📊 BASELINE PERIOD: No interventions active
+🔄 Curriculum callback initialized: adaptation every 30 episodes
+Using cuda device
+Wrapping the env with a `Monitor` wrapper
+Wrapping the env in a DummyVecEnv.
+Logging to baseline_picking_her_sac_curriculum/her_sac_curriculum_5
+
+📊 EPISODE COMPLETED:
+   Episode: 1
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 0)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 2
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 1)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 3
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 2)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+---------------------------------
+| rollout/           |          |
+|    ep_len_mean     | 401      |
+|    ep_rew_mean     | 0        |
+| time/              |          |
+|    episodes        | 4        |
+|    fps             | 356      |
+|    time_elapsed    | 4        |
+|    total_timesteps | 1604     |
+---------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 4
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 3)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 5
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 4)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 6
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 5)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 7
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 6)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+---------------------------------
+| rollout/           |          |
+|    ep_len_mean     | 401      |
+|    ep_rew_mean     | 0        |
+| time/              |          |
+|    episodes        | 8        |
+|    fps             | 363      |
+|    time_elapsed    | 8        |
+|    total_timesteps | 3208     |
+---------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 8
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 7)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 9
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 8)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 10
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 9)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 11
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 10)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+---------------------------------
+| rollout/           |          |
+|    ep_len_mean     | 401      |
+|    ep_rew_mean     | 0        |
+| time/              |          |
+|    episodes        | 12       |
+|    fps             | 365      |
+|    time_elapsed    | 13       |
+|    total_timesteps | 4812     |
+---------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 12
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 11)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 13
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 12)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 14
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 13)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 15
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 14)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+---------------------------------
+| rollout/           |          |
+|    ep_len_mean     | 401      |
+|    ep_rew_mean     | 0        |
+| time/              |          |
+|    episodes        | 16       |
+|    fps             | 65       |
+|    time_elapsed    | 98       |
+|    total_timesteps | 6416     |
+| train/             |          |
+|    actor_loss      | -123     |
+|    critic_loss     | 76.7     |
+|    ent_coef        | 0.761    |
+|    ent_coef_loss   | -0.259   |
+|    learning_rate   | 0.0003   |
+|    n_updates       | 1415     |
+---------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 16
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 15)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 17
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 16)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 18
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 17)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 19
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 18)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+---------------------------------
+| rollout/           |          |
+|    ep_len_mean     | 401      |
+|    ep_rew_mean     | 0        |
+| time/              |          |
+|    episodes        | 20       |
+|    fps             | 41       |
+|    time_elapsed    | 195      |
+|    total_timesteps | 8020     |
+| train/             |          |
+|    actor_loss      | -434     |
+|    critic_loss     | 778      |
+|    ent_coef        | 0.95     |
+|    ent_coef_loss   | 0.17     |
+|    learning_rate   | 0.0003   |
+|    n_updates       | 3019     |
+---------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 20
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 19)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 21
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 20)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 22
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 21)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 23
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 22)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 24        |
+|    fps             | 32        |
+|    time_elapsed    | 291       |
+|    total_timesteps | 9624      |
+| train/             |           |
+|    actor_loss      | -1.06e+03 |
+|    critic_loss     | 2.79e+03  |
+|    ent_coef        | 1.52      |
+|    ent_coef_loss   | -2.02     |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 4623      |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 24
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 23)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 25
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 24)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 26
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 25)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 27
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 26)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+---------------------------------
+| rollout/           |          |
+|    ep_len_mean     | 401      |
+|    ep_rew_mean     | 0        |
+| time/              |          |
+|    episodes        | 28       |
+|    fps             | 28       |
+|    time_elapsed    | 388      |
+|    total_timesteps | 11228    |
+| train/             |          |
+|    actor_loss      | -2.1e+03 |
+|    critic_loss     | 7.5e+03  |
+|    ent_coef        | 2.33     |
+|    ent_coef_loss   | -3.22    |
+|    learning_rate   | 0.0003   |
+|    n_updates       | 6227     |
+---------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 28
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 27)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 29
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 28)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+🔄 CURRICULUM ADAPTATION TRIGGERED
+🔄 Adapting curriculum...
+
+🎓 CURRICULUM CONFIG GENERATION (Episode 29)
+   📊 BASELINE PERIOD: No interventions active
+🔧 Updating curriculum wrapper...
+🔧 Updating internal curriculum object...
+🔧 Reinitializing curriculum actors...
+[34m[1mwandb[0m: [33mWARNING[0m Step cannot be set when using tensorboard syncing. Please use `run.define_metric(...)` to define a custom metric to log your step values.
+✅ Curriculum updated successfully!
+   📊 Active interventions: 0
+   🎯 Active nodes: []
+   📈 Baseline reward: 0.000000
+   🧪 Episode count: 29
+
+📊 EPISODE COMPLETED:
+   Episode: 30
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 29)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 31
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 30)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 32        |
+|    fps             | 26        |
+|    time_elapsed    | 484       |
+|    total_timesteps | 12832     |
+| train/             |           |
+|    actor_loss      | -4.32e+03 |
+|    critic_loss     | 8.43e+04  |
+|    ent_coef        | 4.14      |
+|    ent_coef_loss   | -12.8     |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 7831      |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 32
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 31)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 33
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 32)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 34
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 33)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 35
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 34)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 36        |
+|    fps             | 24        |
+|    time_elapsed    | 580       |
+|    total_timesteps | 14436     |
+| train/             |           |
+|    actor_loss      | -9.32e+03 |
+|    critic_loss     | 5.17e+05  |
+|    ent_coef        | 7.22      |
+|    ent_coef_loss   | -21.3     |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 9435      |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 36
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 35)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 37
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 36)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 38
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 37)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 39
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 38)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 40        |
+|    fps             | 23        |
+|    time_elapsed    | 677       |
+|    total_timesteps | 16040     |
+| train/             |           |
+|    actor_loss      | -2.01e+04 |
+|    critic_loss     | 2.95e+06  |
+|    ent_coef        | 12.6      |
+|    ent_coef_loss   | -44.9     |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 11039     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 40
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 39)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 41
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 40)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 42
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 41)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 43
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 42)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 44        |
+|    fps             | 22        |
+|    time_elapsed    | 774       |
+|    total_timesteps | 17644     |
+| train/             |           |
+|    actor_loss      | -5.36e+04 |
+|    critic_loss     | 4.91e+07  |
+|    ent_coef        | 22.2      |
+|    ent_coef_loss   | -64.8     |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 12643     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 44
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 43)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 45
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 44)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 46
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 45)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 47
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 46)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 48        |
+|    fps             | 22        |
+|    time_elapsed    | 871       |
+|    total_timesteps | 19248     |
+| train/             |           |
+|    actor_loss      | -1.26e+05 |
+|    critic_loss     | 3.53e+08  |
+|    ent_coef        | 37.8      |
+|    ent_coef_loss   | -94.3     |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 14247     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 48
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 47)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 49
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 48)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 50
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 49)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 51
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 50)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 52        |
+|    fps             | 21        |
+|    time_elapsed    | 968       |
+|    total_timesteps | 20852     |
+| train/             |           |
+|    actor_loss      | -2.82e+05 |
+|    critic_loss     | 2.54e+09  |
+|    ent_coef        | 63.7      |
+|    ent_coef_loss   | -118      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 15851     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 52
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 51)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 53
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 52)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 54
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 53)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 55
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 54)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 56        |
+|    fps             | 21        |
+|    time_elapsed    | 1064      |
+|    total_timesteps | 22456     |
+| train/             |           |
+|    actor_loss      | -5.59e+05 |
+|    critic_loss     | 1.5e+10   |
+|    ent_coef        | 109       |
+|    ent_coef_loss   | -175      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 17455     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 56
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 55)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 57
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 56)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 58
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 57)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 59
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 58)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+🔄 CURRICULUM ADAPTATION TRIGGERED
+🔄 Adapting curriculum...
+
+🎓 CURRICULUM CONFIG GENERATION (Episode 59)
+   📊 BASELINE PERIOD: No interventions active
+🔧 Updating curriculum wrapper...
+🔧 Updating internal curriculum object...
+🔧 Reinitializing curriculum actors...
+✅ Curriculum updated successfully!
+   📊 Active interventions: 0
+   🎯 Active nodes: []
+   📈 Baseline reward: 0.000000
+   🧪 Episode count: 59
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 60        |
+|    fps             | 20        |
+|    time_elapsed    | 1160      |
+|    total_timesteps | 24060     |
+| train/             |           |
+|    actor_loss      | -9.32e+05 |
+|    critic_loss     | 5.62e+10  |
+|    ent_coef        | 179       |
+|    ent_coef_loss   | -178      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 19059     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 60
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 59)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 61
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 60)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 62
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 61)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 63
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 62)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 64        |
+|    fps             | 20        |
+|    time_elapsed    | 1257      |
+|    total_timesteps | 25664     |
+| train/             |           |
+|    actor_loss      | -1.38e+06 |
+|    critic_loss     | 1.58e+11  |
+|    ent_coef        | 289       |
+|    ent_coef_loss   | -178      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 20663     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 64
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 63)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 65
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 64)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 66
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 65)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 67
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 66)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 68        |
+|    fps             | 20        |
+|    time_elapsed    | 1353      |
+|    total_timesteps | 27268     |
+| train/             |           |
+|    actor_loss      | -1.94e+06 |
+|    critic_loss     | 3.97e+11  |
+|    ent_coef        | 461       |
+|    ent_coef_loss   | -180      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 22267     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 68
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 67)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 69
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 68)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 70
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 69)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 71
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 70)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 72        |
+|    fps             | 19        |
+|    time_elapsed    | 1450      |
+|    total_timesteps | 28872     |
+| train/             |           |
+|    actor_loss      | -2.32e+06 |
+|    critic_loss     | 5.41e+11  |
+|    ent_coef        | 726       |
+|    ent_coef_loss   | -181      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 23871     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 72
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 71)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 73
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 72)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 74
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 73)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 75
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 74)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 76        |
+|    fps             | 19        |
+|    time_elapsed    | 1546      |
+|    total_timesteps | 30476     |
+| train/             |           |
+|    actor_loss      | -2.92e+06 |
+|    critic_loss     | 1.04e+12  |
+|    ent_coef        | 1.14e+03  |
+|    ent_coef_loss   | -169      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 25475     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 76
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 75)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 77
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 76)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 78
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 77)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 79
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 78)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 80        |
+|    fps             | 19        |
+|    time_elapsed    | 1643      |
+|    total_timesteps | 32080     |
+| train/             |           |
+|    actor_loss      | -3.86e+06 |
+|    critic_loss     | 1.8e+12   |
+|    ent_coef        | 1.8e+03   |
+|    ent_coef_loss   | -173      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 27079     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 80
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 79)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 81
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 80)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 82
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 81)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 83
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 82)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 84        |
+|    fps             | 19        |
+|    time_elapsed    | 1740      |
+|    total_timesteps | 33684     |
+| train/             |           |
+|    actor_loss      | -4.41e+06 |
+|    critic_loss     | 2.71e+12  |
+|    ent_coef        | 2.81e+03  |
+|    ent_coef_loss   | -162      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 28683     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 84
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 83)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 85
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 84)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 86
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 85)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 87
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 86)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 88        |
+|    fps             | 19        |
+|    time_elapsed    | 1838      |
+|    total_timesteps | 35288     |
+| train/             |           |
+|    actor_loss      | -5.01e+06 |
+|    critic_loss     | 3.79e+12  |
+|    ent_coef        | 4.38e+03  |
+|    ent_coef_loss   | -146      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 30287     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 88
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 87)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 89
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 88)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+🔄 CURRICULUM ADAPTATION TRIGGERED
+🔄 Adapting curriculum...
+
+🎓 CURRICULUM CONFIG GENERATION (Episode 89)
+   📊 BASELINE PERIOD: No interventions active
+🔧 Updating curriculum wrapper...
+🔧 Updating internal curriculum object...
+🔧 Reinitializing curriculum actors...
+✅ Curriculum updated successfully!
+   📊 Active interventions: 0
+   🎯 Active nodes: []
+   📈 Baseline reward: 0.000000
+   🧪 Episode count: 89
+
+📊 EPISODE COMPLETED:
+   Episode: 90
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 89)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 91
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 90)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 92        |
+|    fps             | 19        |
+|    time_elapsed    | 1935      |
+|    total_timesteps | 36892     |
+| train/             |           |
+|    actor_loss      | -6.15e+06 |
+|    critic_loss     | 6.02e+12  |
+|    ent_coef        | 6.78e+03  |
+|    ent_coef_loss   | -133      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 31891     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 92
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 91)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 93
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 92)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 94
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 93)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 95
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 94)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 96        |
+|    fps             | 18        |
+|    time_elapsed    | 2033      |
+|    total_timesteps | 38496     |
+| train/             |           |
+|    actor_loss      | -5.67e+06 |
+|    critic_loss     | 5.65e+12  |
+|    ent_coef        | 1.04e+04  |
+|    ent_coef_loss   | -114      |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 33495     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 96
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 95)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 97
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 96)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 98
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 97)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 99
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 98)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 100       |
+|    fps             | 18        |
+|    time_elapsed    | 2131      |
+|    total_timesteps | 40100     |
+| train/             |           |
+|    actor_loss      | -6.92e+06 |
+|    critic_loss     | 8.08e+12  |
+|    ent_coef        | 1.57e+04  |
+|    ent_coef_loss   | -94.1     |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 35099     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 100
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 99)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 101
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 100)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 102
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 101)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 103
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 102)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+---------------------------------
+| rollout/           |          |
+|    ep_len_mean     | 401      |
+|    ep_rew_mean     | 0        |
+| time/              |          |
+|    episodes        | 104      |
+|    fps             | 18       |
+|    time_elapsed    | 2229     |
+|    total_timesteps | 41704    |
+| train/             |          |
+|    actor_loss      | -7.3e+06 |
+|    critic_loss     | 1.09e+13 |
+|    ent_coef        | 2.31e+04 |
+|    ent_coef_loss   | -65      |
+|    learning_rate   | 0.0003   |
+|    n_updates       | 36703    |
+---------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 104
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 103)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 105
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 104)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 106
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 105)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 107
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 106)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 108       |
+|    fps             | 18        |
+|    time_elapsed    | 2327      |
+|    total_timesteps | 43308     |
+| train/             |           |
+|    actor_loss      | -8.28e+06 |
+|    critic_loss     | 1.26e+13  |
+|    ent_coef        | 3.26e+04  |
+|    ent_coef_loss   | -43       |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 38307     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 108
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 107)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 109
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 108)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 110
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 109)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 111
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 110)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 112       |
+|    fps             | 18        |
+|    time_elapsed    | 2425      |
+|    total_timesteps | 44912     |
+| train/             |           |
+|    actor_loss      | -7.54e+06 |
+|    critic_loss     | 1.46e+13  |
+|    ent_coef        | 4.31e+04  |
+|    ent_coef_loss   | -24.1     |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 39911     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 112
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 111)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 113
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 112)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 114
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 113)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 115
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 114)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 116       |
+|    fps             | 18        |
+|    time_elapsed    | 2523      |
+|    total_timesteps | 46516     |
+| train/             |           |
+|    actor_loss      | -7.78e+06 |
+|    critic_loss     | 1.44e+13  |
+|    ent_coef        | 5.12e+04  |
+|    ent_coef_loss   | -0.348    |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 41515     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 116
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 115)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 117
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 116)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 118
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 117)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+📊 EPISODE COMPLETED:
+   Episode: 119
+   Reward: 0.000000
+   Success: False
+   Active interventions: []
+
+📈 PERFORMANCE UPDATE (Episode 118)
+   Reward: 0.000000, Success: False
+   Active interventions: []
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+
+🔄 CURRICULUM ADAPTATION TRIGGERED
+🔄 Adapting curriculum...
+
+🎓 CURRICULUM CONFIG GENERATION (Episode 119)
+
+🧪 EXPERIMENTAL PHASE SELECTION (Episode 119)
+
+🔍 Checking intervention eligibility...
+   Node goal_basic: prerequisites_met=True
+   ✅ goal_basic is ELIGIBLE
+   Node pose_position: prerequisites_met=False
+      Prerequisites: goal_basic(satisfied=False, data=0, impact=0.000000, p=1.000000, effect=0.000)
+   ❌ pose_position is NOT eligible
+   Node pose_orientation: prerequisites_met=True
+   ✅ pose_orientation is ELIGIBLE
+   Node physics_friction: prerequisites_met=True
+   ✅ physics_friction is ELIGIBLE
+   Node physics_mass: prerequisites_met=True
+   ✅ physics_mass is ELIGIBLE
+   Node visual: prerequisites_met=True
+   ✅ visual is ELIGIBLE
+   Node random_full: prerequisites_met=True
+   ✅ random_full is ELIGIBLE
+🎯 Final eligible interventions: ['goal_basic', 'pose_orientation', 'physics_friction', 'physics_mass', 'visual', 'random_full']
+🔬 INTERVENTION TEST PHASE:
+   Test cycle: 0
+   Testing intervention: goal_basic
+   Episodes in current test: 19/50
+🎭 Creating actor instance for: goal_basic
+   🚀 SELECTED: goal_basic (strength: 0.70)
+   🔧 Building curriculum configuration:
+      goal_basic: frequency=1, strength=0.700
+   ✅ Config ready: 1 actors, 1 active nodes
+🔧 Updating curriculum wrapper...
+🔧 Updating internal curriculum object...
+🔧 Reinitializing curriculum actors...
+✅ Curriculum updated successfully!
+   📊 Active interventions: 1
+   🎯 Active nodes: ['goal_basic']
+   📈 Baseline reward: 0.000000
+   🧪 Episode count: 119
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 401       |
+|    ep_rew_mean     | 0         |
+| time/              |           |
+|    episodes        | 120       |
+|    fps             | 18        |
+|    time_elapsed    | 2621      |
+|    total_timesteps | 48120     |
+| train/             |           |
+|    actor_loss      | -8.32e+06 |
+|    critic_loss     | 1.6e+13   |
+|    ent_coef        | 5.55e+04  |
+|    ent_coef_loss   | -3.69     |
+|    learning_rate   | 0.0003    |
+|    n_updates       | 43119     |
+----------------------------------
+
+📊 EPISODE COMPLETED:
+   Episode: 120
+   Reward: 0.000000
+   Success: False
+   Active interventions: ['goal_basic']
+
+📈 PERFORMANCE UPDATE (Episode 119)
+   Reward: 0.000000, Success: False
+   Active interventions: ['goal_basic']
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: ACTIVE episode - reward=0.000000, total activations=1
+🎯 Node goal_basic: Insufficient data for causal impact
+📊 Node pose_position: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_position: Insufficient data for causal impact
+📊 Node pose_orientation: INACTIVE episode - baseline reward=0.000000
+🎯 Node pose_orientation: Insufficient data for causal impact
+📊 Node physics_friction: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_friction: Insufficient data for causal impact
+📊 Node physics_mass: INACTIVE episode - baseline reward=0.000000
+🎯 Node physics_mass: Insufficient data for causal impact
+📊 Node visual: INACTIVE episode - baseline reward=0.000000
+🎯 Node visual: Insufficient data for causal impact
+📊 Node random_full: INACTIVE episode - baseline reward=0.000000
+🎯 Node random_full: Insufficient data for causal impact
+
+📊 EPISODE COMPLETED:
+   Episode: 121
+   Reward: 0.000000
+   Success: False
+   Active interventions: ['goal_basic']
+
+📈 PERFORMANCE UPDATE (Episode 120)
+   Reward: 0.000000, Success: False
+   Active interventions: ['goal_basic']
+   Baseline reward: 0.000000 → 0.000000
+📊 Node goal_basic: ACTIVE episode - reward=0.000000, total activations=2
+Traceback (most recent call last):
+  File "her_sac.py", line 229, in <module>
+    wandb_config=wandb_config
+  File "her_sac.py", line 178, in train_policy
+    callback=callbacks)
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/sac/sac.py", line 301, in learn
+    reset_num_timesteps=reset_num_timesteps,
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/off_policy_algorithm.py", line 361, in learn
+    log_interval=log_interval,
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/off_policy_algorithm.py", line 595, in collect_rollouts
+    if callback.on_step() is False:
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/callbacks.py", line 88, in on_step
+    return self._on_step()
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/callbacks.py", line 192, in _on_step
+    continue_training = callback.on_step() and continue_training
+  File "/home/kpatherya3/anaconda3/envs/causal_env/lib/python3.7/site-packages/stable_baselines3/common/callbacks.py", line 88, in on_step
+    return self._on_step()
+  File "/home/kpatherya3/causal-core-su25/curriculum/graph_interventions.py", line 544, in _on_step
+    episode_reward, episode_success, self.current_active_node_ids
+  File "/home/kpatherya3/causal-core-su25/curriculum/graph_interventions.py", line 423, in update_graph_with_performance
+    node.update_performance(episode_reward, episode_success, was_active)
+  File "/home/kpatherya3/causal-core-su25/curriculum/graph_interventions.py", line 74, in update_performance
+    self.success_rate = np.mean(self.intervention_rewards[-10:])
+TypeError: sequence index must be integer, not 'slice'
