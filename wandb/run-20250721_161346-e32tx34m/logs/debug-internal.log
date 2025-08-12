@@ -1,8 +1,0 @@
-{"time":"2025-07-21T16:13:46.557804449-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
-{"time":"2025-07-21T16:13:46.557831407-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250721_161346-e32tx34m/logs/debug-core.log"}
-{"time":"2025-07-21T16:13:46.771017963-04:00","level":"INFO","msg":"created new stream","id":"e32tx34m"}
-{"time":"2025-07-21T16:13:46.771055327-04:00","level":"INFO","msg":"stream: started","id":"e32tx34m"}
-{"time":"2025-07-21T16:13:46.771125796-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"e32tx34m"}
-{"time":"2025-07-21T16:13:46.771152755-04:00","level":"INFO","msg":"sender: started","stream_id":"e32tx34m"}
-{"time":"2025-07-21T16:13:46.771152755-04:00","level":"INFO","msg":"handler: started","stream_id":"e32tx34m"}
-{"time":"2025-07-21T16:13:46.972036098-04:00","level":"INFO","msg":"Starting system monitor"}

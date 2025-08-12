@@ -1,9 +1,0 @@
-{"time":"2025-07-17T00:11:15.679569085-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
-{"time":"2025-07-17T00:11:15.679597021-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250717_001115-7ptl170i/logs/debug-core.log"}
-{"time":"2025-07-17T00:11:15.791561256-04:00","level":"INFO","msg":"created new stream","id":"7ptl170i"}
-{"time":"2025-07-17T00:11:15.791615662-04:00","level":"INFO","msg":"stream: started","id":"7ptl170i"}
-{"time":"2025-07-17T00:11:15.791706035-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"7ptl170i"}
-{"time":"2025-07-17T00:11:15.791802554-04:00","level":"INFO","msg":"handler: started","stream_id":"7ptl170i"}
-{"time":"2025-07-17T00:11:15.791855144-04:00","level":"INFO","msg":"sender: started","stream_id":"7ptl170i"}
-{"time":"2025-07-17T00:11:16.048014505-04:00","level":"INFO","msg":"Starting system monitor"}
-{"time":"2025-07-17T00:15:43.238991488-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}

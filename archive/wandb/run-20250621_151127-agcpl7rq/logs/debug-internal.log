@@ -1,9 +1,0 @@
-{"time":"2025-06-21T15:11:27.410513791-04:00","level":"INFO","msg":"using version","core version":"0.18.7"}
-{"time":"2025-06-21T15:11:27.410538444-04:00","level":"INFO","msg":"created symlink","path":"/home/kpatherya3/causal-core-su25/wandb/run-20250621_151127-agcpl7rq/logs/debug-core.log"}
-{"time":"2025-06-21T15:11:27.623129296-04:00","level":"INFO","msg":"created new stream","id":"agcpl7rq"}
-{"time":"2025-06-21T15:11:27.62316708-04:00","level":"INFO","msg":"stream: started","id":"agcpl7rq"}
-{"time":"2025-06-21T15:11:27.623242298-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"agcpl7rq"}
-{"time":"2025-06-21T15:11:27.623283503-04:00","level":"INFO","msg":"sender: started","stream_id":"agcpl7rq"}
-{"time":"2025-06-21T15:11:27.623399927-04:00","level":"INFO","msg":"handler: started","stream_id":"agcpl7rq"}
-{"time":"2025-06-21T15:11:27.828561096-04:00","level":"INFO","msg":"Starting system monitor"}
-{"time":"2025-06-21T15:11:39.10197888-04:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
