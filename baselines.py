@@ -43,8 +43,43 @@ python baselines.py --train --curriculum_mode cm --task pushing --timesteps 5000
 11. RANDOM CURRICULUM WITH REPLACEMENT:
 python baselines.py --train --curriculum_mode random --task pushing --timesteps 50000 --replacement --use_wandb
 
+LOG DIRECTORY STRUCTURE:
+-----------------------
+
+All logs are automatically organized in a centralized 'logs/' directory:
+
+- logs/greedy_sequencing_logs/              (greedy without replacement)
+- logs/greedy_replacement_sequencing_logs/  (greedy with replacement)
+- logs/cm_sequencing_logs/                  (causal mismatch without replacement)
+- logs/cm_replacement_sequencing_logs/      (causal mismatch with replacement)
+- logs/random_sequencing_logs/              (random without replacement)
+- logs/random_replacement_sequencing_logs/  (random with replacement)
+- logs/none_sequencing_logs/                (no curriculum baseline)
+- logs/rnd_sequencing_logs/                 (RND intrinsic motivation)
+- logs/count_sequencing_logs/               (count-based exploration)
+
+CUSTOM LOG DIRECTORY:
+--------------------
+
+12. SPECIFY CUSTOM LOG DIRECTORY:
+python baselines.py --train --curriculum_mode greedy --task pushing --timesteps 50000 --log_dir custom_experiment --use_wandb
+
+MODEL DIRECTORY STRUCTURE:
+-------------------------
+
+All pretrained models are expected to be in a centralized 'models/' directory:
+
+- models/ppo_pushing_sb3/final_model.zip
+- models/ppo_reaching_sb3/final_model.zip  
+- models/ppo_picking_sb3/final_model.zip
+- models/ppo_pick_and_place_sb3/final_model.zip
+- models/ppo_stacking2_sb3/final_model.zip
+
+13. SPECIFY CUSTOM PRETRAINED MODEL PATH:
+python baselines.py --train --curriculum_mode greedy --task pushing --timesteps 50000 --pretrained_path path/to/custom_model.zip --use_wandb
+
 Note: Replace 'pushing' with any supported task: reaching, picking, pick_and_place, stacking2
-Note: All commands assume you have the required pretrained models in the expected directories
+Note: All commands assume you have the required pretrained models in models/{task} directories (e.g., models/ppo_pushing_sb3/final_model.zip)
 """
 
 import numpy as np
@@ -1023,7 +1058,7 @@ def train_info_baseline(args):
 
     # load pretrained model
     if args.pretrained_path is None:
-        args.pretrained_path = f'ppo_{args.task}_sb3/final_model.zip'
+        args.pretrained_path = f'models/ppo_{args.task}_sb3/final_model.zip'
     
     set_random_seed(args.seed)
     student_model = PPO.load(args.pretrained_path)
@@ -1107,7 +1142,7 @@ def train_lpm_baseline(args):
 
     # load pretrained model
     if args.pretrained_path is None:
-        args.pretrained_path = f'ppo_{args.task}_sb3/final_model.zip'
+        args.pretrained_path = f'models/ppo_{args.task}_sb3/final_model.zip'
     
     set_random_seed(args.seed)
     student_model = PPO.load(args.pretrained_path)
@@ -1248,7 +1283,9 @@ class TrainingVisualizer:
         try:
             from src.visualization import EnhancedTrainingVisualizer
             enhanced_visualizer = EnhancedTrainingVisualizer(self.log_dir)
-            heuristic_name = os.path.basename(self.log_dir).replace('_sequencing_logs', '')
+            # Extract heuristic name from log directory, handling both replacement and non-replacement cases
+            heuristic_name = os.path.basename(self.log_dir)
+            heuristic_name = heuristic_name.replace('_replacement_sequencing_logs', '').replace('_sequencing_logs', '')
             enhanced_visualizer.plot_single_heuristic_analysis(
                 sb3_progress_path, heuristic_name, validation_csv_path
             )
@@ -1620,7 +1657,7 @@ def train_rnd_baseline(args):
 
     # load the pretrained model
     if args.pretrained_path is None:
-        args.pretrained_path = f'ppo_{args.task}_sb3/final_model.zip'
+        args.pretrained_path = f'models/ppo_{args.task}_sb3/final_model.zip'
 
     set_random_seed(args.seed)
     student_model = PPO.load(args.pretrained_path)
@@ -1813,7 +1850,7 @@ def train_count_baseline(args):
 
     # load pretrained model
     if args.pretrained_path is None:
-        args.pretrained_path = f'ppo_{args.task}_sb3/final_model.zip'
+        args.pretrained_path = f'models/ppo_{args.task}_sb3/final_model.zip'
 
     set_random_seed(args.seed)
     student_model = PPO.load(args.pretrained_path)
@@ -2077,7 +2114,7 @@ def main():
     parser.add_argument('--task', type=str, default='pushing', help='Task name')
     parser.add_argument('--timesteps', type=int, default=50000, help='Timesteps for each intervention training block')
     parser.add_argument('--pretrained_path', type=str, help='Path to pretrained PPO model')
-    parser.add_argument('--log_dir', type=str, default='highest_reward_sequencing_logs', help='Log directory')
+    parser.add_argument('--log_dir', type=str, default=None, help='Log directory (will be auto-generated if not specified)')
     parser.add_argument('--seed', type=int, default=0, help='Random seed')
     parser.add_argument('--skip_frame', type=int, default=3, help='Frame skip')
     parser.add_argument('--use_wandb', action='store_true', help='Enable wandb logging')
@@ -2102,22 +2139,17 @@ def main():
 
     args = parser.parse_args()
 
-    if args.curriculum_mode == 'random':
-        args.log_dir = 'random_sequencing_logs'
-    elif args.curriculum_mode == 'greedy':
-        args.log_dir = 'greedy_sequencing_logs'
-    elif args.curriculum_mode == 'none':
-        args.log_dir = 'none_sequencing_logs'
-    elif args.curriculum_mode == 'cm':
-        args.log_dir = 'cm_sequencing_logs'
-    elif args.curriculum_mode == 'rnd':
-        args.log_dir = 'rnd_sequencing_logs'
-    elif args.curriculum_mode == 'count':
-        args.log_dir = 'count_sequencing_logs'
-    elif args.curriculum_mode == 'lpm':
-        args.log_dir = 'lpm_sequencing_logs'
-    elif args.curriculum_mode == 'info':
-        args.log_dir = 'info_sequencing_logs'
+    # Only set log directory automatically if not provided by user
+    if args.log_dir is None:
+        # Create log directory name with replacement indicator if applicable
+        base_log_name = f"{args.curriculum_mode}_sequencing_logs"
+        
+        # Add replacement indicator for intervention-based methods
+        if args.replacement and args.curriculum_mode in ['random', 'greedy', 'cm']:
+            base_log_name = f"{args.curriculum_mode}_replacement_sequencing_logs"
+        
+        # Place all logs in a centralized 'logs' directory
+        args.log_dir = os.path.join('logs', base_log_name)
 
     
     if args.task not in TASK_BENCHMARKS:
@@ -2295,7 +2327,7 @@ def main():
             logging.info(f"Starting curriculum sequencing logic with args: {args}")
 
         if args.pretrained_path is None:
-            args.pretrained_path = f'ppo_{args.task}_sb3/final_model.zip'
+            args.pretrained_path = f'models/ppo_{args.task}_sb3/final_model.zip'
         set_random_seed(args.seed)  # seed before loading the model
         student_model = PPO.load(args.pretrained_path)
         logging.info(f"[PRETRAINED] Using pretrained model path: {args.pretrained_path}")
@@ -2602,14 +2634,14 @@ def main():
             from src.visualization import create_enhanced_visualizations
             
             logging.info("🎨 Generating enhanced comprehensive visualizations...")
-            # Get the parent directory containing all log directories
-            parent_dir = os.path.dirname(args.log_dir)
+            # Use the logs directory as the base directory for finding all log directories
+            logs_base_dir = 'logs'
             
-            # Generate visualizations for all available heuristics
+            # Generate visualizations for all available heuristics (including replacement variants)
             create_enhanced_visualizations(
-                log_base_dir=parent_dir,
-                heuristics=['greedy', 'cm', 'none', 'random', 'rnd', 'count'],
-                output_dir=os.path.join(parent_dir, 'comprehensive_visualizations')
+                log_base_dir=logs_base_dir,
+                heuristics=['greedy', 'greedy_replacement', 'cm', 'cm_replacement', 'none', 'random', 'random_replacement', 'rnd', 'count'],
+                output_dir=os.path.join(logs_base_dir, 'comprehensive_visualizations')
             )
             
             logging.info("✅ Enhanced visualizations completed!")
