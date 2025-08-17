@@ -1,3 +1,62 @@
+"""
+PSEUDOCODE
+# 1. initialization
+student_agent = PPO(…)
+teacher_agent = DQN(state_dim=14, action_dim=7, …)
+validation_env = create_validation_env()
+
+# get initial generalization performance
+last_validation_performance = run_validation_protocol(student_agent, validation_env)
+
+# 2. main meta-learning loop (e.g., for M meta-episodes)
+for meta_step in range(M):
+ 	# 3. compute the current meta-state
+ 	current_meta_state = compute_meta_state(student_agent, INTERVENTIONS)
+	
+	# 4. teacher selects an intervention
+	selected_intervention_idx = teacher_agent.predict(current_meta_state)
+	selected_intervention = INTERVENTIONS[selected_intervention_idx]
+
+ 	# 5. student trains on that intervention
+ 	student_agent.learn(total_timesteps=50000, env=create_intervened_env(selected_intervention))
+
+	# 6. evaluate new generalization performance
+	current_validation_performance = run_validation_protocol(student_agent, validation_env)
+
+	# 7. calculate the meta-reward
+	meta_reward = current_validation_performance - last_validation_performance
+	last_validation_performance = current_validation_performance
+
+	# 8. compute the next meta-state
+	next_meta_state = compute_meta_state(student_agent, INTERVENTIONS)
+	
+	# 9. store experience and update the teacher
+ 	teacher_agent.replay_buffer.add(current_meta_state, selected_intervention_idx, meta_reward, next_meta_state, done)
+	teacher_agent.train(batch_size=…)
+
+    
+HELPER FUNCTIONS
+1. compute_meta_state (student, interventions)
+    - this function iterates through all available interventions
+    - for each intervention, we call the existing test_intervention_performance to probe the reward and evaluate_cm_score
+    to get the novelty score
+    - we then concatenate all these values into a 14-dimensional state vector and return that
+
+2. run_validation_protocol (student, validation_env)
+    - this function is responsible for measuring generalization
+    - it takes the current student and evaluates it for 50 episodes on the fixed validation env
+    - it should return a single, robust performance metric, such as the average performance metric, which will be used to
+    calculate the meta-reward
+
+NOTES (tuning the meta-learning process)
+- setting 50K timesteps for each student training block; this gives the student enough time to adapt to the intervention
+- the teacher's exploration (epsilon) may need to decay slowly since each data-point (meta-step) is expensive to collect
+and we have 50 meta-episodes for a full training run; must tune epsilon based on the meta-step we're on, not the timestep
+- we would use a large replay buffer for the teacher's DQN to help mitigate the non-stationary of the agent
+- we use a slow update frequency (low tau) for the DQN's target network to improve stability
+"""
+
+
 import numpy as np
 import torch
 import torch.nn as nn
