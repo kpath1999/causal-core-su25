@@ -54,6 +54,8 @@ NOTES (tuning the meta-learning process)
 and we have 50 meta-episodes for a full training run; must tune epsilon based on the meta-step we're on, not the timestep
 - we would use a large replay buffer for the teacher's DQN to help mitigate the non-stationary of the agent
 - we use a slow update frequency (low tau) for the DQN's target network to improve stability
+
+is this committing?
 """
 
 

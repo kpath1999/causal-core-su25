@@ -92,6 +92,7 @@ import argparse
 import logging
 import time
 import csv
+import gym
 from collections import deque
 from copy import deepcopy
 from stable_baselines3 import PPO
@@ -728,26 +729,47 @@ class LPMRewardCallback(BaseCallback):
         return states, actions, next_states
     
     def _store_transitions(self, obs, actions):
-        """store transitions in buffer (approximating next states)"""
+        """store transitions in buffer with next states from the env wrapper"""
         # flatten observations if needed
         obs_processed = obs.copy()
         if len(obs_processed.shape) > 2:
-            obs_processed = obs_processed.reshape(obs_processed.shape, -1)
+            obs_processed = obs_processed.reshape(obs_processed.shape[0], -1)
         
+        # process the actions
         actions_processed = actions.copy() if actions is not None else obs_processed
         if len(actions_processed.shape) > 2:
-            actions_processed = actions_processed.reshape(actions_processed.shape, -1)
+            actions_processed = actions_processed.reshape(actions_processed.shape[0], -1)
         
-        # TODO: [not sure about this] for next_states, we approximate using current obs (suboptimal but workable)
-        # we will need an environment wrapper to capture true next_states
-        next_states_processed = obs_processed
+        # getting the actual next states from the NextStateWrapper
+        next_states_processed = []
+        for env_idx in range(self.training_env.num_envs):
+            # navigating through the nested wrappers to find the NextStateWrapper
+            wrapped_env = self.training_env.envs[env_idx]
+            
+            # keep unwrapping until we find NextStateWrapper or run out of wrappers
+            while hasattr(wrapped_env, 'env') and not isinstance(wrapped_env, NextStateWrapper):
+                wrapped_env = wrapped_env.env
+            
+            if isinstance(wrapped_env, NextStateWrapper) and wrapped_env.current_next_obs is not None:
+                # found the wrapper with next_obs
+                next_obs = wrapped_env.current_next_obs.copy()
+                # process to match obs shape
+                if len(next_obs.shape) > 1:
+                    next_obs = next_obs.reshape(-1)
+                next_states_processed.append(next_obs)
+            else:
+                # we would have to fallback to the current obs if the wrapper is not found (shouldn't happen)
+                logging.warning("NextStateWrapper is not found, approximating with current obs")
+                next_states_processed.append(obs_processed[env_idx])
+        
+        next_states_processed = np.array(next_states_processed)
 
         # store transitions
         for i in range(len(obs_processed)):
             self.transition_buffer.append((
                 obs_processed[i],
                 actions_processed[i] if actions is not None else obs_processed[i],
-                next_states_processed[i]
+                next_states_processed[i] if i < len(next_states_processed) else obs_processed[i]
             ))
         
         # maintain the buffer size
@@ -881,30 +903,42 @@ class InfoRewardCallback(BaseCallback):
             print(f"[Info] Beta (intrinsic reward scale): {self.beta}")
     
     def _store_transitions(self, obs, actions, rewards):
-        """store transitions in buffer (approximating next_state for now)"""
-        # TODO: you will need to modify this part
-
+        """store transitions in buffer with actual next states"""
+        
         # flatten observations if needed
         obs_processed = obs.copy()
         if len(obs_processed.shape) > 2:
             obs_processed = obs_processed.reshape(obs_processed.shape[0], -1)
         
+        # process the actions
         actions_processed = actions.copy() if actions is not None else obs_processed
         if len(actions_processed.shape) > 2:
-            actions_processed.reshape(actions_processed.shape, -1)
+            actions_processed.reshape(actions_processed.shape[0], -1)
         
-        # TODO: this part below specifically...
-        # for next states, we would approximate using current obs (suboptimal)
-        # in practice, we need an env wrapper to capture true next_states
-        next_states_processed = obs_processed   # PLACEHOLDER
+        # getting the actual next states from the wrapper
+        next_states_processed = []
+        for env_idx in range(self.training_env.num_envs):
+            wrapped_env = self.training_env.envs[env_idx]
+            while hasattr(wrapped_env, 'env') and not isinstance(wrapped_env, NextStateWrapper):
+                wrapped_env = wrapped_env.env
+            
+            if isinstance(wrapped_env, NextStateWrapper) and wrapped_env.current_next_obs is not None:
+                next_obs = wrapped_env.current_next_obs.copy()
+                if len(next_obs.shape) > 1:
+                    next_obs = next_obs.reshape(-1)
+                next_states_processed.append(next_obs)
+            else:
+                next_states_processed.append(obs_processed[env_idx])
 
-        # store transitions
+        next_states_processed = np.array(next_states_processed)
+
+        # store transitions with all the components
         for i in range(len(obs_processed)):
             self.data_buffer.append((
                 obs_processed[i],
                 actions_processed[i] if actions is not None else obs_processed[i],
                 rewards[i],
-                next_states_processed[i]
+                next_states_processed[i] if i < len(next_states_processed) else obs_processed[i]
             ))
         
         # maintain the buffer size
@@ -1014,7 +1048,7 @@ class InfoRewardCallback(BaseCallback):
         
         actions_processed = actions.copy() if actions is not None else obs_processed
         if len(actions_processed.shape) > 2:
-            actions_processed = actions_processed.reshape(actions_processed.shape, -1)
+            actions_processed = actions_processed.reshape(actions_processed.shape[0], -1)
         
         # convert to tensors
         obs_tensor = torch.tensor(obs_processed, dtype=torch.float32, device=self.device)
@@ -1295,6 +1329,29 @@ class TrainingVisualizer:
         except Exception as e:
             logging.error(f"Enhanced visualization failed: {e}")
 
+# =========================================
+# Wrappers - next state and interventions
+# =========================================
+class NextStateWrapper(gym.Wrapper):
+    """wrapper to capture next states from environment step() calls"""
+    def __init__(self, env):
+        super().__init__(env)
+        self.last_obs = None
+        self.current_next_obs = None
+    
+    def step(self, action):
+        # get next_obs directly from the env step method
+        next_obs, reward, done, info = self.env.step(action)
+        # store it for access by the callback
+        self.current_next_obs = next_obs.copy()
+        self.last_obs = next_obs.copy()
+        return next_obs, reward, done, info
+
+    def reset(self):
+        obs = self.env.reset()
+        self.last_obs = obs.copy()
+        self.current_next_obs = None
+        return obs
 
 class IntervenedCausalWorld:
     """
@@ -1503,6 +1560,17 @@ class ValidationCallback(BaseCallback):
                 obs, reward, done, info = validation_env.step(action)
                 episode_reward += reward
                 episode_length += 1
+
+                # check for success
+                if isinstance(info, dict) and 'success' in info and info['success']:
+                    episode_success = True
+            
+            # now that the episode has completed
+            total_reward += episode_reward
+            total_length += episode_length
+            episode_rewards.append(episode_reward)
+            if episode_success:
+                successes += 1
         
         validation_env.close()
 
@@ -1562,6 +1630,9 @@ def create_environment(task_name, intervention=None, seed=0, skip_frame=3, max_e
         seed=seed,
         max_episode_length=max_episode_length
     )
+
+    # i am wrapping this to capture next states
+    base_env = NextStateWrapper(base_env)
 
     if intervention is not None:
         return IntervenedCausalWorld(base_env, intervention)
