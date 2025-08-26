@@ -8,16 +8,16 @@ BASIC TRAINING COMMANDS:
 -----------------------
 
 1. GREEDY CURRICULUM (highest reward intervention selection):
-python baselines.py --train --curriculum_mode greedy --task pushing --timesteps 50000 --use_wandb
+python baselines.py --train --curriculum_mode greedy --task pushing --timesteps 50000 --replacement --use_wandb
 
 2. CAUSAL MISMATCH CURRICULUM (CM score-based selection):
-python baselines.py --train --curriculum_mode cm --task pushing --timesteps 50000 --alpha_cm 0.5 --use_wandb
+python baselines.py --train --curriculum_mode cm --task pushing --timesteps 50000 --alpha_cm 0.5 --replacement --use_wandb
 
 3. RANDOM CURRICULUM (random intervention selection):
-python baselines.py --train --curriculum_mode random --task pushing --timesteps 50000 --use_wandb
+python baselines.py --train --curriculum_mode random --task pushing --timesteps 50000 --replacement --use_wandb
 
 4. NO CURRICULUM (baseline without interventions):
-python baselines.py --train --curriculum_mode none --task pushing --timesteps 50000 --use_wandb
+python baselines.py --train --curriculum_mode none --task pushing --timesteps 50000 --replacement --use_wandb
 
 5. RND INTRINSIC MOTIVATION (Random Network Distillation):
 python baselines.py --train --curriculum_mode rnd --task pushing --timesteps 50000 --rnd_beta 0.01 --rnd_update_freq 1000 --rnd_batch_size 1024 --use_wandb
@@ -30,18 +30,6 @@ python baselines.py --train --curriculum_mode lpm --task pushing --timesteps 500
 
 8. INFORMATION GAIN REWARD (rewards "surprise" measured by model uncertainty):
 python baselines.py --train --curriculum_mode info --task pushing --timesteps 50000 --info_beta 1.0 --use_wandb
-
-REPLACEMENT MODE (allow same intervention to be selected multiple times):
-------------------------------------------------------------------------
-
-9. GREEDY CURRICULUM WITH REPLACEMENT:
-python baselines.py --train --curriculum_mode greedy --task pushing --timesteps 50000 --replacement --use_wandb
-
-10. CAUSAL MISMATCH CURRICULUM WITH REPLACEMENT:
-python baselines.py --train --curriculum_mode cm --task pushing --timesteps 50000 --alpha_cm 0.5 --replacement --use_wandb
-
-11. RANDOM CURRICULUM WITH REPLACEMENT:
-python baselines.py --train --curriculum_mode random --task pushing --timesteps 50000 --replacement --use_wandb
 
 LOG DIRECTORY STRUCTURE:
 -----------------------
@@ -387,7 +375,7 @@ class BetaVAE(nn.Module):
         # clamping logvar before exponentiation
         logvar = torch.clamp(logvar, min=-10, max=2)   # conservative upper bound
         std = torch.exp(0.5 * logvar)
-        eps = torch.randn_like(std, generator=generator)
+        eps = torch.randn(std.size(), dtype=std.dtype, device=std.device, generator=generator)
         return mu + eps * std
     def forward(self, x):
         # normalize the input if not done already
@@ -413,7 +401,9 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
     termination_reasons = []
     for episode in range(max_episodes):
         # adding a unique seed per episode
-        obs = env.reset(seed=seed+episode)
+        if hasattr(env, 'seed'):
+            env.seed(seed + episode)
+        obs = env.reset()
         done = False
         episode_steps = 0
         episode_reward = 0
@@ -687,7 +677,7 @@ class LPMRewardCallback(BaseCallback):
 
         # transition buffer: stores (state, action, next_state) tuples
         self.transition_buffer = []
-        self.model = None
+        self.transition_model = None
         self.optimizer = None
     
     def _on_training_start(self):
@@ -700,8 +690,8 @@ class LPMRewardCallback(BaseCallback):
         hidden_dim = 64
 
         # reuse transition prediction model from CM score implementation
-        self.model = TransitionPrediction(state_dim, action_dim, hidden_dim).to(self.device)
-        self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
+        self.transition_model = TransitionPrediction(state_dim, action_dim, hidden_dim).to(self.device)
+        self.optimizer = optim.Adam(self.transition_model.parameters(), lr=self.lr)
 
         if self.verbose > 0:
             print(f"[LPM] initialized with state_dim={state_dim}, action_dim={action_dim}")
@@ -710,7 +700,7 @@ class LPMRewardCallback(BaseCallback):
     
     def _compute_prediction_loss(self, states, actions, next_states):
         """compute MSE loss for transition prediction"""
-        pred_next_states = self.model(states, actions)
+        pred_next_states = self.transition_model(states, actions)
         loss = nn.MSELoss()(pred_next_states, next_states)
         return loss
 
@@ -799,12 +789,12 @@ class LPMRewardCallback(BaseCallback):
             return True
 
         # compute prediction loss BEFORE training
-        self.model.eval()
+        self.transition_model.eval()
         with torch.no_grad():
             loss_before = self._compute_prediction_loss(states, actions_batch, next_states).item()
         
         # train the model for n_train_steps
-        self.model.train()
+        self.transition_model.train()
         for _ in range(self.n_train_steps):
             self.optimizer.zero_grad()
             loss = self._compute_prediction_loss(states, actions_batch, next_states)
@@ -813,7 +803,7 @@ class LPMRewardCallback(BaseCallback):
             self.optimizer.step()
         
         # compute prediction loss AFTER training
-        self.model.eval()
+        self.transition_model.eval()
         with torch.no_grad():
             loss_after = self._compute_prediction_loss(states, actions_batch, next_states).item()
 
@@ -1098,74 +1088,90 @@ def train_info_baseline(args):
     student_model = PPO.load(args.pretrained_path)
     logging.info(f"[Info] using pretrained model: {args.pretrained_path}")
 
-    # create base env (on interventions)
-    def env_factory():
-        return create_environment(
-            args.task,
-            intervention=None,      # no intervention for Info baseline
-            seed=args.seed,
-            skip_frame=args.skip_frame
-        )
-    
-    # create vectorized env
-    train_env = DummyVecEnv([env_factory])
-    train_env = VecMonitor(train_env, filename=os.path.join(args.log_dir, 'info_monitor.csv'))
-    
-    # set up info callback
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    info_callback = InfoRewardCallback(
-        beta=getattr(args, 'info_beta', 1.0),
-        lr=getattr(args, 'info_lr', 1e-3),
-        update_freq=getattr(args, 'info_update_freq', 1000),
-        batch_size=getattr(args, 'info_batch_size', 256),
-        device=device,
-        verbose=1
-    )
+    # track the cumulative timesteps
+    cumulative_timesteps = 0
+    total_stages = 50
 
-    # set up logging
+    # set up csv logger
     csv_logger = CSVLogger(args.log_dir)
-    reward_monitor = RewardMonitorCallback("info_baseline", csv_logger, 0, 0)
 
-    callback_list = CallbackList([
-        info_callback,
-        reward_monitor,
-        WandbCallback(
-            gradient_save_freq=100,
-            model_save_path=args.log_dir if args.use_wandb else None,
-            verbose=2
-        ) if args.use_wandb else None
-    ])
-    callback_list.callbacks = [cb for cb in callback_list.callbacks if cb is not None]
+    # run 50 training segments
+    for stage in range(1, total_stages + 1):
+        logging.info(f"[Info] Starting meta-episode {stage}/{total_stages}")
 
-    # set up SB3 logger
-    sb3_log_path = os.path.join(args.log_dir, "sb3_csv_logs_info_baseline")
-    new_logger = configure(sb3_log_path, ["stdout", "csv"])
-    student_model.set_logger(new_logger)
-    student_model.set_env(train_env)
+        # create env for this segment (no interventions)
+        def env_factory():
+            return create_environment(
+                args.task,
+                intervention=None,
+                seed=args.seed + stage * 100,
+                skip_frame=args.skip_frame
+            )
+        
+        # create vectorized env
+        train_env = DummyVecEnv([env_factory])
+        train_env = VecMonitor(train_env, filename=os.path.join(args.log_dir, f'info_monitor_stage{stage}.csv'))
 
-    # train with information gain intrinsic rewards
-    total_timesteps = args.timesteps * 7      # this is the same as the 7-stage curriculum
-    logging.info(f"[Info] training for {total_timesteps} timesteps")
+        # set up info callback
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        info_callback = InfoRewardCallback(
+            beta=getattr(args, 'info_beta', 1.0),
+            lr=getattr(args, 'info_lr', 1e-3),
+            update_freq=getattr(args, 'info_update_freq', 1000),
+            batch_size=getattr(args, 'info_batch_size', 256),
+            device=device,
+            verbose=1
+        )
 
-    start_time = time.time()
-    student_model.learn(
-        total_timesteps=total_timesteps,
-        callback=callback_list,
-        reset_num_timesteps=False
-    )
-    training_duration = time.time() - start_time
+        # set up logging for this segment
+        reward_monitor = RewardMonitorCallback("info_baseline", csv_logger, stage, cumulative_timesteps)
 
-    logging.info(f"[Info] training completed in {training_duration:.2f} seconds")
+        callback_list = CallbackList([
+            info_callback,
+            reward_monitor,
+            WandbCallback(
+                gradient_save_freq=100,
+                model_save_path=args.log_dir if args.use_wandb else None,
+                verbose=2
+            ) if args.use_wandb else None
+        ])
+        callback_list.callbacks = [cb for cb in callback_list.callbacks if cb is not None]
 
+        # set up the sb3 logger
+        sb3_log_path = os.path.join(args.log_dir, f"sb3_csv_logs_info_baseline_stage{stage}")
+        new_logger = configure(sb3_log_path, ["stdout", "csv"])
+        student_model.set_logger(new_logger)
+        student_model.set_env(train_env)
+
+        # train for this segment
+        segment_timesteps = args.timesteps      # each segment is 50K timesteps
+        logging.info(f"[Info] Training meta-episode {stage} for {segment_timesteps} timesteps")
+
+        student_model.learn(
+            total_timesteps=segment_timesteps,
+            callback=callback_list,
+            reset_num_timesteps=False
+        )
+
+        # update the cumulative timesteps
+        cumulative_timesteps += segment_timesteps
+
+        # save the intermediate model
+        if stage % 10 == 0 or stage == total_stages:
+            model_path = os.path.join(args.log_dir, f"info_model_stage_{stage}.zip")
+            student_model.save(model_path)
+            logging.info(f"[Info] Model saved after {stage}: {model_path}")
+        
+        # clean up
+        train_env.close()
+    
     # save final model
     final_model_path = os.path.join(args.log_dir, "final_info_model.zip")
     student_model.save(final_model_path)
-    logging.info(f"[Info] final model saved to {final_model_path}")
-
-    # clean up
-    train_env.close()
+    logging.info(f"[Info] Final model saved to {final_model_path}")
 
     return student_model
+
 
 # =====================
 # LPM Training Function
@@ -1182,74 +1188,126 @@ def train_lpm_baseline(args):
     student_model = PPO.load(args.pretrained_path)
     logging.info(f"[LPM] using pretrained model: {args.pretrained_path}")
 
-    # create base env (no interventions)
-    def env_factory():
-        return create_environment(
-            args.task,
-            intervention=None,      # no intervention for LPM baseline
-            seed=args.seed,
-            skip_frame=args.skip_frame
+    # track the cumulative timesteps
+    cumulative_timesteps = 0
+    total_stages = 50
+
+    # set up CSV logger
+    csv_logger = CSVLogger(args.log_dir)
+
+    # run 50 training segments
+    for stage in range(1, total_stages + 1):
+        logging.info(f"[LPM] Starting meta-episode {stage}/{total_stages}")
+
+        # create base env for this segment (no interventions)
+        def env_factory():
+            return create_environment(
+                args.task,
+                intervention=None,      # no intervention for LPM baseline
+                seed=args.seed + stage * 100,
+                skip_frame=args.skip_frame
+            )
+
+        # create vectorized env
+        train_env = DummyVecEnv([env_factory])
+        train_env = VecMonitor(train_env, filename=os.path.join(args.log_dir, f'lpm_monitor_stage{stage}.csv'))
+
+        # set up the LPM callback
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        lpm_callback = LPMRewardCallback(
+            beta=getattr(args, 'lpm_beta', 1.0),
+            lr=getattr(args, 'lpm_lr', 1e-3),
+            batch_size=getattr(args, 'lpm_batch_size', 256),
+            n_train_steps=getattr(args, 'lpm_train_steps', 1),
+            verbose=1
         )
 
-    # create vectorized env
-    train_env = DummyVecEnv([env_factory])
-    train_env = VecMonitor(train_env, filename=os.path.join(args.log_dir, 'lpm_monitor.csv'))
+        # set up logging for this segment
+        reward_monitor = RewardMonitorCallback("lpm_baseline", csv_logger, stage, cumulative_timesteps)
 
-    # set up LPM callback
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    lpm_callback = LPMRewardCallback(
-        beta=getattr(args, 'lpm_beta', 1.0),
-        lr=getattr(args, 'lpm_lr', 1e-3),
-        batch_size=getattr(args, 'lpm_batch_size', 256),
-        n_train_steps=getattr(args, 'lpm_train_steps', 1),
-        device=device,
-        verbose=1
-    )
+        callback_list = CallbackList([
+            lpm_callback,
+            reward_monitor,
+            WandbCallback(
+                gradient_save_freq=100,
+                model_save_path=args.log_dir if args.use_wandb else None,
+                verbose=2
+            ) if args.use_wandb else None
+        ])
+        callback_list.callbacks = [cb for cb in callback_list.callbacks if cb is not None]
 
-    # set up logging
-    csv_logger = CSVLogger(args.log_dir)
-    reward_monitor = RewardMonitorCallback("lpm_baseline", csv_logger, 0, 0)
+        # set up the SB3 logger
+        sb3_log_path = os.path.join(args.log_dir, f"sb3_csv_logs_lpm_baseline_stage{stage}")
+        new_logger = configure(sb3_log_path, ["stdout", "csv"])
+        student_model.set_logger(new_logger)
+        student_model.set_env(train_env)
 
-    callback_list = CallbackList([
-        lpm_callback,
-        reward_monitor,
-        WandbCallback(
-            gradient_save_freq=100,
-            model_save_path=args.log_dir if args.use_wandb else None,
-            verbose=2
-        ) if args.use_wandb else None
-    ])
-    callback_list.callbacks = [cb for cb in callback_list.callbacks if cb is not None]
+        # train for this segment
+        segment_timesteps = args.timesteps      # since each segment is 50K timesteps
+        logging.info(f"[LPM] Training meta-episode {stage} for {segment_timesteps} timesteps")
 
-    # set up SB3 logger
-    sb3_log_path = os.path.join(args.log_dir, "sb3_csv_logs_lpm_baseline")
-    new_logger = configure(sb3_log_path, ["stdout", "csv"])
-    student_model.set_logger(new_logger)
-    student_model.set_env(train_env)
+        student_model.learn(
+            total_timesteps=segment_timesteps,
+            callback=callback_list,
+            reset_num_timesteps=False
+        )
 
-    # train with LPM intrinsic rewards
-    total_timesteps = args.timesteps * 7      # this is the same as the 7-stage curriculum
-    logging.info(f"[LPM] training for {total_timesteps} timesteps")
+        # update the cumulative timesteps
+        cumulative_timesteps += segment_timesteps
 
-    start_time = time.time()
-    student_model.learn(
-        total_timesteps=total_timesteps,
-        callback=callback_list,
-        reset_num_timesteps=False
-    )
-    training_duration = time.time() - start_time
-
-    logging.info(f"[LPM] training completed in {training_duration:.2f} seconds")
-
+        # save intermediate model
+        if stage % 10 == 0 or stage == total_stages:
+            model_path = os.path.join(args.log_dir, f"lpm_model_stage_{stage}.zip")
+            student_model.save(model_path)
+            logging.info(f"[LPM] Model saved after stage {stage}: {model_path}")
+        
+        # clean up
+        train_env.close()
+    
     # save final model
     final_model_path = os.path.join(args.log_dir, "final_lpm_model.zip")
     student_model.save(final_model_path)
-    logging.info(f"[LPM] final model saved to {final_model_path}")
-
-    # clean up
-    train_env.close()
+    logging.info(f"[LPM] Final model saved to {final_model_path}")
 
     return student_model
+
+# ===================================
+# Getting SB3 metrics to log to WandB
+# ===================================
+# NOTE: copied this class from LLM since it's for monitoring
+class SB3WandbIntegrationCallback(BaseCallback):
+    """custom callback to get SB3 metrics to log to WandB"""
+    def __init__(self, stage, intervention_type, verbose=0):
+        super().__init__(verbose)
+        self.stage = stage
+        self.intervention_type = intervention_type
+    
+    def _on_step(self) -> bool:
+        # Only log every 100 steps to avoid spam
+        if self.num_timesteps % 100 == 0 and wandb.run is not None:
+            # Get the logger from the model
+            logger = self.model.logger
+            
+            # Extract metrics from SB3's logger
+            metrics_to_log = {}
+            
+            # Get the current record from logger if available
+            if hasattr(logger, 'name_to_value'):
+                for key, value in logger.name_to_value.items():
+                    if isinstance(value, (int, float)):
+                        metrics_to_log[key] = value
+            
+            # Add stage and intervention info
+            metrics_to_log.update({
+                'stage': self.stage,
+                'intervention_type': self.intervention_type,
+                'timesteps': self.num_timesteps
+            })
+            
+            # Log to WandB
+            wandb.log(metrics_to_log)
+        
+        return True
 
 # =====================
 # CSV Logger Class
@@ -1260,6 +1318,7 @@ class CSVLogger:
         self.log_dir = log_dir
         self.csv_path = os.path.join(log_dir, 'training_log.csv')
         self.intervention_log_path = os.path.join(log_dir, 'intervention_log.csv')
+        self.validation_log_path = os.path.join(log_dir, 'validation_log.csv')
         self.init_csv_files()
     
     def init_csv_files(self):
@@ -1279,6 +1338,14 @@ class CSVLogger:
             writer.writerow([
                 'timestamp', 'stage', 'intervention_type', 'test_avg_reward', 'test_success_rate',
                 'test_avg_length', 'selected', 'cumulative_timesteps', 'cm_score'
+            ])
+        
+        # validation log initialization
+        with open(self.validation_log_path, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                'timestamp', 'stage', 'timestep', 'validation_avg_reward',
+                'validation_success_rate', 'validation_avg_length'
             ])
     
     def log_episode(self, stage, intervention_type, episode, timestep, reward,
@@ -1302,6 +1369,16 @@ class CSVLogger:
                 time.strftime('%Y-%m-%d %H:%M:%S'),
                 stage, intervention_type, test_avg_reward, test_success_rate,
                 test_avg_length, selected, cumulative_timesteps, cm_score
+            ])
+    
+    def log_validation_episode(self, stage, timestep, validation_reward, validation_success_rate, validation_avg_length):
+        """log the validation episode data"""
+        with open(self.validation_log_path, 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                time.strftime('%Y-%m-%d %H:%M:%S'),
+                stage, timestep, validation_reward,
+                validation_success_rate, validation_avg_length
             ])
 
 # =====================
@@ -1347,7 +1424,11 @@ class NextStateWrapper(gym.Wrapper):
         self.last_obs = next_obs.copy()
         return next_obs, reward, done, info
 
-    def reset(self):
+    def reset(self, seed=None):
+        # i'm handling seeding here for the wrapped env
+        if seed is not None and hasattr(self.env, 'seed'):
+            self.env.seed(seed)
+
         obs = self.env.reset()
         self.last_obs = obs.copy()
         self.current_next_obs = None
@@ -1372,13 +1453,20 @@ class IntervenedCausalWorld:
 
         print(f"IntervenedCausalWorld created with {(intervention['type'] if intervention is not None else 'none')} intervention")
 
-    def reset(self, seed=0):
+    def reset(self, seed=None):
         """
         Resets the environment and then applies the intervention.
         """
         self.reset_count += 1
         # logging.info(f"[ENV RESET] Resetting environment (reset_count={self.reset_count})")
-        obs = self.base_env.reset(seed=seed)
+        
+        # handling how seeding is managed in CausalWorld
+        if seed is not None and hasattr(self.base_env, 'seed'):
+            self.base_env.seed(seed)
+        
+        # calling the reset function without the seed parameter
+        obs = self.base_env.reset()
+
         try:
             variables_dict = self.base_env.get_variable_space_used()
             intervention_dict = self.intervention_actor._act(variables_dict)
@@ -1548,7 +1636,9 @@ class ValidationCallback(BaseCallback):
         episode_rewards = []
 
         for episode in range(self.validation_episodes):
-            obs = validation_env.reset(seed=self.seed + self.num_timesteps + episode)
+            if hasattr(validation_env, 'seed'):
+                validation_env.seed(self.seed + self.num_timesteps + episode)
+            obs = validation_env.reset()    # i removed the seed parameter
             done = False
             episode_reward = 0
             episode_length = 0
@@ -1631,6 +1721,10 @@ def create_environment(task_name, intervention=None, seed=0, skip_frame=3, max_e
         max_episode_length=max_episode_length
     )
 
+    # setting the seed explicitly if the env supports it
+    if hasattr(base_env, 'seed'):
+        base_env.seed(seed)
+    
     # i am wrapping this to capture next states
     base_env = NextStateWrapper(base_env)
 
@@ -1638,28 +1732,6 @@ def create_environment(task_name, intervention=None, seed=0, skip_frame=3, max_e
         return IntervenedCausalWorld(base_env, intervention)
     else:
         return base_env
-
-def log_validation_episode(self, stage, timestep, validation_reward, validation_success_rate, validation_avg_length):
-    """log validation episode data"""
-    validation_csv_path = os.path.join(self.log_dir, 'validation_log.csv')
-
-    # create file with headers if it does not exist
-    if not os.path.exists(validation_csv_path):
-        with open(validation_csv_path, 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([
-                'timestamp', 'stage', 'timestep', 'validation_avg_reward',
-                'validation_success_rate', 'validation_avg_length'
-            ])
-    
-    # append validation data
-    with open(validation_csv_path, 'a', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow([
-            time.strftime('%Y-%m-%d %H:%M:%S'),
-            stage, timestep, validation_reward,
-            validation_success_rate, validation_avg_length
-        ])
 
 def test_intervention_performance(student_model, intervention, task_name, num_episodes=10, seed=0):
     """test an intervention and return its average performance metrics"""
@@ -1676,7 +1748,13 @@ def test_intervention_performance(student_model, intervention, task_name, num_ep
     episode_rewards = []
 
     for episode in range(num_episodes):
-        obs = env.reset(seed=seed+episode)
+        # using env seeding before reset
+        if hasattr(env, 'seed'):
+            env.seed(seed + episode)
+        elif hasattr(env, 'base_env') and hasattr(env.base_env, 'seed'):
+            env.base_env.seed(seed + episode)
+        
+        obs = env.reset()
         done = False
         episode_reward = 0
         episode_length = 0
@@ -1734,73 +1812,89 @@ def train_rnd_baseline(args):
     student_model = PPO.load(args.pretrained_path)
     logging.info(f"[RND] using pretrained model: {args.pretrained_path}")
 
-    # create base environment (no interventions)
-    def env_factory():
-        return create_environment(
-            args.task,
-            intervention=None,
-            seed=args.seed,
-            skip_frame=args.skip_frame
-        )
-    
-    # create vectorized env
-    train_env = DummyVecEnv([env_factory])
-    train_env = VecMonitor(train_env, filename=os.path.join(args.log_dir, 'rnd_monitor.csv'))
+    # tracking the cumulative timesteps
+    cumulative_timesteps = 0
+    total_stages = 50
 
-    # set up RND callback
-    device = 'cuda'if torch.cuda.is_available() else 'cpu'
-    rnd_callback = RNDIntrinsicRewardCallback(
-        beta=getattr(args, 'rnd_beta', 0.01),
-        update_freq=getattr(args, 'rnd_update_freq', 1000),
-        batch_size=getattr(args, 'rnd_batch_size', 1024),
-        device=device,
-        verbose=1
-    )
-
-    # set up logging
+    # set up csv logger
     csv_logger = CSVLogger(args.log_dir)
-    reward_monitor = RewardMonitorCallback("rnd_baseline", csv_logger, 0, 0)
 
-    callback_list = CallbackList([
-        rnd_callback,
-        reward_monitor,
-        WandbCallback(
-            gradient_save_freq=100,
-            model_save_path=args.log_dir if args.use_wandb else None,
-            verbose=2
-        ) if args.use_wandb else None
-    ])
-    callback_list.callbacks = [cb for cb in callback_list.callbacks if cb is not None]
+    # run 50 training segments
+    for stage in range(1, total_stages + 1):
+        logging.info(f"[RND] Starting meta-episode {stage}/{total_stages}")
 
-    # set up SB3 logger
-    sb3_log_path = os.path.join(args.log_dir, "sb3_csv_logs_rnd_baseline")
-    new_logger = configure(sb3_log_path, ["stdout", "csv"])
-    student_model.set_logger(new_logger)
-    student_model.set_env(train_env)
+        # creating env for this segment (no interventions)
+        def env_factory():
+            return create_environment(
+                args.task,
+                intervention=None,
+                seed=args.seed + stage * 100,
+                skip_frame=args.skip_frame
+            )
+        
+        # create the vectorized env
+        train_env = DummyVecEnv([env_factory])
+        train_env = VecMonitor(train_env, filename=os.path.join(args.log_dir, f'rnd_monitor_stage{stage}.csv'))
 
-    # train with RND intrinsic rewards
-    total_timesteps = args.timesteps * 7    # same as the 7-stage curriculum
-    logging.info(f"[RND] training for {total_timesteps} timesteps")
+        # set up rnd callback
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        rnd_callback = RNDIntrinsicRewardCallback(
+            beta=getattr(args, 'rnd_beta', 0.01),
+            update_freq=getattr(args, 'rnd_update_freq', 1000),
+            batch_size=getattr(args, 'rnd_batch_size', 1024),
+            device=device,
+            verbose=1
+        )
 
-    start_time = time.time()
-    student_model.learn(
-        total_timesteps=total_timesteps,
-        callback=callback_list,
-        reset_num_timesteps=False
-    )
-    training_duration = time.time() - start_time
+        # set up logging for this segment
+        reward_monitor = RewardMonitorCallback("rnd_baseline", csv_logger, stage, cumulative_timesteps)
 
-    logging.info(f"[RND] training completed {training_duration:.2f} seconds")
+        callback_list = CallbackList([
+            rnd_callback,
+            reward_monitor,
+            WandbCallback(
+                gradient_save_freq=100,
+                model_save_path=args.log_dir if args.use_wandb else None,
+                verbose=2
+            ) if args.use_wandb else None
+        ])
+        callback_list.callbacks = [cb for cb in callback_list.callbacks if cb is not None]
 
-    # save the final model
+        # set up sb3 logger
+        sb3_log_path = os.path.join(args.log_dir, f"sb3_csv_logs_rnd_baseline_stage{stage}")
+        new_logger = configure(sb3_log_path, ["stdout", "csv"])
+        student_model.set_logger(new_logger)
+        student_model.set_env(train_env)
+
+        # train for this segment
+        segment_timesteps = args.timesteps   # each segment is args.timesteps (50K)
+        logging.info(f"[RND] training meta-episode {stage} for {segment_timesteps} timesteps")
+
+        student_model.learn(
+            total_timesteps=segment_timesteps,
+            callback=callback_list,
+            reset_num_timesteps=False
+        )
+
+        # update cumulative timesteps
+        cumulative_timesteps += segment_timesteps
+
+        # save intermediate model
+        if stage % 10 == 0 or stage == total_stages:
+            model_path = os.path.join(args.log_dir, f"rnd_model_stage_{stage}.zip")
+            student_model.save(model_path)
+            logging.info(f"[RND] Model saved after stage {stage} : {model_path}")
+        
+        # clean up
+        train_env.close()
+    
+    # save final model
     final_model_path = os.path.join(args.log_dir, "final_rnd_model.zip")
     student_model.save(final_model_path)
     logging.info(f"[RND] Final model saved to {final_model_path}")
 
-    # clean up
-    train_env.close()
-
     return student_model
+
 
 # =====================
 # Count-based Exploration Model
@@ -1927,72 +2021,87 @@ def train_count_baseline(args):
     student_model = PPO.load(args.pretrained_path)
     logging.info(f"[CountBased] Using pretrained model: {args.pretrained_path}")
 
-    # create base environment (no interventions)
-    def env_factory():
-        return create_environment(
-            args.task,
-            intervention=None,      # no intervention for count-based baseline
-            seed=args.seed,
-            skip_frame=args.skip_frame
-        )
-    
-    # create vectorized env
-    train_env = DummyVecEnv([env_factory])
-    train_env = VecMonitor(train_env, filename=os.path.join(args.log_dir, 'count_monitor.csv'))
+    # track cumulative timesteps
+    cumulative_timesteps = 0
+    total_stages = 50
 
-    # set up count-based callback
-    count_callback = CountBasedRewardCallback(
-        beta=getattr(args, 'count_beta', 0.01),
-        encoding_dim=getattr(args, 'count_encoding_dim', 32),
-        verbose=1
-    )
-
-    # set up logging
+    # set up the csv logger
     csv_logger = CSVLogger(args.log_dir)
-    reward_monitor = RewardMonitorCallback("count_baseline", csv_logger, 0, 0)
 
-    callback_list = CallbackList([
-        count_callback,
-        reward_monitor,
-        WandbCallback(
-            gradient_save_freq=100,
-            model_save_path=args.log_dir if args.use_wandb else None,
-            verbose=2
-        ) if args.use_wandb else None
-    ])
-    callback_list.callbacks = [cb for cb in callback_list.callbacks if cb is not None]
+    # run 50 training segments
+    for stage in range(1, total_stages + 1):
+        logging.info(f"[Count-Based] Starting meta-episode {stage}/{total_stages}")
 
-    # set up SB3 logger
-    sb3_log_path = os.path.join(args.log_dir, "sb3_csv_logs_count_baseline")
-    new_logger = configure(sb3_log_path, ["stdout", "csv"])
-    student_model.set_logger(new_logger)
-    student_model.set_env(train_env)
+        # create env for this segment (no interventions)
+        def env_factory():
+            return create_environment(
+                args.task,
+                intervention=None,
+                seed=args.seed + stage * 100,
+                skip_frame=args.skip_frame
+            )
+        
+        # create a vectorized env
+        train_env = DummyVecEnv([env_factory])
+        train_env = VecMonitor(train_env, filename=os.path.join(args.log_dir, f'count_monitor_stage{stage}.csv'))
 
-    # train with count-based intrinsic rewards
-    total_timesteps = args.timesteps * 7    # same total as 7-stage curriculum
-    logging.info(f"[CountBased] Training for {total_timesteps} timesteps")
+        # set up a count-based callback
+        count_callback = CountBasedRewardCallback(
+            beta=getattr(args, 'count_beta', 0.01),
+            encoding_dim=getattr(args, 'count_encoding_dim', 32),
+            verbose=1
+        )
 
-    start_time = time.time()
-    student_model.learn(
-        total_timesteps=total_timesteps,
-        callback=callback_list,
-        reset_num_timesteps=False
-    )
-    training_duration = time.time() - start_time
+        # set up logging for this segment
+        reward_monitor = RewardMonitorCallback("count_baseline", csv_logger, stage, cumulative_timesteps)
 
-    logging.info(f"[CountBased] Training completed in {training_duration:.2f} seconds")
+        callback_list = CallbackList([
+            count_callback,
+            reward_monitor,
+            WandbCallback(
+                gradient_save_freq=100,
+                model_save_path=args.log_dir if args.use_wandb else None,
+                verbose=2
+            ) if args.use_wandb else None
+        ])
+        callback_list.callbacks = [cb for cb in callback_list.callbacks if cb is not None]
 
-    # log final statistics
-    unique_states = len(count_callback.visit_counts)
-    logging.info(f"[CountBased] Final unique states visited: {unique_states}")
+        # set up sb3 logger
+        sb3_log_path = os.path.join(args.log_dir, f"sb3_csv_logs_count_baseline_stage{stage}")
+        new_logger = configure(sb3_log_path, ["stdout", "csv"])
+        student_model.set_logger(new_logger)
+        student_model.set_env(train_env)
+
+        # train for this segment
+        segment_timesteps = args.timesteps      # each segment is 50K timesteps
+        logging.info(f"[Count-Based] Training meta-episode {stage} for {segment_timesteps} timesteps")
+
+        student_model.learn(
+            total_timesteps=segment_timesteps,
+            callback=callback_list,
+            reset_num_timesteps=False
+        )
+
+        # update the cumulative timesteps
+        cumulative_timesteps += segment_timesteps
+
+        # save intermediate model
+        if stage % 10 or stage == total_stages:
+            model_path = os.path.join(args.log_dir, f"count_model_stage_{stage}.zip")
+            student_model.save(model_path)
+            logging.info(f"[Count-Based] Model saved after stage {stage}: {model_path}")
+        
+        # clean up
+        train_env.close()
 
     # save final model
     final_model_path = os.path.join(args.log_dir, "final_count_model.zip")
     student_model.save(final_model_path)
-    logging.info(f"[CountBased] Final model saved to {final_model_path}")
+    logging.info(f"[Count-Based] Final model saved to {final_model_path}")
 
-    # clean up
-    train_env.close()
+    # log final count statistics
+    unique_states = len(count_callback.visit_counts)
+    logging.info(f"[Count-Based] Final unique states visited: {unique_states}")
 
     return student_model, count_callback
 
@@ -2031,16 +2140,22 @@ def train_on_intervention(student_model, intervention, task_name, timesteps, arg
         seed=args.seed + stage_num * 10000  # unique seed for validation
     )
 
+    # adding the custom SB3-WandB integration callback
+    sb3_wandb_callback = SB3WandbIntegrationCallback(stage_num, type) if args.use_wandb else None
+
     # set up callback for monitoring
     reward_monitor = RewardMonitorCallback(type, csv_logger, stage_num, cumulative_timesteps)
     callback_list = CallbackList([
         reward_monitor,
         validation_callback,
         InterventionLoggingCallback(type, stage_num),
+        sb3_wandb_callback,
         WandbCallback(
             gradient_save_freq=100,
             model_save_path=args.log_dir if args.use_wandb else None,
-            verbose=2
+            verbose=2,
+            model_save_freq=1000,
+            log="all"
         ) if args.use_wandb else None
     ])
     # removing none if wandb is not used
@@ -2082,7 +2197,9 @@ def evaluate_final_performance(student_model, task_name, num_episodes=20, seed=0
     episode_rewards = []
 
     for episode in range(num_episodes):
-        obs = validation_env.reset(seed=seed+episode)
+        if hasattr(validation_env, 'seed'):
+            validation_env.seed(seed + episode)
+        obs = validation_env.reset()
         done = False
         episode_reward = 0
         episode_length = 0
@@ -2141,6 +2258,7 @@ def aggregate_sb3_progress(log_dir):
         print("No progress.csv files found.")
         return None
     all_progress = pd.concat(all_dfs, ignore_index=True)
+    all_progress['meta_episode'] = all_progress['stage']
     rename_map = {
         'rollout/ep_rew_mean': 'mean_episode_reward',
         'time/time_elapsed': 'elapsed_time',
@@ -2183,6 +2301,7 @@ def main():
     parser.add_argument('--train', action='store_true', help='Train the model')
     parser.add_argument('--eval', action='store_true', help='Evaluate the model')
     parser.add_argument('--task', type=str, default='pushing', help='Task name')
+    parser.add_argument('--meta_episodes', type=int, default=50, help='Number of meta-episodes (intervention selection)')
     parser.add_argument('--timesteps', type=int, default=50000, help='Timesteps for each intervention training block')
     parser.add_argument('--pretrained_path', type=str, help='Path to pretrained PPO model')
     parser.add_argument('--log_dir', type=str, default=None, help='Log directory (will be auto-generated if not specified)')
@@ -2418,7 +2537,7 @@ def main():
         
         # main sequencing loop
         stage = 1
-        total_stages = 7  # Always run for 7 stages for fair comparison
+        total_stages = 50  # Changing from 7 to 50 to match AutoCaLC
 
         while stage <= total_stages:
             logging.info(f"CURRICULUM STAGE {stage}/{total_stages}")
@@ -2627,6 +2746,8 @@ def main():
             else:
                 logging.info(f"Remaining interventions: {len(remaining_interventions)}")
             
+            # time estimation (TODO: add code here)
+
             # WandB logging
             if args.use_wandb:
                 wandb.log({

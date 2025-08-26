@@ -154,9 +154,10 @@ Thumbs.db
 *.swo
 *~
 
-# Log files
+# Log and archive files
 *.log
 logs/
+archive/
 
 # Model checkpoints and weights (uncomment if you want to exclude models)
 # *.pt

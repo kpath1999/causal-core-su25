@@ -1,5 +1,6 @@
 import numpy as np
 from causal_world.intervention_actors.base_actor import BaseInterventionActorPolicy
+import logging
 
 class ValidationInterventionActorPolicy(BaseInterventionActorPolicy):
 
@@ -40,40 +41,56 @@ class ValidationInterventionActorPolicy(BaseInterventionActorPolicy):
         :param variables_dict: current variables dictionary
         :return: combined interventions dictionary
         """
-        # use the call count to vary seed while maintaining determinism
-        current_seed = self.seed + self._call_count
-        self._rng = np.random.RandomState(current_seed)
-        self._call_count += 1
+        try:
+            # use the call count to vary seed while maintaining determinism
+            current_seed = self.seed + self._call_count
+            self._rng = np.random.RandomState(current_seed)
+            self._call_count += 1
 
-        interventions_dict = dict()
+            interventions_dict = dict()
 
-        # 1. goal intervention (30% probability)
-        if self._rng.random() < 0.3 and self.goal_sampler_function:
-            goal_interventions = self.goal_sampler_function()
-            interventions_dict.update(goal_interventions)
+            # 1. goal intervention (30% probability)
+            if self._rng.random() < 0.3 and self.goal_sampler_function:
+                goal_interventions = self.goal_sampler_function()
+                interventions_dict.update(goal_interventions)
+            
+            # 2. physical properties intervention (40% probability)
+            if self._rng.random() < 0.4:
+                physical_interventions = self._sample_physical_properties()
+                interventions_dict.update(physical_interventions)
+            
+            # 3. visual intervention (50% probability)
+            if self._rng.random() < 0.5:
+                visual_interventions = self._sample_visual_properties()
+                interventions_dict.update(visual_interventions)
+            
+            # 4. rigid pose intervention (60% probability)
+            if self._rng.random() < 0.6:
+                pose_interventions = self._sample_rigid_poses()
+                interventions_dict.update(pose_interventions)
+            
+            # 5. combined multi-modal intervention (20% intervention)
+            # this creates more complex combinations not seen during individual training
+            if self._rng.random() < 0.2:
+                multimodal_interventions = self._sample_multimodal_interventions()
+                interventions_dict.update(multimodal_interventions)
+            
+            # applying the bounds here to ensure that all interventions are valid
+            if interventions_dict:
+                interventions_dict = self._check_intervention_bounds(interventions_dict)
+
+            if not interventions_dict:
+                logging.warning("Generated empty intervention dict - using fallback intervention")
+                # create a simple fallback intervention
+                interventions_dict = self._generate_fallback_interventions()
+            
+            return interventions_dict
         
-        # 2. physical properties intervention (40% probability)
-        if self._rng.random() < 0.4:
-            physical_interventions = self._sample_physical_properties()
-            interventions_dict.update(physical_interventions)
-        
-        # 3. visual intervention (50% probability)
-        if self._rng.random() < 0.5:
-            visual_interventions = self._sample_visual_properties()
-            interventions_dict.update(visual_interventions)
-        
-        # 4. rigid pose intervention (60% probability)
-        if self._rng.random() < 0.6:
-            pose_interventions = self._sample_rigid_poses()
-            interventions_dict.update(pose_interventions)
-        
-        # 5. combined multi-modal intervention (20% intervention)
-        # this creates more complex combinations not seen during individual training
-        if self._rng.random() < 0.2:
-            multimodal_interventions = self._sample_multimodal_interventions()
-            interventions_dict.update(multimodal_interventions)
-        
-        return interventions_dict
+        except Exception as e:
+            logging.error(f"Error creating validation interventions: {e}")
+            import traceback
+            logging.error(traceback.format_exc())
+            raise   # return empty dict or error to avoid downstream failures
     
     def _sample_physical_properties(self):
         """sample physical properties with validation-specific ranges"""
@@ -90,7 +107,7 @@ class ValidationInterventionActorPolicy(BaseInterventionActorPolicy):
                         interventions_dict[variable] = dict()
                         # sample from the upper 30% of mass range for validation
                         mass_range = self.task_intervention_space[variable]['mass']
-                        mass_min = mass_range[0] + 0.7 * (mass_range[1] - mass_range[0])
+                        mass_min = max(mass_range[0], mass_range[0] + 0.7 * (mass_range[1] - mass_range[0]))
                         mass_max = mass_range[1]
                         interventions_dict[variable]['mass'] = self._rng.uniform(mass_min, mass_max)
                     
@@ -100,19 +117,25 @@ class ValidationInterventionActorPolicy(BaseInterventionActorPolicy):
                         # sample from the lower 30% of friction range for validation
                         friction_range = self.task_intervention_space[variable]['friction']
                         friction_min = friction_range[0]
-                        friction_max = friction_range[0] + 0.3 * (friction_range[1] - friction_range[0])
+                        friction_max = min(friction_range[1], friction_range[0] + 0.3 * (friction_range[1] - friction_range[0]))
+                        if friction_min >= friction_max:
+                            friction_max = friction_range[1]
                         interventions_dict[variable]['friction'] = self._rng.uniform(friction_min, friction_max)
                 
                 elif 'mass' in variable:
                     mass_range = self.task_intervention_space[variable]
-                    mass_min = mass_range[0] + 0.7 * (mass_range[1] - mass_range[0])
+                    mass_min = max(mass_range[0], mass_range[0] + 0.7 * (mass_range[1] - mass_range[0]))
                     mass_max = mass_range[1]
+                    if mass_min >= mass_max:
+                        mass_min = mass_range[0]
                     interventions_dict[variable] = self._rng.uniform(mass_min, mass_max)
 
                 elif 'friction' in variable:
                     friction_range = self.task_intervention_space[variable]
                     friction_min = friction_range[0]
-                    friction_max = friction_range[0] + 0.3 * (friction_range[1] - friction_range[0])
+                    friction_max = min(friction_range[1], friction_range[0] + 0.3 * (friction_range[1] - friction_range[0]))
+                    if friction_min >= friction_max:
+                        friction_max = friction_range[1]
                     interventions_dict[variable] = self._rng.uniform(friction_min, friction_max)
 
         return interventions_dict
@@ -121,30 +144,44 @@ class ValidationInterventionActorPolicy(BaseInterventionActorPolicy):
         """sample visual properties with validation-specific color schemes"""
         interventions_dict = dict()
 
-        # creating validation specific color palettes
-        validation_color_palettes = [
-            [0.8, 0.2, 0.2],    # reddish
-            [0.2, 0.8, 0.2],    # greenish
-            [0.2, 0.2, 0.8],    # blueish
-            [0.8, 0.8, 0.2],    # yellowish
-            [0.8, 0.2, 0.8],    # magenta-ish
-        ]
-
-        selected_palette = self._rng.choice(len(validation_color_palettes))
-        base_color = validation_color_palettes[selected_palette]
+        # generating base color palette that will be used with variations
+        base_color_r = np.random.uniform(0.7, 0.9)  # red component
+        base_color_g = np.random.uniform(0.7, 0.9)  # green component
+        base_color_b = np.random.uniform(0.7, 0.9)  # blue component
+        base_color = np.array([base_color_r, base_color_g, base_color_b])
 
         for variable in self.task_intervention_space:
             if isinstance(self.task_intervention_space[variable], dict):
                 if 'color' in self.task_intervention_space[variable]:
+                    color_bounds = self.task_intervention_space[variable]['color']
+                    lower_bound = color_bounds[0]
+                    upper_bound = color_bounds[1]
+
                     interventions_dict[variable] = dict()
+
+                    # sample within the valid bounds
+                    color = lower_bound + (upper_bound - lower_bound) * base_color
+
                     # add some noise to base color while keeping it in range
-                    color_noise = self._rng.uniform(-0.1, 0.1, 3)
-                    target_color = np.clip(np.array(base_color) + color_noise, 0.0, 1.0)
-                    interventions_dict[variable]['color'] = target_color
+                    noise = self._rng.uniform(-0.1, 0.1, 3) * (upper_bound - lower_bound)
+                    color = np.clip(color + noise, lower_bound, upper_bound)
+
+                    interventions_dict[variable]['color'] = color
+
             elif 'color' in variable:
-                color_noise = self._rng.uniform(-0.1, 0.1, 3)
-                target_color = np.clip(np.array(base_color) + color_noise, 0.0, 1.0)
-                interventions_dict[variable] = target_color
+                # now we direct the color variables (like the floor color, etc.)
+                color_bounds = self.task_intervention_space[variable]
+                lower_bound = color_bounds[0]
+                upper_bound = color_bounds[1]
+
+                # map the base color to the valid range
+                color = lower_bound + (upper_bound - lower_bound) * base_color
+
+                # add small noise while staying in bounds
+                noise = self._rng.uniform(-0.1, 0.1, 3) * (upper_bound - lower_bound)
+                color = np.clip(color + noise, lower_bound, upper_bound)
+
+                interventions_dict[variable] = color
         
         return interventions_dict
 
@@ -203,10 +240,18 @@ class ValidationInterventionActorPolicy(BaseInterventionActorPolicy):
                         interventions_dict[variable]['mass'] = self._rng.uniform(mass_range[0] + 0.8 * (mass_range[1] - mass_range[0]), mass_range[1])
                     if 'color' in self.task_intervention_space[variable]:
                         # extreme color (very dark or very bright)
+                        # get the actual color bounds
+                        color_bounds = self.task_intervention_space[variable]['color']
+                        lower_bound = color_bounds[0]
+                        upper_bound = color_bounds[1]
+                        
+                        # close to bounds but still valid
                         if self._rng.random() < 0.5:
-                            interventions_dict[variable]['color'] = self._rng.uniform(0.0, 0.2, 3)  # dark
+                            lower_margin = 0.1 * (upper_bound - lower_bound)
+                            interventions_dict[variable]['color'] = self._rng.uniform(lower_bound, lower_bound + lower_margin, 3)  # dark
                         else:
-                            interventions_dict[variable]['color'] = self._rng.uniform(0.8, 1.0, 3)  # bright
+                            upper_margin = 0.1 * (upper_bound - lower_bound)
+                            interventions_dict[variable]['color'] = self._rng.uniform(upper_bound - upper_margin, upper_bound, 3)  # bright
                     if 'cylindrical_position' in self.task_intervention_space[variable]:
                         # edge position
                         pos_range = self.task_intervention_space[variable]['cylindrical_position']
@@ -243,3 +288,48 @@ class ValidationInterventionActorPolicy(BaseInterventionActorPolicy):
                 'intervention_probability': self.intervention_probability
             }
         }
+
+    def _check_intervention_bounds(self, intervention_dict):
+        """check and fix any interventions that might violate bounds"""
+        fixed_dict = {}
+
+        # a deep copy to avoid modifying the original
+        for key, value in intervention_dict.items():
+            if isinstance(value, dict):
+                fixed_dict[key] = {}
+                for inner_key, inner_value in value.items():
+                    if inner_key == 'color' and isinstance(inner_value, np.ndarray):
+                        # ensure colors respect the bounds
+                        if key in self.task_intervention_space and inner_key in self.task_intervention_space[key]:
+                            color_bounds = self.task_intervention_space[key][inner_key]
+                            lower_bound = color_bounds[0]
+                            upper_bound = color_bounds[1]
+                            # get the colors to respect their specific bounds
+                            fixed_dict[key][inner_key] = np.clip(inner_value, lower_bound, upper_bound)
+                        else:
+                            # this is a fallback in case we can't find specific bounds
+                            fixed_dict[key][inner_key] = np.clip(inner_value, 0.5, 1.0)
+                    else:
+                        # for other properties, keep as is
+                        fixed_dict[key][inner_key] = inner_value
+            elif 'color' in key and isinstance(value, np.ndarray):
+                # direct color properties
+                if key in self.task_intervention_space:
+                    color_bounds = self.task_intervention_space[key]
+                    lower_bound = color_bounds[0]
+                    upper_bound = color_bounds[1]
+                    fixed_dict[key] = np.clip(value, lower_bound, upper_bound)
+                else:
+                    # here we fallback to the default bounds
+                    fixed_dict[key] = np.clip(value, 0.5, 1.0)
+            else:
+                fixed_dict[key] = value
+        
+        return fixed_dict
+    
+    def _generate_fallback_interventions(self):
+        """
+        generates a simple, guaranteed intervention when no other interventions are seleted.
+        this ensures that the validation env is always modified.
+        """
+        return self._sample_visual_properties()
