@@ -70,6 +70,10 @@ Note: Replace 'pushing' with any supported task: reaching, picking, pick_and_pla
 Note: All commands assume you have the required pretrained models in models/{task} directories (e.g., models/ppo_pushing_sb3/final_model.zip)
 """
 
+# TODO: fix the logging such that it is easy to compare all algorithms side-by-side in a Colab notebook, upon uploading all the baseline csv files
+# note: they should training and validation related data
+# and of course evaluation with the radar plots in the end
+
 import numpy as np
 import torch
 import torch.nn as nn

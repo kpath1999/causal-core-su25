@@ -56,6 +56,16 @@ and we have 50 meta-episodes for a full training run; must tune epsilon based on
 - we use a slow update frequency (low tau) for the DQN's target network to improve stability
 """
 
+"""
+TERMINAL COMMANDS:
+
+Training --
+python meta_teacher_student.py --task pushing --student_train_steps 50000 --meta_episodes 50 --seed 0 --log_dir logs/autocalc_logs
+
+Evaluation --
+python meta_teacher_student.py --task pushing --log_dir logs/autocalc_logs --eval --seed 0
+"""
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -69,14 +79,29 @@ from copy import deepcopy
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv, VecMonitor
 from stable_baselines3.common.callbacks import BaseCallback
+from causal_world.envs import CausalWorld
+from causal_world.evaluation import EvaluationPipeline
+from causal_world.benchmark import REACHING_BENCHMARK, PUSHING_BENCHMARK, PICKING_BENCHMARK, PICK_AND_PLACE_BENCHMARK, STACKING2_BENCHMARK
+import causal_world.evaluation.visualization.visualiser as vis
+from causal_world.intervention_actors import (
+    GoalInterventionActorPolicy, 
+    PhysicalPropertiesInterventionActorPolicy,
+    VisualInterventionActorPolicy,
+    RigidPoseInterventionActorPolicy,
+    RandomInterventionActorPolicy
+)
+from causal_world.task_generators import generate_task
 
 # importing the resuable components from baselines and validation_actor
 # because why not
 from baselines import (
     INTERVENTIONS,
+    TASK_BENCHMARKS,
+    SUPPORTED_TASKS,
     DENSE_REWARD_WEIGHTS,
     create_environment,
     evaluate_cm_score,
+    test_intervention_performance,
     RewardMonitorCallback,
     IntervenedCausalWorld
 )
@@ -104,32 +129,61 @@ def get_teacher_state(student_model, task_name, interventions, device='cpu', see
     so if we have 7 interventions, it would be:
     [reward1, cm1, reward2, cm2, ..., reward7, cm7]
     """
-    logging.info("computing teacher state (cm scores for all interventions - for now)")
+    logging.info("Computing teacher state (rewards and CM scores for all interventions)")
     cm_scores = []
     rewards = []
+
     for i, intervention in enumerate(interventions):
         logging.info(f"     Processing intervention {i+1}/{len(interventions)}: {intervention['type']}")
-        # use the create_env factory from baselines.py
-        env = create_environment(task_name, intervention, seed=seed)
-        # use the evaluate_cm_score func from baselines.py
-        cm_score = evaluate_cm_score(env, student_model, episodes=5, device=device, intervention_type=intervention['type'], seed=seed)
+
+        # 1. Test the reward performance
+        reward_metrics = test_intervention_performance(
+            student_model,
+            intervention,
+            task_name,
+            num_episodes=5,
+            seed=seed + i
+        )
+        rewards.append(reward_metrics['avg_reward'])
+        logging.info(f"     {intervention['type']} reward: {reward_metrics['avg_reward']:.4f}")
+
+        # 2. Compute CM score
+        env = create_environment(task_name, intervention, seed=seed + i + 100)
+        cm_score = evaluate_cm_score(env, student_model, episodes=5, device=device,
+                                     intervention_type=intervention['type'], seed=seed + i + 100)
+        
         cm_scores.append(cm_score)
         env.close()
         logging.info(f"     {intervention['type']} CM score: {cm_score:.4f}")
     
-    cm_array = np.array(cm_scores, dtype=np.float32)
-
-    # normalize scores for stable dqn training
-    mean = np.mean(cm_array)
-    std = np.std(cm_array)
-    if std > 1e-8:
-        normalized_cm = (cm_array - mean) / std
-    else:
-        normalized_cm = cm_array - mean    # here we center if std is zero
+    # normalize reward scores
+    reward_array = np.array(rewards, dtype=np.float32)
+    reward_mean = np.mean(reward_array)
+    reward_std = np.std(reward_array)
+    if reward_std > 1e-8:
+        normalized_rewards = (reward_array - reward_mean) / reward_std    
     
+    # normalize CM scores
+    cm_array = np.array(rewards, dtype=np.float32)
+    cm_mean = np.mean(cm_array)
+    cm_std = np.std(cm_array)
+    if cm_std > 1e-8:
+        normalized_cm = (cm_array - cm_mean) / cm_std
+    else:
+        normalized_cm = cm_array - cm_mean      # here we center if std is zero
+    
+    # interleave rewards and CM scores
+    interleaved_state = np.zeros(len(interventions) * 2, dtype=np.float32)
+    interleaved_state[0::2] = normalized_rewards    # even indices for rewards
+    interleaved_state[1::2] = normalized_cm         # odd indices for CM scores
+    
+    logging.info(f"Raw rewards: {reward_array}")
     logging.info(f"Raw CM scores: {cm_array}")
+    logging.info(f"Normalized rewards: {normalized_rewards}")
     logging.info(f"Normalized CM scores: {normalized_cm}")
-    return normalized_cm
+    logging.info(f"Interleaved state shape: {interleaved_state.shape}")
+    
+    return interleaved_state
 
 # evaluate student generalization
 def run_validation_protocol(student_model, validation_env, num_episodes=50):
@@ -240,6 +294,97 @@ class TeacherDQNAgent:
         
         return loss.item()
 
+# the eval function
+def evaluate_autocalc_performance(log_dir, task_name='pushing', seed=0, max_episode_length=250, skip_frame=3, num_episodes=10):
+    """made similar to baselines evaluation"""
+    set_seed(seed)
+    logging.info("Running AutoCaLC evaluation...")
+
+    # create env
+    dense_weights = DENSE_REWARD_WEIGHTS.get(task_name, [0])
+    task = generate_task(
+        task_generator_id=task_name,
+        dense_reward_weights=np.array(dense_weights),
+        variable_space='space_a',
+        fractional_reward_weight=1
+    )
+    env = CausalWorld(
+        task=task,
+        skip_frame=skip_frame,
+        action_mode='joint_torques',
+        enable_visualization=False,
+        seed=seed,
+        max_episode_length=max_episode_length
+    )
+
+    # load the final model
+    model_path = os.path.join(log_dir, "final_student_model.zip")
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Trained model not found at {model_path}")
+    
+    model = PPO.load(model_path)
+
+    # basic episode evaluation
+    logging.info("\nFirst phase of evaluation:")
+    all_rewards, all_successes = [], []
+    for ep in range(num_episodes):
+        obs = env.reset()
+        if hasattr(env, 'seed'):
+            env.seed(seed + ep)
+        done = False
+        total_reward, successes = 0.0, 0
+        while not done:
+            action, _ = model.predict(obs, deterministic=True)
+            obs, reward, done, info = env.step(action)
+            total_reward += reward
+            if isinstance(info, dict) and 'success' in info:
+                successes += int(info['success'])
+        logging.info(f"Episode {ep + 1}: reward = {total_reward:.2f}, success = {successes}")
+        all_rewards.append(total_reward)
+        all_successes.append(successes)
+    
+    logging.info(f"\nMean reward: {np.mean(all_rewards):.2f}")
+    logging.info(f"Mean success rate: {np.mean(all_successes):.2f}")
+
+    # benchmark eval (same as baselines)
+    logging.info("\nGenerating benchmark evaluation and viz...")
+    if task_name not in TASK_BENCHMARKS:
+        logging.error(f"No benchmark available for task: '{task_name}'. Supported: {SUPPORTED_TASKS}")
+        return
+    benchmark = TASK_BENCHMARKS[task_name]
+
+    # use the causalworld benchmark evaluation
+    evaluation = EvaluationPipeline(
+        evaluation_protocols=benchmark['evaluation_protocols'],
+        task_params={'task_generator_id': task_name},
+        world_params={'skip_frame': 3, 'action_mode': 'joint_torques'},
+        visualize_evaluation=False
+    )
+
+    def policy_fn(obs):
+        action, _ = model.predict(obs, deterministic=True)
+        return action
+    
+    scores_model = evaluation.evaluate_policy(policy_fn, fraction=0.005)
+
+    logging.info("\nEvaluation results:")
+    logging.info(scores_model)
+
+    # save the benchmark results
+    import json
+    benchmark_path = os.path.join(log_dir, "benchmark_results.json")
+    with open(benchmark_path, 'w') as f:
+        json.dump({
+            'final_evals': scores_model
+        }, f, indent=2)
+    logging.info(f"Final evals saved to: {benchmark_path}")
+
+    # generate the visualizations
+    plots_dir = os.path.join(log_dir, "plots")
+    vis.generate_visual_analysis(plots_dir, experiments={task_name: scores_model})
+    logging.info(f"Visualization saved to: {plots_dir}")
+
+
 # ========================
 # main meta-learning loop
 # ========================
@@ -276,7 +421,7 @@ def main():
     student_model = PPO.load(args.student_pretrained_path, device=device)
     logging.info(f"Loaded student PPO from {args.student_pretrained_path}")
 
-    teacher = TeacherDQNAgent(state_dim=len(INTERVENTIONS), action_dim=len(INTERVENTIONS), device=device)
+    teacher = TeacherDQNAgent(state_dim=len(INTERVENTIONS) * 2, action_dim=len(INTERVENTIONS), device=device)
 
     # create a validation env with an intervention set
     validation_intervention = {"type": "validation", "class": ValidationInterventionActorPolicy, "params": {"seed": args.seed + 42}}
@@ -343,4 +488,11 @@ def main():
         wandb.finish()
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description="Meta-RL Teacher-Student Curriculum (AutoCaLC)")
+    parser.add_argument('--eval', action='store_true', help='Evaluate the model')
+    args = parser.parse_args()
+
+    if args.eval:
+        evaluate_autocalc_performance(args.log_dir, task_name=args.task, seed=args.seed)
+    else:
+        main()
