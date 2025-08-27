@@ -2371,7 +2371,7 @@ def main():
         # initialize wandb if requested
         if args.use_wandb:
             wandb.init(
-                project=f'curriculum-sequencing-{args.task}',
+                project=f'curriculum-sequencing-{args.task}-replacement-{args.replacement}',
                 name=f'{args.curriculum_mode}_{args.task}_seed{args.seed}',
                 config=vars(args),
                 tags=[args.task, args.curriculum_mode, 'curriculum', 'sequencing']
