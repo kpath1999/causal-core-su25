@@ -4,13 +4,14 @@ import logging
 
 class ValidationInterventionActorPolicy(BaseInterventionActorPolicy):
 
-    def __init__(self, seed=0, intervention_probability=0.7, **kwargs):
+    def __init__(self, seed=0, intervention_probability=0.7, fixed_intervention=False, **kwargs):
         """
         here, the intervention actor creates a validation set by combining multiple
         intervention types in a deterministic, seed-based manner.
 
         :param seed: (int) the random seed for deterministic intervention sampling
         :param intervention_probability: (float) probability of applying each intervention type
+        :param fixed_intervention: (bool) if True, use the same intervention pattern for all calls
         :param kwargs: additional parameters
         """
         super(ValidationInterventionActorPolicy, self).__init__()
@@ -19,9 +20,13 @@ class ValidationInterventionActorPolicy(BaseInterventionActorPolicy):
         self.task_intervention_space = None
         self.goal_sampler_function = None
         self._rng = np.random.RandomState(seed)
+        self.fixed_intervention = fixed_intervention
 
         # track intervention call count for seed variation
         self._call_count = 0
+
+        # store the generated intervention for reuse if fixed_intervention is True
+        self.cached_intervention = None
     
     def initialize(self, env):
         """
@@ -41,11 +46,19 @@ class ValidationInterventionActorPolicy(BaseInterventionActorPolicy):
         :param variables_dict: current variables dictionary
         :return: combined interventions dictionary
         """
+        # if we want fixed interventions and have already generated one, reuse it
+        if self.fixed_intervention and self.cached_intervention is not None:
+            return self.cached_intervention
+
         try:
-            # use the call count to vary seed while maintaining determinism
-            current_seed = self.seed + self._call_count
-            self._rng = np.random.RandomState(current_seed)
-            self._call_count += 1
+            # only vary the seed if we're not using fixed interventions
+            if not self.fixed_intervention:
+                current_seed = self.seed + self._call_count
+                self._rng = np.random.RandomState(current_seed)
+                self._call_count += 1
+            else:
+                # for fixed interventions, always use the base seed
+                self._rng = np.random.RandomState(self.seed)
 
             interventions_dict = dict()
 
@@ -83,6 +96,10 @@ class ValidationInterventionActorPolicy(BaseInterventionActorPolicy):
                 logging.warning("Generated empty intervention dict - using fallback intervention")
                 # create a simple fallback intervention
                 interventions_dict = self._generate_fallback_interventions()
+            
+            # we cache the intervention if we're using fixed interventions
+            if self.fixed_intervention:
+                self.cached_intervention = interventions_dict.copy()
             
             return interventions_dict
         

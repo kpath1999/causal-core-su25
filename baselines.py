@@ -8,28 +8,28 @@ BASIC TRAINING COMMANDS:
 -----------------------
 
 1. GREEDY CURRICULUM (highest reward intervention selection):
-python baselines.py --train --curriculum_mode greedy --task pushing --timesteps 50000 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode greedy --task pushing --timesteps 50000 --replacement --use_wandb
 
 2. CAUSAL MISMATCH CURRICULUM (CM score-based selection):
-python baselines.py --train --curriculum_mode cm --task pushing --timesteps 50000 --alpha_cm 0.5 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode cm --task pushing --timesteps 50000 --alpha_cm 0.5 --replacement --use_wandb
 
 3. RANDOM CURRICULUM (random intervention selection):
-python baselines.py --train --curriculum_mode random --task pushing --timesteps 50000 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode random --task pushing --timesteps 50000 --replacement --use_wandb
 
 4. NO CURRICULUM (baseline without interventions):
-python baselines.py --train --curriculum_mode none --task pushing --timesteps 50000 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode none --task pushing --timesteps 50000 --replacement --use_wandb
 
 5. RND INTRINSIC MOTIVATION (Random Network Distillation):
-python baselines.py --train --curriculum_mode rnd --task pushing --timesteps 50000 --rnd_beta 0.01 --rnd_update_freq 1000 --rnd_batch_size 1024 --use_wandb
+python baselines.py --train --eval --curriculum_mode rnd --task pushing --timesteps 50000 --rnd_beta 0.01 --rnd_update_freq 1000 --rnd_batch_size 1024 --use_wandb
 
 6. COUNT-BASED EXPLORATION (state visitation counts):
-python baselines.py --train --curriculum_mode count --task pushing --timesteps 50000 --count_beta 0.01 --count_encoding_dim 32 --use_wandb
+python baselines.py --train --eval --curriculum_mode count --task pushing --timesteps 50000 --count_beta 0.01 --count_encoding_dim 32 --use_wandb
 
 7. LEARNING PROGRESS MOTIVATION (improvement in transition model prediction accuracy):
-python baselines.py --train --curriculum_mode lpm --task pushing --timesteps 50000 --lpm_beta 1.0 --use_wandb
+python baselines.py --train --eval --curriculum_mode lpm --task pushing --timesteps 50000 --lpm_beta 1.0 --use_wandb
 
 8. INFORMATION GAIN REWARD (rewards "surprise" measured by model uncertainty):
-python baselines.py --train --curriculum_mode info --task pushing --timesteps 50000 --info_beta 1.0 --use_wandb
+python baselines.py --train --eval --curriculum_mode info --task pushing --timesteps 50000 --info_beta 1.0 --use_wandb
 
 LOG DIRECTORY STRUCTURE:
 -----------------------
@@ -105,6 +105,7 @@ from causal_world.intervention_actors import (
     RandomInterventionActorPolicy
 )
 from validation_actor import ValidationInterventionActorPolicy
+# from consolidated_logger import ConsolidatedLogger, MonitorWithSuccess
 import wandb
 from wandb.integration.sb3 import WandbCallback
 
@@ -279,6 +280,12 @@ class RNDIntrinsicRewardCallback(BaseCallback):
         
         # compute intrinsic rewards
         intrinsic_rewards = self.rnd_model.compute_intrinsic_reward(obs_processed)
+
+        # need to clip and check for nans for to avoid dealing with nan action vals
+        intrinsic_rewards = np.clip(intrinsic_rewards, -10.0, 10.0)
+        if np.any(np.isnan(intrinsic_rewards)):
+            logging.warning("nan detected in rnd intrinsic rewards! using zeros instead.")
+            intrinsic_rewards = np.zeros_like(rewards)
 
         # normalize intrinsic rewards using RMS
         self.intrinsic_reward_history.extend(intrinsic_rewards)
@@ -1055,6 +1062,12 @@ class InfoRewardCallback(BaseCallback):
         info_scores = t_scores + r_scores
         intrinsic_rewards = self.beta * info_scores
 
+        # clipping and checking for nans here as well
+        intrinsic_rewards = np.clip(intrinsic_rewards, -10.0, 10.0)
+        if np.any(np.isnan(intrinsic_rewards)) or np.any(np.isinf(intrinsic_rewards)):
+            logging.info("nan/inf detected in info-gain intrinsic rewards! using zeros instead.")
+            intrinsic_rewards = np.zeros_like(rewards)
+
         # augment env rewards with intrinsic rewards
         augmented_rewards = rewards + intrinsic_rewards
         self.locals['rewards'] = augmented_rewards
@@ -1094,7 +1107,7 @@ def train_info_baseline(args):
 
     # track the cumulative timesteps
     cumulative_timesteps = 0
-    total_stages = 50
+    total_stages = args.meta_episodes
 
     # set up csv logger
     csv_logger = CSVLogger(args.log_dir)
@@ -1194,7 +1207,7 @@ def train_lpm_baseline(args):
 
     # track the cumulative timesteps
     cumulative_timesteps = 0
-    total_stages = 50
+    total_stages = args.meta_episodes
 
     # set up CSV logger
     csv_logger = CSVLogger(args.log_dir)
@@ -1385,31 +1398,6 @@ class CSVLogger:
                 validation_success_rate, validation_avg_length
             ])
 
-# =====================
-# Visualization Class
-# =====================
-class TrainingVisualizer:
-    """Simplified visualization class that uses enhanced system only"""
-    def __init__(self, log_dir):
-        self.log_dir = log_dir
-        
-    def plot_training_and_validation_curves(self, sb3_progress_path, validation_csv_path=None):
-        """Generate training curve plots using enhanced visualization system"""
-        try:
-            from src.visualization import EnhancedTrainingVisualizer
-            enhanced_visualizer = EnhancedTrainingVisualizer(self.log_dir)
-            # Extract heuristic name from log directory, handling both replacement and non-replacement cases
-            heuristic_name = os.path.basename(self.log_dir)
-            heuristic_name = heuristic_name.replace('_replacement_sequencing_logs', '').replace('_sequencing_logs', '')
-            enhanced_visualizer.plot_single_heuristic_analysis(
-                sb3_progress_path, heuristic_name, validation_csv_path
-            )
-            logging.info("Enhanced visualization completed successfully")
-        except ImportError:
-            logging.warning("Enhanced visualization not available, skipping plot generation")
-        except Exception as e:
-            logging.error(f"Enhanced visualization failed: {e}")
-
 # =========================================
 # Wrappers - next state and interventions
 # =========================================
@@ -1537,7 +1525,7 @@ class RewardMonitorCallback(BaseCallback):
         self.step_count += 1
 
         # check if we have infos and they contain episode data
-        if (hasattr(self.locals, 'infos') and self.locals['info'] is not None and len(self.locals['infos']) > 0):
+        if 'infos' in self.locals and self.locals['infos'] is not None and len(self.locals['infos']) > 0:
             for info in self.locals['infos']:
                 if isinstance(info, dict) and 'episode' in info:
                     episode_info = info['episode']
@@ -1608,6 +1596,26 @@ class ValidationCallback(BaseCallback):
         self.seed = seed
         self.last_validation_step = 0
         self.validation_history = []    # storing the validation metrics over time
+
+        # creating a fixed val intervention that will be reused
+        self.validation_intervention = {
+            "type": "validation",
+            "class": ValidationInterventionActorPolicy,
+            "params": {"seed": self.seed, "fixed_intervention": True}
+        }
+
+        # pre-create val env so that it's consistent
+        self.validation_env = None
+    
+    def _on_training_start(self):
+        """initialize the val env once at the start of training"""
+        # create val env with fixed seed
+        self.validation_env = create_environment(
+            self.task_name,
+            self.validation_intervention,
+            seed=self.seed
+        )
+        logging.info(f"Validation env initialized with seed {self.seed}")
     
     def _on_step(self) -> bool:
         # is it time for validation?
@@ -1621,18 +1629,14 @@ class ValidationCallback(BaseCallback):
         logging.info(f"[VALIDATION] step {self.num_timesteps}: evaluating on validation set...")
 
         # create validation intervention
-        validation_intervention = {
-            "type": "validation",
-            "class": ValidationInterventionActorPolicy,
-            "params": {"seed": self.seed + self.num_timesteps}
-        }
-
-        # create validation environment
-        validation_env = create_environment(
-            self.task_name,
-            validation_intervention,
-            seed=self.seed + self.num_timesteps
-        )
+        # modified: i'm reusing the pre-created val environment
+        if self.validation_env is None:
+            # creating if not already
+            self.validation_env = create_environment(
+                self.task_name,
+                self.validation_intervention,
+                seed=self.seed
+            )
 
         total_reward = 0
         total_length = 0
@@ -1640,9 +1644,10 @@ class ValidationCallback(BaseCallback):
         episode_rewards = []
 
         for episode in range(self.validation_episodes):
-            if hasattr(validation_env, 'seed'):
-                validation_env.seed(self.seed + self.num_timesteps + episode)
-            obs = validation_env.reset()    # i removed the seed parameter
+            if hasattr(self.validation_env, 'seed'):
+                self.validation_env.seed(self.seed + episode)
+            
+            obs = self.validation_env.reset()    # i removed the seed parameter
             done = False
             episode_reward = 0
             episode_length = 0
@@ -1651,13 +1656,14 @@ class ValidationCallback(BaseCallback):
             while not done:
                 # use current model for prediction
                 action, _ = self.model.predict(obs, deterministic=True)
-                obs, reward, done, info = validation_env.step(action)
+                obs, reward, done, info = self.validation_env.step(action)
                 episode_reward += reward
                 episode_length += 1
 
                 # check for success
                 if isinstance(info, dict) and 'success' in info and info['success']:
                     episode_success = True
+                    done = True     # early termination on success
             
             # now that the episode has completed
             total_reward += episode_reward
@@ -1665,8 +1671,6 @@ class ValidationCallback(BaseCallback):
             episode_rewards.append(episode_reward)
             if episode_success:
                 successes += 1
-        
-        validation_env.close()
 
         # calculate metrics
         validation_metrics = {
@@ -1818,7 +1822,7 @@ def train_rnd_baseline(args):
 
     # tracking the cumulative timesteps
     cumulative_timesteps = 0
-    total_stages = 50
+    total_stages = args.meta_episodes
 
     # set up csv logger
     csv_logger = CSVLogger(args.log_dir)
@@ -1985,6 +1989,12 @@ class CountBasedRewardCallback(BaseCallback):
         
         intrinsic_rewards = np.array(intrinsic_rewards)
 
+        # clipping and checking for nans
+        intrinsic_rewards = np.clip(intrinsic_rewards, -10.0, 10.0)
+        if np.any(np.isnan(intrinsic_rewards)):
+            logging.warning("nan detected in count-based intrinsic rewards! using zeros instead.")
+            intrinsic_rewards = np.zeros_like(rewards)
+
         # augment env rewards with intrinsic rewards
         augmented_rewards = rewards + intrinsic_rewards
 
@@ -2027,7 +2037,7 @@ def train_count_baseline(args):
 
     # track cumulative timesteps
     cumulative_timesteps = 0
-    total_stages = 50
+    total_stages = args.meta_episodes
 
     # set up the csv logger
     csv_logger = CSVLogger(args.log_dir)
@@ -2368,9 +2378,8 @@ def main():
                 logging.StreamHandler()
             ]
         )
-        # initialize the csv logger and visualizer
+        # initialize the csv logger
         csv_logger = CSVLogger(args.log_dir)
-        visualizer = TrainingVisualizer(args.log_dir)
 
         # initialize wandb if requested
         if args.use_wandb:
@@ -2392,10 +2401,9 @@ def main():
             
             # Generate plots
             sb3_progress_path = aggregate_sb3_progress(args.log_dir)
-            if sb3_progress_path:
-                visualizer.plot_training_and_validation_curves(sb3_progress_path)  # No validation curves for RND baseline
             
             # Save results
+            import json
             results_path = os.path.join(args.log_dir, "rnd_results.json")
             with open(results_path, 'w') as f:
                 json.dump({
@@ -2425,10 +2433,9 @@ def main():
 
             # generate plots
             sb3_progress_path = aggregate_sb3_progress(args.log_dir)
-            if sb3_progress_path:
-                visualizer.plot_training_and_validation_curves(sb3_progress_path)   # no validation curves for count baseline
 
             # save results
+            import json
             results_path = os.path.join(args.log_dir, "count_results.json")
             with open(results_path, 'w') as f:
                 json.dump({
@@ -2461,10 +2468,9 @@ def main():
 
             # generate plots
             sb3_progress_path = aggregate_sb3_progress(args.log_dir)
-            if sb3_progress_path:
-                visualizer.plot_training_and_validation_curves(sb3_progress_path)
             
             # save results
+            import json
             results_path = os.path.join(args.log_dir, "lpm_results.json")
             with open(results_path, 'w') as f:
                 json.dump({
@@ -2495,10 +2501,9 @@ def main():
 
             # generate the plots
             sb3_progress_path = aggregate_sb3_progress(args.log_dir)
-            if sb3_progress_path:
-                visualizer.plot_training_and_validation_curves(sb3_progress_path)
             
             # save results
+            import json
             results_path = os.path.join(args.log_dir, "info_results.json")
             with open(results_path, 'w') as f:
                 json.dump({
@@ -2541,7 +2546,7 @@ def main():
         
         # main sequencing loop
         stage = 1
-        total_stages = 50  # Changing from 7 to 50 to match AutoCaLC
+        total_stages = args.meta_episodes  # Changing from 7 to 50 to match AutoCaLC
 
         while stage <= total_stages:
             logging.info(f"CURRICULUM STAGE {stage}/{total_stages}")
@@ -2770,8 +2775,6 @@ def main():
         # generate plots after training
         sb3_progress_path = aggregate_sb3_progress(args.log_dir)
         validation_csv_path = os.path.join(args.log_dir, 'validation_log.csv')
-        if sb3_progress_path:
-            visualizer.plot_training_and_validation_curves(sb3_progress_path, validation_csv_path)
 
         # final evaluation
         final_performance = evaluate_final_performance(student_model, args.task, num_episodes=20, seed=args.seed + 999)
@@ -2826,27 +2829,27 @@ def main():
             wandb.finish()
         
         # Generate enhanced comprehensive visualizations
-        try:
-            from src.visualization import create_enhanced_visualizations
+        # try:
+        #     from src.visualization import create_enhanced_visualizations
             
-            logging.info("🎨 Generating enhanced comprehensive visualizations...")
-            # Use the logs directory as the base directory for finding all log directories
-            logs_base_dir = 'logs'
+        #     logging.info("🎨 Generating enhanced comprehensive visualizations...")
+        #     # Use the logs directory as the base directory for finding all log directories
+        #     logs_base_dir = 'logs'
             
-            # Generate visualizations for all available heuristics (including replacement variants)
-            create_enhanced_visualizations(
-                log_base_dir=logs_base_dir,
-                heuristics=['greedy', 'greedy_replacement', 'cm', 'cm_replacement', 'none', 'random', 'random_replacement', 'rnd', 'count'],
-                output_dir=os.path.join(logs_base_dir, 'comprehensive_visualizations')
-            )
+        #     # Generate visualizations for all available heuristics (including replacement variants)
+        #     create_enhanced_visualizations(
+        #         log_base_dir=logs_base_dir,
+        #         heuristics=['greedy', 'greedy_replacement', 'cm', 'cm_replacement', 'none', 'random', 'random_replacement', 'rnd', 'count'],
+        #         output_dir=os.path.join(logs_base_dir, 'comprehensive_visualizations')
+        #     )
             
-            logging.info("✅ Enhanced visualizations completed!")
+        #     logging.info("✅ Enhanced visualizations completed!")
             
-        except ImportError:
-            logging.warning("Enhanced visualization module not available")
-        except Exception as e:
-            logging.warning(f"Enhanced visualization failed: {e}")
-            logging.info("Continuing with basic visualizations only")
+        # except ImportError:
+        #     logging.warning("Enhanced visualization module not available")
+        # except Exception as e:
+        #     logging.warning(f"Enhanced visualization failed: {e}")
+        #     logging.info("Continuing with basic visualizations only")
     
     if args.eval:
         gen_eval(args.log_dir, task_name=args.task, seed=args.seed)
@@ -2879,7 +2882,9 @@ def gen_eval(log_dir, task_name='pushing', seed=0, max_episode_length=250, skip_
     logging.info("\nFirst phase of evaluation:")
     all_rewards, all_successes = [], []
     for ep in range(num_episodes):
-        obs = env.reset(seed=seed+ep)
+        if hasattr(env, 'seed'):
+            env.seed(seed+ep)
+        obs = env.reset()
         done = False
         total_reward, successes = 0.0, 0
         while not done:

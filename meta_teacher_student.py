@@ -149,7 +149,7 @@ def get_teacher_state(student_model, task_name, interventions, device='cpu', see
 
         # 2. Compute CM score
         env = create_environment(task_name, intervention, seed=seed + i + 100)
-        cm_score = evaluate_cm_score(env, student_model, episodes=5, device=device,
+        cm_score = evaluate_cm_score(env, student_model, max_episodes=5, device=device,
                                      intervention_type=intervention['type'], seed=seed + i + 100)
         
         cm_scores.append(cm_score)
@@ -252,7 +252,7 @@ class DQN(nn.Module):
         return self.net(x)
 
 class TeacherDQNAgent:
-    def __init__(self, state_dim, action_dim, lr=1e-4, gamma=0.99, device='cpu', buffer_size=100, batch_size=8, target_update=5):
+    def __init__(self, state_dim, action_dim, lr=1e-4, gamma=0.99, device='cpu', buffer_size=10000, batch_size=64, target_update=5):
         self.device = device
         self.q_net = DQN(state_dim, action_dim).to(device)
         self.target_net = deepcopy(self.q_net)
@@ -288,10 +288,15 @@ class TeacherDQNAgent:
         torch.nn.utils.clip_grad_norm_(self.q_net.parameters(), 1.0)
         self.optimizer.step()
 
-        self.update_count += 1
-        if self.update_count % self.target_update == 0:
-            self.target_net.load_state_dict(self.q_net.state_dict())
+        # self.update_count += 1
+        # if self.update_count % self.target_update == 0:
+        #     self.target_net.load_state_dict(self.q_net.state_dict())
         
+        # replacing hard update with:
+        tau = 0.005
+        for target_param, param in zip(self.target_net.parameters(), self.q_net.parameters()):
+            target_param.data.copy_(tau * param.data + (1 - tau) * target_param.data)
+
         return loss.item()
 
 # the eval function
@@ -398,11 +403,11 @@ def main():
     parser.add_argument('--student_pretrained_path', type=str, default=None, help='Path to pretrained PPO model (optional)')
     parser.add_argument('--seed', type=int, default=0, help='Random seed')
     parser.add_argument('--use_wandb', action='store_true', help='Enable wandb logging')
-    parser.add_argument('--log_dir', type=str, default='autocalc_logs', help='Log directory')
+    parser.add_argument('--log_dir', type=str, default='logs/autocalc', help='Log directory')
     args = parser.parse_args()
 
     # the initial setup phase
-    os.make_dirs(args.log_dir, exist_ok=True)
+    os.makedirs(args.log_dir, exist_ok=True)
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',
                         handlers=[logging.FileHandler(os.path.join(args.log_dir, 'autocalc.log')), logging.StreamHandler()])
     set_seed(args.seed)
@@ -438,7 +443,7 @@ def main():
         current_meta_state = get_teacher_state(student_model, args.task, INTERVENTIONS, device=device, seed=args.seed + meta_step)
 
         # 4. Teacher selects an intervention
-        epsilon = max(0.1, 1.0 - meta_step / (args.meta_episodes * 0.8))    # epsilon decay
+        epsilon = max(0.1, 1.0 - meta_step / (args.meta_episodes * 1.5))    # epsilon decay, made slow
         selected_intervention_idx = teacher.select_action(current_meta_state, epsilon)
         selected_intervention = INTERVENTIONS[selected_intervention_idx]
         logging.info(f"Teacher chose intervention: '{selected_intervention['type']}' (Epsilon: {epsilon:.2f})")

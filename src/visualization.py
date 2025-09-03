@@ -188,7 +188,10 @@ class EnhancedTrainingVisualizer:
                     lines2, labels2 = ax2.get_legend_handles_labels()
                     ax.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
                 else:
-                    ax.legend(fontsize=10)
+                    # only show legend if there are labeled artists on the plot
+                    handles, labels = ax.get_legend_handles_labels()
+                    if handles:
+                        ax.legend(fontsize=10)
                 
                 # Formatting
                 ax.set_xlabel('Cumulative Iterations', fontsize=11)
@@ -477,6 +480,341 @@ class EnhancedTrainingVisualizer:
         
         print(f"\n✅ Comprehensive visualization report completed!")
         print(f"📁 All plots saved to: {self.output_dir}")
+    
+    def load_all_log_files(self, base_path: str) -> dict:
+        """Load all log files for a given heuristic into a dictionary of dataframes."""
+        log_data = {}
+        
+        # Training log (episode data)
+        training_log_path = os.path.join(base_path, 'training_log.csv')
+        if os.path.exists(training_log_path):
+            log_data['training'] = pd.read_csv(training_log_path)
+            logging.info(f"Loaded training log with {len(log_data['training'])} episodes")
+        
+        # Validation log
+        validation_log_path = os.path.join(base_path, 'validation_log.csv')
+        if os.path.exists(validation_log_path):
+            log_data['validation'] = pd.read_csv(validation_log_path)
+            logging.info(f"Loaded validation log with {len(log_data['validation'])} validation points")
+        
+        # Intervention log
+        intervention_log_path = os.path.join(base_path, 'intervention_log.csv')
+        if os.path.exists(intervention_log_path):
+            log_data['intervention'] = pd.read_csv(intervention_log_path)
+            logging.info(f"Loaded intervention log with {len(log_data['intervention'])} intervention tests")
+        
+        # SB3 progress data
+        progress_path = os.path.join(base_path, 'all_progress.csv')
+        if os.path.exists(progress_path):
+            log_data['progress'] = pd.read_csv(progress_path)
+            logging.info(f"Loaded progress data with {len(log_data['progress'])} entries")
+        
+        # Sequencing results if available
+        results_path = os.path.join(base_path, 'sequencing_results.json')
+        if os.path.exists(results_path):
+            with open(results_path, 'r') as f:
+                log_data['sequence'] = json.load(f)
+            logging.info("Loaded sequencing results")
+        
+        return log_data
+    
+    def plot_curriculum_progression(self, heuristic_name: str, log_data: dict):
+        """Plot the curriculum progression showing which interventions were selected."""
+        if 'sequence' not in log_data or not log_data['sequence'].get('sequence'):
+            logging.warning(f"No sequencing data available for curriculum progression plot for {heuristic_name}")
+            return
+        
+        sequence = log_data['sequence']['sequence']
+        
+        # Create the figure
+        fig, ax = plt.subplots(figsize=(15, 7))
+        
+        # Extract data from sequence
+        stages = [item['stage'] for item in sequence]
+        interventions = [item['intervention'] for item in sequence]
+        rewards = [item['test_metrics']['avg_reward'] for item in sequence]
+        
+        # Get success rates from intervention log by matching stage and intervention type
+        success_rates = []
+        if 'intervention' in log_data:
+            intervention_df = log_data['intervention']
+            for stage, intervention in zip(stages, interventions):
+                # Find the row where this intervention was selected for this stage
+                matching_rows = intervention_df[
+                    (intervention_df['stage'] == stage) & 
+                    (intervention_df['intervention_type'] == intervention) &
+                    (intervention_df['selected'] == True)
+                ]
+                
+                if not matching_rows.empty:
+                    success_rates.append(matching_rows.iloc[0]['test_success_rate'])
+                else:
+                    # Fallback: find any test of this intervention in this stage
+                    fallback_rows = intervention_df[
+                        (intervention_df['stage'] == stage) & 
+                        (intervention_df['intervention_type'] == intervention)
+                    ]
+                    if not fallback_rows.empty:
+                        success_rates.append(fallback_rows.iloc[0]['test_success_rate'])
+                    else:
+                        logging.warning(f"No success rate found for stage {stage}, intervention {intervention}")
+                        success_rates.append(0)
+        else:
+            logging.warning("No intervention log available - using zero success rates")
+            success_rates = [0] * len(stages)
+
+        # Plot bars for rewards
+        bar_width = 0.35
+        x = np.arange(len(stages))
+        ax.bar(x - bar_width/2, rewards, bar_width, label='Test Reward', color='cornflowerblue')
+        
+        # Create a twin axis for success rate
+        ax2 = ax.twinx()
+        ax2.bar(x + bar_width/2, success_rates, bar_width, label='Test Success Rate', color='lightcoral')
+        
+        # Add intervention labels on bars
+        for i, (intervention, reward) in enumerate(zip(interventions, rewards)):
+            ax.text(i - bar_width/2, reward / 2, intervention, ha='center', va='center', color='white', fontsize=10, fontweight='bold', rotation=90)
+
+        # Labels and title
+        ax.set_xlabel('Curriculum Stage', fontsize=12, fontweight='bold')
+        ax.set_ylabel('Average Reward', fontsize=12, color='cornflowerblue', fontweight='bold')
+        ax2.set_ylabel('Success Rate', fontsize=12, color='lightcoral', fontweight='bold')
+        ax.set_title(f'{heuristic_name.replace("_", " ").title()} - Curriculum Progression', fontsize=16, fontweight='bold')
+        
+        # Set the tick labels
+        ax.set_xticks(x)
+        ax.set_xticklabels([f'Stage {s}' for s in stages])
+        
+        # Add legend
+        lines1, labels1 = ax.get_legend_handles_labels()
+        lines2, labels2 = ax2.get_legend_handles_labels()
+        ax.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
+        
+        ax2.set_ylim(0, 1.05)
+        ax.grid(axis='y', linestyle='--', alpha=0.7)
+        
+        plt.tight_layout()
+        save_path = os.path.join(self.output_dir, f'{heuristic_name}_curriculum_progression.png')
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        logging.info(f"Curriculum progression plot saved to {save_path}")
+    
+    def plot_training_validation_comparison(self, heuristic_name: str, log_data: dict):
+        """Plot training versus validation metrics over time for reward, success, and episode length."""
+        if 'training' not in log_data or 'validation' not in log_data:
+            logging.warning(f"Missing training or validation data for comparison plot for {heuristic_name}")
+            return
+        
+        training_df = log_data['training']
+        validation_df = log_data['validation']
+        
+        # Create figure with 3 subplots
+        fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(16, 18), sharex=True)
+        
+        # Calculate total timesteps for training data
+        training_df['total_timesteps'] = training_df['cumulative_timesteps'] + training_df['timestep']
+        
+        # --- Plot 1: Reward ---
+        ax1.plot(training_df['total_timesteps'], training_df['reward'], alpha=0.2, color='dodgerblue', label='Episodic Training Reward')
+        ax1.plot(training_df['total_timesteps'], training_df['mean_reward_last_10'], linewidth=2, color='darkblue', label='Training Reward (10-ep MA)')
+        ax1.scatter(validation_df['timestep'], validation_df['validation_avg_reward'], color='crimson', s=60, zorder=5, label='Validation Reward')
+        ax1.plot(validation_df['timestep'], validation_df['validation_avg_reward'], color='crimson', linestyle='--', alpha=0.7)
+        
+        # --- Plot 2: Success Rate ---
+        ax2.plot(training_df['total_timesteps'], training_df['success'], alpha=0.2, color='seagreen', label='Episodic Training Success')
+        ax2.plot(training_df['total_timesteps'], training_df['success_rate_last_10'], linewidth=2, color='darkgreen', label='Training Success Rate (10-ep MA)')
+        ax2.scatter(validation_df['timestep'], validation_df['validation_success_rate'], color='orangered', s=60, zorder=5, label='Validation Success Rate')
+        ax2.plot(validation_df['timestep'], validation_df['validation_success_rate'], color='orangered', linestyle='--', alpha=0.7)
+
+        # --- Plot 3: Episode Length ---
+        ax3.plot(training_df['total_timesteps'], training_df['episode_length'], alpha=0.2, color='purple', label='Episodic Training Length')
+        ax3.plot(training_df['total_timesteps'], training_df['episode_length'].rolling(10).mean(), linewidth=2, color='indigo', label='Training Length (10-ep MA)')
+        ax3.scatter(validation_df['timestep'], validation_df['validation_avg_length'], color='gold', s=60, zorder=5, label='Validation Length')
+        ax3.plot(validation_df['timestep'], validation_df['validation_avg_length'], color='gold', linestyle='--', alpha=0.7)
+
+        # Add vertical lines and text for stage changes
+        if 'sequence' in log_data and log_data['sequence'].get('sequence'):
+            sequence = log_data['sequence']['sequence']
+            stage_timesteps = training_df.groupby('stage')['total_timesteps'].min()
+            for i, item in enumerate(sequence):
+                stage_start = stage_timesteps.get(item['stage'])
+                if stage_start is not None:
+                    for ax in [ax1, ax2, ax3]:
+                        ax.axvline(x=stage_start, color='gray', linestyle='--', alpha=0.8)
+                    stage_text = f"Stage {item['stage']}: {item['intervention']}"
+                    ax1.text(stage_start + 50, ax1.get_ylim()[1] * 0.95, stage_text, rotation=90, verticalalignment='top', fontsize=9, color='dimgray')
+
+        # Formatting
+        fig.suptitle(f'{heuristic_name.replace("_", " ").title()} - Training & Validation Performance', fontsize=18, fontweight='bold')
+        
+        ax1.set_ylabel('Reward', fontsize=12)
+        ax1.legend(loc='upper left')
+        ax1.grid(True, linestyle='--', alpha=0.6)
+
+        ax2.set_ylabel('Success Rate', fontsize=12)
+        ax2.set_ylim(-0.05, 1.05)
+        ax2.legend(loc='upper left')
+        ax2.grid(True, linestyle='--', alpha=0.6)
+
+        ax3.set_xlabel('Cumulative Timesteps', fontsize=14, fontweight='bold')
+        ax3.set_ylabel('Episode Length', fontsize=12)
+        ax3.legend(loc='upper left')
+        ax3.grid(True, linestyle='--', alpha=0.6)
+        
+        plt.tight_layout(rect=[0, 0, 1, 0.96])
+        save_path = os.path.join(self.output_dir, f'{heuristic_name}_training_validation_comparison.png')
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        logging.info(f"Training-validation comparison plot saved to {save_path}")
+
+    def plot_intervention_effectiveness(self, heuristic_name: str, log_data: dict):
+        """Plot the effectiveness of each intervention type based on test runs."""
+        if 'intervention' not in log_data:
+            logging.warning(f"No intervention data available for effectiveness plot for {heuristic_name}")
+            return
+        
+        intervention_df = log_data['intervention']
+        
+        # Group by intervention type and calculate average metrics
+        intervention_metrics = intervention_df.groupby('intervention_type').agg(
+            avg_reward=('test_avg_reward', 'mean'),
+            std_reward=('test_avg_reward', 'std'),
+            avg_success=('test_success_rate', 'mean'),
+            std_success=('test_success_rate', 'std'),
+            avg_length=('test_avg_length', 'mean'),
+            std_length=('test_avg_length', 'std'),
+            times_selected=('selected', lambda x: x.sum())
+        ).reset_index().sort_values('avg_reward', ascending=False)
+        
+        fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(16, 18), sharex=True)
+        fig.suptitle(f'{heuristic_name.replace("_", " ").title()} - Intervention Test Effectiveness', fontsize=18, fontweight='bold')
+        
+        x = np.arange(len(intervention_metrics))
+        
+        # Plot Reward
+        ax1.bar(x, intervention_metrics['avg_reward'], yerr=intervention_metrics['std_reward'], capsize=5, color='skyblue')
+        ax1.set_ylabel('Average Reward', fontsize=12)
+        ax1.set_title('Intervention Test Rewards', fontsize=14)
+        
+        # Plot Success Rate
+        ax2.bar(x, intervention_metrics['avg_success'], yerr=intervention_metrics['std_success'], capsize=5, color='lightgreen')
+        ax2.set_ylabel('Success Rate', fontsize=12)
+        ax2.set_title('Intervention Test Success Rates', fontsize=14)
+        ax2.set_ylim(0, 1.05)
+
+        # Plot Episode Length
+        ax3.bar(x, intervention_metrics['avg_length'], yerr=intervention_metrics['std_length'], capsize=5, color='lightcoral')
+        ax3.set_ylabel('Episode Length', fontsize=12)
+        ax3.set_title('Intervention Test Episode Lengths', fontsize=14)
+
+        # Add labels for times selected
+        for ax in [ax1, ax2, ax3]:
+            for i, row in intervention_metrics.iterrows():
+                if row['times_selected'] > 0:
+                    ax.text(i, 0, f" Sel {int(row['times_selected'])}x ", color='white', ha='center', va='bottom', backgroundcolor='black', alpha=0.7, fontsize=9, fontweight='bold')
+
+        plt.xticks(x, intervention_metrics['intervention_type'], rotation=45, ha='right')
+        plt.xlabel('Intervention Type', fontsize=14, fontweight='bold')
+        fig.tight_layout(rect=[0, 0, 1, 0.96])
+        
+        save_path = os.path.join(self.output_dir, f'{heuristic_name}_intervention_effectiveness.png')
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        logging.info(f"Intervention effectiveness plot saved to {save_path}")
+    
+    def generate_heuristic_report(self, heuristic_name: str, base_path: str):
+        """Generate a comprehensive report for a single heuristic."""
+        # Load all log files
+        log_data = self.load_all_log_files(base_path)
+        
+        if not log_data:
+            logging.error(f"No log data found for {heuristic_name}")
+            return
+        
+        logging.info(f"Generating comprehensive report for {heuristic_name}...")
+        
+        # the output directory is already set correctly in the constructor
+        # heuristic_dir = os.path.join(self.output_dir, heuristic_name)
+        os.makedirs(self.output_dir, exist_ok=True)
+        
+        # Generate each plot type
+        self.plot_curriculum_progression(heuristic_name, log_data)
+        self.plot_training_validation_comparison(heuristic_name, log_data)
+        self.plot_intervention_effectiveness(heuristic_name, log_data)
+        
+        # Also create the original analysis plot for compatibility
+        if 'progress' in log_data:
+            progress_path = os.path.join(base_path, 'all_progress.csv')
+            validation_path = os.path.join(base_path, 'validation_log.csv') if 'validation' in log_data else None
+            self.plot_single_heuristic_analysis(progress_path, heuristic_name, validation_path)
+        
+        logging.info(f"Completed report generation for {heuristic_name}")
+
+def generate_comprehensive_visualizations(log_base_dir: str, heuristics: List[str] = None):
+    """Generate comprehensive visualizations for all heuristics."""
+    
+    if heuristics is None:
+        # Auto-detect available heuristics
+        heuristics = []
+        possible_heuristics = ['greedy', 'cm', 'none', 'random', 'rnd', 'count', 'lpm', 'info']
+        
+        for h in possible_heuristics:
+            # Check both with and without replacement
+            for pattern in [f'{h}_sequencing_logs', f'{h}_replacement_sequencing_logs']:
+                path = os.path.join(log_base_dir, pattern)
+                if os.path.exists(path) and os.path.isdir(path):
+                    heuristics.append((h, path))
+    else:
+        # Use specified heuristics - FIXED to check both patterns
+        heuristics_list = heuristics    # store the input list
+        heuristics = []                 # prepare the output list
+
+        for h in heuristics_list:
+            found = False
+            # check both naming patterns
+            for pattern in [f'{h}_sequencing_logs', f'{h}_replacement_sequencing_logs']:
+                path = os.path.join(log_base_dir, pattern)
+                if os.path.exists(path) and os.path.isdir(path):
+                    heuristics.append((h, path))
+                    found = True
+                    logging.info(f"Found log directory for {h}: {path}")
+                    break
+            if not found:
+                logging.warning(f"Could not find log directory for heuristic: '{h}")
+    
+    if not heuristics:
+        logging.error(f"No valid heuristic directories found in {log_base_dir}")
+        return
+    
+    # Create visualizer
+    output_dir = os.path.join(log_base_dir, 'comprehensive_visualizations', heuristics_list[0])
+    visualizer = EnhancedTrainingVisualizer(log_base_dir, output_dir)
+    
+    # Generate reports for each heuristic
+    for name, path in heuristics:
+        if os.path.exists(path):
+            visualizer.generate_heuristic_report(name, path)
+    
+    # Generate cross-heuristic comparisons
+    # This uses the existing methods to compare metrics across heuristics
+    visualizer.plot_all_heuristics_comparison({name: os.path.join(path, 'all_progress.csv') 
+                                              for name, path in heuristics 
+                                              if os.path.exists(os.path.join(path, 'all_progress.csv'))})
+    
+    # Add radar plots if evaluation data is available
+    eval_paths = {name: os.path.join(path, 'benchmark_results.json') 
+                 for name, path in heuristics 
+                 if os.path.exists(os.path.join(path, 'benchmark_results.json'))}
+    
+    if eval_paths:
+        visualizer.create_modern_radar_plots(eval_paths)
+        visualizer.calculate_performance_ranking(eval_paths)
+    
+    return visualizer
 
 # Convenience function for easy usage
 def create_enhanced_visualizations(log_base_dir: str, heuristics: List[str] = None, 
