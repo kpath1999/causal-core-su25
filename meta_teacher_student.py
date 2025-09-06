@@ -59,11 +59,11 @@ and we have 50 meta-episodes for a full training run; must tune epsilon based on
 """
 TERMINAL COMMANDS:
 
-Training --
-python meta_teacher_student.py --task pushing --student_train_steps 50000 --meta_episodes 50 --seed 0 --log_dir logs/autocalc_logs
+Training + Evaluation --
+python meta_teacher_student.py --task pushing --student_train_steps 50000 --meta_episodes 50 --eval --seed 0 --log_dir logs/autocalc_logs --use_wandb
 
-Evaluation --
-python meta_teacher_student.py --task pushing --log_dir logs/autocalc_logs --eval --seed 0
+Short Training (for testing) --
+python meta_teacher_student.py --task pushing --student_train_steps 5000 --meta_episodes 5 --eval --seed 0 --log_dir logs/autocalc_test --use_wandb
 """
 
 import numpy as np
@@ -78,7 +78,7 @@ from collections import deque
 from copy import deepcopy
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv, VecMonitor
-from stable_baselines3.common.callbacks import BaseCallback
+from stable_baselines3.common.callbacks import BaseCallback, CallbackList
 from causal_world.envs import CausalWorld
 from causal_world.evaluation import EvaluationPipeline
 from causal_world.benchmark import REACHING_BENCHMARK, PUSHING_BENCHMARK, PICKING_BENCHMARK, PICK_AND_PLACE_BENCHMARK, STACKING2_BENCHMARK
@@ -103,7 +103,9 @@ from baselines import (
     evaluate_cm_score,
     test_intervention_performance,
     RewardMonitorCallback,
-    IntervenedCausalWorld
+    IntervenedCausalWorld,
+    CSVLogger,
+    ValidationCallback
 )
 from validation_actor import ValidationInterventionActorPolicy
 import wandb
@@ -123,11 +125,8 @@ def set_seed(seed):
 # get the teacher state
 def get_teacher_state(student_model, task_name, interventions, device='cpu', seed=0):
     """
-    this func computes the meta-state for the teacher by evaluating the CM score for the
-    student agent under each available intervention
-    TODO: I also want the reward
-    so if we have 7 interventions, it would be:
-    [reward1, cm1, reward2, cm2, ..., reward7, cm7]
+    Compute the meta-state for the teacher by evaluating reward and CM score for each intervention
+    Returns interleaved array: [reward1, cm1, reward2, cm2, ..., reward7, cm7]
     """
     logging.info("Computing teacher state (rewards and CM scores for all interventions)")
     cm_scores = []
@@ -149,8 +148,14 @@ def get_teacher_state(student_model, task_name, interventions, device='cpu', see
 
         # 2. Compute CM score
         env = create_environment(task_name, intervention, seed=seed + i + 100)
-        cm_score = evaluate_cm_score(env, student_model, max_episodes=5, device=device,
-                                     intervention_type=intervention['type'], seed=seed + i + 100)
+        cm_score = evaluate_cm_score(
+            env, 
+            student_model, 
+            max_episodes=5, 
+            device=device,
+            intervention_type=intervention['type'], 
+            seed=seed + i + 100
+        )
         
         cm_scores.append(cm_score)
         env.close()
@@ -161,16 +166,18 @@ def get_teacher_state(student_model, task_name, interventions, device='cpu', see
     reward_mean = np.mean(reward_array)
     reward_std = np.std(reward_array)
     if reward_std > 1e-8:
-        normalized_rewards = (reward_array - reward_mean) / reward_std    
+        normalized_rewards = (reward_array - reward_mean) / reward_std
+    else:
+        normalized_rewards = reward_array - reward_mean
     
     # normalize CM scores
-    cm_array = np.array(rewards, dtype=np.float32)
+    cm_array = np.array(cm_scores, dtype=np.float32)  # Fixed: was using rewards instead of cm_scores
     cm_mean = np.mean(cm_array)
     cm_std = np.std(cm_array)
     if cm_std > 1e-8:
         normalized_cm = (cm_array - cm_mean) / cm_std
     else:
-        normalized_cm = cm_array - cm_mean      # here we center if std is zero
+        normalized_cm = cm_array - cm_mean
     
     # interleave rewards and CM scores
     interleaved_state = np.zeros(len(interventions) * 2, dtype=np.float32)
@@ -186,33 +193,69 @@ def get_teacher_state(student_model, task_name, interventions, device='cpu', see
     return interleaved_state
 
 # evaluate student generalization
-def run_validation_protocol(student_model, validation_env, num_episodes=50):
-    """
-    evaluate generalization performance on a fixed validation env
-    primary metric: the success rate, we can use this as the meta-reward
-    """
-    logging.info(f"Running validation protocol ({num_episodes} episodes)...")
-    successes = 0
-    total_rewards = 0
+def run_validation_protocol(student_model, task_name, stage_num, args, csv_logger, cumulative_timesteps):
+    """Evaluate generalization performance on the 10, fixed validation environments"""
+    logging.info(f"[VALIDATION] Running validation after meta-episode {stage_num}")
 
-    for _ in range(num_episodes):
-        obs = validation_env.reset()
-        done = False
-        episode_success = False
-        while not done:
-            act, _ = student_model.predict(obs, deterministic=False)
-            obs, reward, done, info = validation_env.step(act)
-            total_rewards += reward
-            if isinstance(info, dict) and info.get('success') and not episode_success:
-                successes += 1
-                episode_success = True
-                done = True     # early stop on success
+    # create validation callback with the same settings as baselines
+    validation_callback = ValidationCallback(
+        validation_frequency = float('inf'),    # only run when explicitly called
+        task_name=task_name,
+        csv_logger=csv_logger,
+        stage=stage_num,
+        cumulative_timesteps=cumulative_timesteps,
+        validation_episodes=10,
+        seed=args.seed + stage_num * 10000,
+        baseline_type="autocalc"
+    )
     
-    success_rate = successes / num_episodes
-    avg_reward = total_rewards / num_episodes
+    # run validation and return metrics
+    validation_metrics = validation_callback._execute_validation(student_model)
 
-    logging.info(f"Validation Performance: Success Rate={success_rate:.3f}, Avg Reward={avg_reward:.3f}")
-    return success_rate
+    return validation_metrics
+
+def test_all_interventions_for_teacher(student_model, task_name, stage_num, args, csv_logger, cumulative_timesteps, selected_intervention_type):
+    """Test student model on all interventions to gather data for teacher state and logging"""
+    logging.info(f"[AUTOCALC] Testing all interventions at meta-episode {stage_num}")
+    
+    # Test each intervention type including none
+    for intervention in INTERVENTIONS + [None]:
+        int_type = intervention['type'] if intervention is not None else 'none'
+        
+        # Test performance on this intervention
+        metrics = test_intervention_performance(
+            student_model=student_model,
+            intervention=intervention,
+            task_name=task_name,
+            num_episodes=getattr(args, 'test_episodes', 10),
+            seed=args.seed + stage_num * 100 + (INTERVENTIONS.index(intervention) if intervention in INTERVENTIONS else 0)
+        )
+        
+        # Calculate CM score if needed for teacher state
+        env = create_environment(task_name, intervention, seed=args.seed + stage_num * 100)
+        cm_score = evaluate_cm_score(
+            env, 
+            student_model, 
+            max_episodes=5, 
+            device='cuda' if torch.cuda.is_available() else 'cpu',
+            intervention_type=int_type, 
+            seed=args.seed + stage_num * 100
+        )
+        env.close()
+        
+        # Log results to CSV
+        if csv_logger:
+            csv_logger.log_intervention_test(
+                stage=stage_num,
+                intervention_type=int_type,
+                test_avg_reward=metrics['avg_reward'],
+                test_success_rate=metrics['success_rate'],
+                test_avg_length=metrics['avg_length'],
+                selected=(int_type == selected_intervention_type),  # Mark which intervention was selected
+                cumulative_timesteps=cumulative_timesteps,
+                cm_score=cm_score,
+                baseline_type="autocalc"
+            )
 
 # the teacher dqn agent
 class ReplayBuffer:
@@ -310,7 +353,7 @@ def evaluate_autocalc_performance(log_dir, task_name='pushing', seed=0, max_epis
     task = generate_task(
         task_generator_id=task_name,
         dense_reward_weights=np.array(dense_weights),
-        variable_space='space_a',
+        variables_space='space_a',
         fractional_reward_weight=1
     )
     env = CausalWorld(
@@ -389,21 +432,25 @@ def evaluate_autocalc_performance(log_dir, task_name='pushing', seed=0, max_epis
     vis.generate_visual_analysis(plots_dir, experiments={task_name: scores_model})
     logging.info(f"Visualization saved to: {plots_dir}")
 
-
 # ========================
 # main meta-learning loop
 # ========================
 def main():
+    # Get arguments from the global parser (already parsed in __main__)
+    import sys
+    # Re-parse arguments in main for clarity
     parser = argparse.ArgumentParser(description="Meta-RL Teacher-Student Curriculum (AutoCaLC)")
     parser.add_argument('--task', type=str, default='pushing', help='CausalWorld task name')
     parser.add_argument('--student_train_steps', type=int, default=50000, help='Timesteps per student training block')
     parser.add_argument('--meta_episodes', type=int, default=50, help='Number of meta-episodes (teacher steps)')
-    # TODO: this should not be optional btw, should load automatically as it did for the baselines
-    # oh no i get it now
     parser.add_argument('--student_pretrained_path', type=str, default=None, help='Path to pretrained PPO model (optional)')
     parser.add_argument('--seed', type=int, default=0, help='Random seed')
     parser.add_argument('--use_wandb', action='store_true', help='Enable wandb logging')
     parser.add_argument('--log_dir', type=str, default='logs/autocalc', help='Log directory')
+    parser.add_argument('--test_episodes', type=int, default=10, help='Episodes for testing each intervention')
+    parser.add_argument('--validation_episodes', type=int, default=10, help='Episodes per validation environment')
+    parser.add_argument('--skip_frame', type=int, default=3, help='Frame skip for environment')
+    parser.add_argument('--eval', action='store_true', help='Evaluate the model')
     args = parser.parse_args()
 
     # the initial setup phase
@@ -413,12 +460,20 @@ def main():
     set_seed(args.seed)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
+    # Initialize csv logger
+    csv_logger = CSVLogger(args.log_dir)
+
     if args.student_pretrained_path is None:
         args.student_pretrained_path = f'models/ppo_{args.task}_sb3/final_model.zip'
         logging.info(f"Auto-determined pretrained path: {args.student_pretrained_path}")
     
     if args.use_wandb:
-        wandb.init(project=f'autocalc-{args.task}', name=f'autocalc_{args.task}_seed{args.seed}', config=vars(args))
+        wandb.init(
+            project=f'autocalc-{args.task}',
+            name=f'autocalc_{args.task}_seed{args.seed}',
+            config=vars(args),
+            tags=[args.task, 'autocalc', 'meta-learning']
+        )
     
     logging.info(f"Starting AutoCaLC training for task '{args.task}' on device '{device}'")
 
@@ -428,12 +483,14 @@ def main():
 
     teacher = TeacherDQNAgent(state_dim=len(INTERVENTIONS) * 2, action_dim=len(INTERVENTIONS), device=device)
 
-    # create a validation env with an intervention set
-    validation_intervention = {"type": "validation", "class": ValidationInterventionActorPolicy, "params": {"seed": args.seed + 42}}
-    validation_env = create_environment(args.task, validation_intervention, seed=args.seed + 42)
-
-    last_validation_performance = run_validation_protocol(student_model, validation_env)
-    logging.info(f"Initial student validation performance (success rate): {last_validation_performance:.3f}")
+    # Track cumulative timesteps
+    cumulative_timesteps = 0
+    
+    # Get initial validation performance
+    initial_validation_metrics = run_validation_protocol(
+        student_model, args.task, 0, args, csv_logger, cumulative_timesteps
+    )
+    last_validation_metrics = initial_validation_metrics
 
     # --- 2. Main meta-learning loop ---
     for meta_step in range(args.meta_episodes):
@@ -446,56 +503,108 @@ def main():
         epsilon = max(0.1, 1.0 - meta_step / (args.meta_episodes * 1.5))    # epsilon decay, made slow
         selected_intervention_idx = teacher.select_action(current_meta_state, epsilon)
         selected_intervention = INTERVENTIONS[selected_intervention_idx]
-        logging.info(f"Teacher chose intervention: '{selected_intervention['type']}' (Epsilon: {epsilon:.2f})")
+        selected_intervention_type = selected_intervention['type']
+        logging.info(f"Teacher chose intervention: '{selected_intervention_type}' (Epsilon: {epsilon:.2f})")
 
         # 5. Student trains on that intervention
         train_env = create_environment(args.task, selected_intervention, seed=args.seed + meta_step * 100)
         vec_env = DummyVecEnv([lambda: train_env])
-        vec_env = VecMonitor(vec_env)
+        vec_env = VecMonitor(vec_env, filename=os.path.join(args.log_dir, f'autocalc_monitor_stage{meta_step+1}.csv'))
+        
+        # Set up training monitoring
+        reward_monitor = RewardMonitorCallback(
+            selected_intervention_type, csv_logger, meta_step+1, cumulative_timesteps, baseline_type="autocalc"
+        )
+        
+        # Create callback list
+        callback_list = CallbackList([
+            reward_monitor,
+            WandbCallback(
+                gradient_save_freq=100,
+                model_save_path=args.log_dir if args.use_wandb else None,
+                verbose=2
+            ) if args.use_wandb else None
+        ])
+        callback_list.callbacks = [cb for cb in callback_list.callbacks if cb is not None]
+        
+        # Train the student
         student_model.set_env(vec_env)
-        student_model.learn(total_timesteps=args.student_train_steps, reset_num_timesteps=False)
-        train_env.close()
+        student_model.learn(
+            total_timesteps=args.student_train_steps,
+            callback=callback_list,
+            reset_num_timesteps=False
+        )
+        
+        # Update cumulative timesteps
+        cumulative_timesteps += args.student_train_steps
+        
+        # 6. Test on all interventions for logging
+        test_all_interventions_for_teacher(
+            student_model, args.task, meta_step+1, args, csv_logger, cumulative_timesteps, selected_intervention_type
+        )
+        
+        # 7. Evaluate new generalization performance
+        current_validation_metrics = run_validation_protocol(
+            student_model, args.task, meta_step+1, args, csv_logger, cumulative_timesteps
+        )
 
-        # 6. Evaluate the new generealization performance for meta-reward
-        current_validation_performance = run_validation_protocol(student_model, validation_env)
+        # 8. Calculate the meta-reward using the new formula
+        meta_reward = (10 * current_validation_metrics['validation_success_rate']) + current_validation_metrics['validation_avg_reward']
+        logging.info(f"Meta-Reward: {meta_reward:.4f} (Success Rate: {current_validation_metrics['validation_success_rate']:.3f}, Avg Reward: {current_validation_metrics['validation_avg_reward']:.3f})")
 
-        # 7. Calculate the meta-reward
-        meta_reward = current_validation_performance - last_validation_performance
-        last_validation_performance = current_validation_performance
-        logging.info(f"Meta-Reward: {meta_reward:.4f} (New Perf: {current_validation_performance:.3f})")
-
-        # 8. Compute the next meta-state
+        # 9. Compute the next meta-state
         next_meta_state = get_teacher_state(student_model, args.task, INTERVENTIONS, device=device, seed=args.seed + meta_step + 1)
 
-        # 9. Store experience and update teacher
+        # 10. Store experience and update the teacher
         teacher.replay_buffer.push(current_meta_state, selected_intervention_idx, meta_reward, next_meta_state)
         teacher_loss = teacher.train_step()
         logging.info(f"Teacher training step complete. Loss: {teacher_loss if teacher_loss is not None else 'N/A'}")
 
-        # time to log!!
+        # 11. Log to wandb
         if args.use_wandb:
             wandb.log({
                 'meta_episode': meta_step + 1,
-                'teacher_action': selected_intervention['type'],
+                'teacher_action': selected_intervention_type,
                 'teacher_reward': meta_reward,
-                'student_validation_success_rate': current_validation_performance,
+                'student_validation_success_rate': current_validation_metrics['validation_success_rate'],
+                'student_validation_reward': current_validation_metrics['validation_avg_reward'],
                 'teacher_epsilon': epsilon,
                 'teacher_loss': teacher_loss,
-                **{f"cm_score_{inter['type']}": score for inter, score in zip(INTERVENTIONS, current_meta_state)}
+                'cumulative_timesteps': cumulative_timesteps,
+                **{f"cm_score_{inter['type']}": score for inter, score in zip(INTERVENTIONS, current_meta_state[1::2])}
             })
+        
+        # Clean up
+        train_env.close()
     
     # --- And now the final step ---
     final_model_path = os.path.join(args.log_dir, "final_student_model.zip")
     student_model.save(final_model_path)
     logging.info(f"Meta-RL training complete! Final student model saved to {final_model_path}")
-    validation_env.close()
     if args.use_wandb:
         wandb.finish()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Meta-RL Teacher-Student Curriculum (AutoCaLC)")
     parser.add_argument('--eval', action='store_true', help='Evaluate the model')
+    parser.add_argument('--task', type=str, default='pushing', help='CausalWorld task name')
+    parser.add_argument('--student_train_steps', type=int, default=50000, help='Timesteps per student training block')
+    parser.add_argument('--meta_episodes', type=int, default=50, help='Number of meta-episodes (teacher steps)')
+    parser.add_argument('--student_pretrained_path', type=str, default=None, help='Path to pretrained PPO model (optional)')
+    parser.add_argument('--seed', type=int, default=0, help='Random seed')
+    parser.add_argument('--use_wandb', action='store_true', help='Enable wandb logging')
+    parser.add_argument('--log_dir', type=str, default=None, help='Log directory (will be auto-generated if not specified)')
+    parser.add_argument('--test_episodes', type=int, default=10, help='Episodes for testing each intervention')
+    parser.add_argument('--validation_episodes', type=int, default=10, help='Episodes per validation environment')
+    parser.add_argument('--skip_frame', type=int, default=3, help='Frame skip for environment')
     args = parser.parse_args()
+
+    # Set default log directory if not specified
+    if args.log_dir is None:
+        if args.eval:
+            raise ValueError("--log_dir must be specified for evaluation")
+        else:
+            args.log_dir = f'logs/autocalc_{args.task}_seed{args.seed}'
 
     if args.eval:
         evaluate_autocalc_performance(args.log_dir, task_name=args.task, seed=args.seed)

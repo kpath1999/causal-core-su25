@@ -8,28 +8,28 @@ BASIC TRAINING COMMANDS:
 -----------------------
 
 1. GREEDY CURRICULUM (highest reward intervention selection):
-python baselines.py --train --eval --curriculum_mode greedy --task pushing --timesteps 50000 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode greedy --task pushing --meta_episodes 50 --timesteps 50000 --replacement --use_wandb
 
 2. CAUSAL MISMATCH CURRICULUM (CM score-based selection):
-python baselines.py --train --eval --curriculum_mode cm --task pushing --timesteps 50000 --alpha_cm 0.5 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode cm --task pushing --meta_episodes 50 --timesteps 50000 --alpha_cm 0.5 --replacement --use_wandb
 
 3. RANDOM CURRICULUM (random intervention selection):
-python baselines.py --train --eval --curriculum_mode random --task pushing --timesteps 50000 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode random --task pushing --meta_episodes 50 --timesteps 50000 --replacement --use_wandb
 
 4. NO CURRICULUM (baseline without interventions):
-python baselines.py --train --eval --curriculum_mode none --task pushing --timesteps 50000 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode none --task pushing --meta_episodes 50 --timesteps 50000 --replacement --use_wandb
 
 5. RND INTRINSIC MOTIVATION (Random Network Distillation):
-python baselines.py --train --eval --curriculum_mode rnd --task pushing --timesteps 50000 --rnd_beta 0.01 --rnd_update_freq 1000 --rnd_batch_size 1024 --use_wandb
+python baselines.py --train --eval --curriculum_mode rnd --task pushing --meta_episodes 50 --timesteps 50000 --rnd_beta 0.01 --rnd_update_freq 1000 --rnd_batch_size 1024 --use_wandb
 
 6. COUNT-BASED EXPLORATION (state visitation counts):
-python baselines.py --train --eval --curriculum_mode count --task pushing --timesteps 50000 --count_beta 0.01 --count_encoding_dim 32 --use_wandb
+python baselines.py --train --eval --curriculum_mode count --task pushing --meta_episodes 50 --timesteps 50000 --count_beta 0.01 --count_encoding_dim 32 --use_wandb
 
 7. LEARNING PROGRESS MOTIVATION (improvement in transition model prediction accuracy):
-python baselines.py --train --eval --curriculum_mode lpm --task pushing --timesteps 50000 --lpm_beta 1.0 --use_wandb
+python baselines.py --train --eval --curriculum_mode lpm --task pushing --meta_episodes 50 --timesteps 50000 --lpm_beta 1.0 --use_wandb
 
 8. INFORMATION GAIN REWARD (rewards "surprise" measured by model uncertainty):
-python baselines.py --train --eval --curriculum_mode info --task pushing --timesteps 50000 --info_beta 1.0 --use_wandb
+python baselines.py --train --eval --curriculum_mode info --task pushing --meta_episodes 50 --timesteps 50000 --info_beta 1.0 --use_wandb
 
 LOG DIRECTORY STRUCTURE:
 -----------------------
@@ -84,6 +84,7 @@ import argparse
 import logging
 import time
 import csv
+import pickle
 import gym
 from collections import deque
 from copy import deepcopy
@@ -238,12 +239,15 @@ class RNDIntrinsicModel:
 # =====================
 class RNDIntrinsicRewardCallback(BaseCallback):
     """callback that augments env rewards with RND intrinsic rewards"""
-    def __init__(self, beta=0.01, update_freq=1000, batch_size=1024, device='cpu', verbose=0):
+    def __init__(self, beta=0.01, update_freq=1000, batch_size=1024, device='cpu', verbose=0,
+                 stage=1, csv_logger=None):
         super(RNDIntrinsicRewardCallback, self).__init__(verbose)
         self.beta = beta                    # intrinsic reward scaling factor
         self.update_freq = update_freq      # how often to train the predictor
         self.batch_size = batch_size        # training batch size
         self.device = device
+        self.stage = stage                  # adding stage tracking
+        self.csv_logger = csv_logger
         self.rnd_model = None
         self.obs_buffer = []
         self.last_update_step = 0
@@ -849,7 +853,7 @@ class LPMRewardCallback(BaseCallback):
 # =====================
 class InfoRewardCallback(BaseCallback):
     """information gain intrinsic reward using ensemble disagreement"""
-    def __init__(self, beta=1.0, lr=1e-3, update_freq=1000, batch_size=256, buffer_size=50000, device='cpu', verbose=0):
+    def __init__(self, beta=1.0, lr=1e-3, update_freq=1000, batch_size=256, buffer_size=50000, device='cpu', verbose=0, stage=1, csv_logger=None):
         super(InfoRewardCallback, self).__init__(verbose)
         self.beta = beta
         self.lr = lr
@@ -857,6 +861,9 @@ class InfoRewardCallback(BaseCallback):
         self.batch_size = batch_size
         self.buffer_size = buffer_size
         self.device = device
+
+        self.stage = stage              # adding stage tracking
+        self.csv_logger = csv_logger
         
         # model ensembles (reusing CM score logic)
         self.transition_models = []
@@ -1141,7 +1148,7 @@ def train_info_baseline(args):
         )
 
         # set up logging for this segment
-        reward_monitor = RewardMonitorCallback("info_baseline", csv_logger, stage, cumulative_timesteps)
+        reward_monitor = RewardMonitorCallback("info_baseline", csv_logger, stage, cumulative_timesteps, baseline_type="info")
 
         callback_list = CallbackList([
             info_callback,
@@ -1179,11 +1186,33 @@ def train_info_baseline(args):
             student_model.save(model_path)
             logging.info(f"[Info] Model saved after {stage}: {model_path}")
         
+        # after training this segment, test all interventions
+        test_all_interventions(
+            student_model=student_model,
+            task_name=args.task,
+            stage_num=stage,
+            args=args,
+            csv_logger=csv_logger,
+            cumulative_timesteps=cumulative_timesteps,
+            baseline_type="info"
+        )
+
+        # run post-episode validation using helper function
+        run_post_episode_validation(
+            student_model=student_model,
+            task_name=args.task,
+            stage_num=stage,
+            args=args,
+            csv_logger=csv_logger,
+            cumulative_timesteps=cumulative_timesteps,
+            baseline_type="info"
+        )
+        
         # clean up
         train_env.close()
     
     # save final model
-    final_model_path = os.path.join(args.log_dir, "final_info_model.zip")
+    final_model_path = os.path.join(args.log_dir, "final_model_after_sequencing.zip")
     student_model.save(final_model_path)
     logging.info(f"[Info] Final model saved to {final_model_path}")
 
@@ -1240,7 +1269,7 @@ def train_lpm_baseline(args):
         )
 
         # set up logging for this segment
-        reward_monitor = RewardMonitorCallback("lpm_baseline", csv_logger, stage, cumulative_timesteps)
+        reward_monitor = RewardMonitorCallback("lpm_baseline", csv_logger, stage, cumulative_timesteps, baseline_type="lpm")
 
         callback_list = CallbackList([
             lpm_callback,
@@ -1278,11 +1307,33 @@ def train_lpm_baseline(args):
             student_model.save(model_path)
             logging.info(f"[LPM] Model saved after stage {stage}: {model_path}")
         
+        # after training this segment, test all interventions
+        test_all_interventions(
+            student_model=student_model,
+            task_name=args.task,
+            stage_num=stage,
+            args=args,
+            csv_logger=csv_logger,
+            cumulative_timesteps=cumulative_timesteps,
+            baseline_type="lpm"
+        )
+
+        # run post-episode validation using helper function
+        run_post_episode_validation(
+            student_model=student_model,
+            task_name=args.task,
+            stage_num=stage,
+            args=args,
+            csv_logger=csv_logger,
+            cumulative_timesteps=cumulative_timesteps,
+            baseline_type="lpm"
+        )
+
         # clean up
         train_env.close()
     
     # save final model
-    final_model_path = os.path.join(args.log_dir, "final_lpm_model.zip")
+    final_model_path = os.path.join(args.log_dir, "final_model_after_sequencing.zip")
     student_model.save(final_model_path)
     logging.info(f"[LPM] Final model saved to {final_model_path}")
 
@@ -1346,7 +1397,7 @@ class CSVLogger:
             writer.writerow([
                 'timestamp', 'stage', 'intervention_type', 'episode', 'timestep',
                 'reward', 'episode_length', 'success', 'cumulative_timesteps',
-                'mean_reward_last_10', 'success_rate_last_10'
+                'mean_reward_last_10', 'success_rate_last_10', 'baseline_type'
             ])
         
         # intervention selection log
@@ -1354,7 +1405,7 @@ class CSVLogger:
             writer = csv.writer(f)
             writer.writerow([
                 'timestamp', 'stage', 'intervention_type', 'test_avg_reward', 'test_success_rate',
-                'test_avg_length', 'selected', 'cumulative_timesteps', 'cm_score'
+                'test_avg_length', 'selected', 'cumulative_timesteps', 'cm_score', 'baseline_type'
             ])
         
         # validation log initialization
@@ -1362,11 +1413,14 @@ class CSVLogger:
             writer = csv.writer(f)
             writer.writerow([
                 'timestamp', 'stage', 'timestep', 'validation_avg_reward',
-                'validation_success_rate', 'validation_avg_length'
+                'validation_reward_std', 'validation_success_rate',
+                'validation_success_rate_std', 'validation_avg_length',
+                'validation_length_std', 'baseline_type'
             ])
     
     def log_episode(self, stage, intervention_type, episode, timestep, reward,
-                    episode_length, success, cumulative_timesteps, mean_reward_last_10, success_rate_last_10):
+                    episode_length, success, cumulative_timesteps,
+                    mean_reward_last_10, success_rate_last_10, baseline_type='curriculum'):
         """log episode data"""
         with open(self.csv_path, 'a', newline='') as f:
             writer = csv.writer(f)
@@ -1374,28 +1428,34 @@ class CSVLogger:
                 time.strftime('%Y-%m-%d %H:%M:%S'),
                 stage, intervention_type, episode, timestep, reward,
                 episode_length, success, cumulative_timesteps,
-                mean_reward_last_10, success_rate_last_10
+                mean_reward_last_10, success_rate_last_10, baseline_type
             ])
     
     def log_intervention_test(self, stage, intervention_type, test_avg_reward,
-                              test_success_rate, test_avg_length, selected, cumulative_timesteps, cm_score=None):
+                              test_success_rate, test_avg_length, selected,
+                              cumulative_timesteps, cm_score=None, baseline_type='curriculum'):
         """log intervention test results"""
         with open(self.intervention_log_path, 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerow([
                 time.strftime('%Y-%m-%d %H:%M:%S'),
                 stage, intervention_type, test_avg_reward, test_success_rate,
-                test_avg_length, selected, cumulative_timesteps, cm_score
+                test_avg_length, selected, cumulative_timesteps, cm_score, baseline_type
             ])
     
-    def log_validation_episode(self, stage, timestep, validation_reward, validation_success_rate, validation_avg_length):
+    def log_validation_episode(self, stage, timestep, validation_reward,
+                               validation_reward_std, validation_success_rate,
+                               validation_success_rate_std, validation_avg_length,
+                               validation_length_std, baseline_type='curriculum'):
         """log the validation episode data"""
         with open(self.validation_log_path, 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerow([
                 time.strftime('%Y-%m-%d %H:%M:%S'),
                 stage, timestep, validation_reward,
-                validation_success_rate, validation_avg_length
+                validation_reward_std, validation_success_rate,
+                validation_success_rate_std, validation_avg_length,
+                validation_length_std, baseline_type
             ])
 
 # =========================================
@@ -1507,13 +1567,15 @@ class IntervenedCausalWorld:
         """
         return getattr(self.base_env, name)
 
+# TODO: baseline type would need to be introduced here as well
 class RewardMonitorCallback(BaseCallback):
     """callback to monitor training progress with detailed metrics"""
-    def __init__(self, intervention_type="unknown", csv_logger=None, stage=0, cumulative_timesteps=0):
+    def __init__(self, intervention_type="unknown", csv_logger=None, stage=0, cumulative_timesteps=0, baseline_type='curriculum'):
         super().__init__()
         self.intervention_type = intervention_type
         self.csv_logger = csv_logger
         self.stage = stage
+        self.baseline_type = baseline_type
         self.episode_rewards = []
         self.episode_lengths = []
         self.episode_successes = []
@@ -1548,7 +1610,8 @@ class RewardMonitorCallback(BaseCallback):
                         self.csv_logger.log_episode(
                             self.stage, self.intervention_type, self.episode_count,
                             self.step_count, episode_info['r'], episode_info['l'],
-                            success, self.cumulative_timesteps, mean_reward_last_10, success_rate_last_10
+                            success, self.cumulative_timesteps, mean_reward_last_10,
+                            success_rate_last_10, self.baseline_type    # pass the baseline type here
                         )
                     
                     # log recent episode completion
@@ -1583,9 +1646,10 @@ class InterventionLoggingCallback(BaseCallback):
         return True
 
 class ValidationCallback(BaseCallback):
-    """callback to evaluate on validation intervention set during training"""
+    """callback to evaluate on pre-generated validation environments during training"""
     def __init__(self, validation_frequency=5000, task_name="pushing", csv_logger=None,
-                 stage=0, cumulative_timesteps=0, validation_episodes=3, seed=0, verbose=0):
+                 stage=0, cumulative_timesteps=0, validation_episodes=10, seed=0,
+                 verbose=0, baseline_type='curriculum', num_val_envs=10):
         super().__init__(verbose)
         self.validation_frequency = validation_frequency
         self.task_name = task_name
@@ -1596,105 +1660,150 @@ class ValidationCallback(BaseCallback):
         self.seed = seed
         self.last_validation_step = 0
         self.validation_history = []    # storing the validation metrics over time
+        self.num_val_envs = num_val_envs
+        self.baseline_type = baseline_type
 
-        # creating a fixed val intervention that will be reused
-        self.validation_intervention = {
-            "type": "validation",
-            "class": ValidationInterventionActorPolicy,
-            "params": {"seed": self.seed, "fixed_intervention": True}
-        }
-
-        # pre-create val env so that it's consistent
-        self.validation_env = None
+        # check if validation environments exist
+        self.val_env_dir = os.path.join("envs", self.task_name)
+        if not os.path.exists(self.val_env_dir):
+            logging.warning(f"Validation env directory not found: {self.val_env_dir}")
+            logging.warning("Please run create_validation_envs.py first to generate validation environments")
+            self.validation_envs_available = False
+        else:
+            self.validation_envs_available = True
     
     def _on_training_start(self):
-        """initialize the val env once at the start of training"""
-        # create val env with fixed seed
-        self.validation_env = create_environment(
-            self.task_name,
-            self.validation_intervention,
-            seed=self.seed
-        )
-        logging.info(f"Validation env initialized with seed {self.seed}")
+        """check if validation environments are available"""
+        if not self.validation_envs_available:
+            logging.warning("Validation environments not available. Validation will be skipped.")
     
     def _on_step(self) -> bool:
         # is it time for validation?
         if (self.num_timesteps - self.last_validation_step) >= self.validation_frequency:
-            self._evaluate_validation()
+            if self.validation_envs_available:
+                self._evaluate_validation()
             self.last_validation_step = self.num_timesteps
         return True
     
+    def _load_validation_env(self, env_idx):
+        """load a validation env from pickle file"""
+        env_path = os.path.join(self.val_env_dir, f"val_env_{env_idx}.pkl")
+
+        if not os.path.exists(env_path):
+            logging.error(f"Validation environment file not found: {env_path}")
+            return None
+
+        with open(env_path, 'rb') as f:
+            task_params = pickle.load(f)
+
+        # create env with saved parameters
+        dense_weights = DENSE_REWARD_WEIGHTS.get(self.task_name, [0])
+        task = generate_task(
+            task_generator_id=self.task_name,
+            dense_reward_weights=np.array(dense_weights),
+            variables_space='space_a',
+            fractional_reward_weight=1
+        )
+
+        env = CausalWorld(
+            task=task,
+            skip_frame=task_params['skip_frame'],
+            action_mode='joint_torques',
+            enable_visualization=False,
+            seed=task_params['seed'],
+            max_episode_length=task_params['max_episode_length']
+        )
+
+        return env
+    
     def _evaluate_validation(self):
-        """evaluate model on validation intervention set"""
+        """evaluate model on all validation environments"""
         logging.info(f"[VALIDATION] step {self.num_timesteps}: evaluating on validation set...")
 
-        # create validation intervention
-        # modified: i'm reusing the pre-created val environment
-        if self.validation_env is None:
-            # creating if not already
-            self.validation_env = create_environment(
-                self.task_name,
-                self.validation_intervention,
-                seed=self.seed
-            )
+        all_rewards = []
+        all_lengths = []
+        all_successes = []
 
-        total_reward = 0
-        total_length = 0
-        successes = 0
-        episode_rewards = []
+        # evaluate on each validation env
+        for env_idx in range(self.num_val_envs):
+            env = self._load_validation_env(env_idx)
+            if env is None:
+                continue
+        
+            env_rewards = []
+            env_lengths = []
+            env_successes = []
 
-        for episode in range(self.validation_episodes):
-            if hasattr(self.validation_env, 'seed'):
-                self.validation_env.seed(self.seed + episode)
+            # run multiple episodes on this environment
+            for episode in range(self.validation_episodes):
+                obs = env.reset()
+                done = False
+                episode_reward = 0
+                episode_length = 0
+                episode_success = False
+
+                while not done:
+                    # use current model for prediction
+                    action, _ = self.model.predict(obs, deterministic=True)
+                    obs, reward, done, info = env.step(action)
+                    episode_reward += reward
+                    episode_length += 1
+
+                    # check for success
+                    if isinstance(info, dict) and 'success' in info and info['success']:
+                        episode_success = True
+                        done = True     # early termination on success
+                
+                # record episode results
+                env_rewards.append(episode_reward)
+                env_lengths.append(episode_length)
+                env_successes.append(1 if episode_success else 0)
             
-            obs = self.validation_env.reset()    # i removed the seed parameter
-            done = False
-            episode_reward = 0
-            episode_length = 0
-            episode_success = False
+            # collect results from this env
+            all_rewards.extend(env_rewards)
+            all_lengths.extend(env_lengths)
+            all_successes.extend(env_successes)
 
-            while not done:
-                # use current model for prediction
-                action, _ = self.model.predict(obs, deterministic=True)
-                obs, reward, done, info = self.validation_env.step(action)
-                episode_reward += reward
-                episode_length += 1
+            # close the env
+            env.close()
 
-                # check for success
-                if isinstance(info, dict) and 'success' in info and info['success']:
-                    episode_success = True
-                    done = True     # early termination on success
-            
-            # now that the episode has completed
-            total_reward += episode_reward
-            total_length += episode_length
-            episode_rewards.append(episode_reward)
-            if episode_success:
-                successes += 1
-
-        # calculate metrics
+            # log per-env results
+            env_avg_reward = np.mean(env_rewards)
+            env_success_rate = np.mean(env_successes)
+            logging.info(f"[VALIDATION] Env {env_idx}: reward={env_avg_reward:.3f}, success={env_success_rate:.3f}")
+        
+        # calculate aggregate metrics
         validation_metrics = {
-            'validation_avg_reward': total_reward / self.validation_episodes,
-            'validation_reward_std': np.std(episode_rewards),
-            'validation_avg_length': total_length / self.validation_episodes,
-            'validation_success_rate': successes / self.validation_episodes,
+            'validation_avg_reward': np.mean(all_rewards),
+            'validation_reward_std': np.std(all_rewards),
+            'validation_avg_length': np.mean(all_lengths),
+            'validation_length_std': np.std(all_lengths),
+            'validation_success_rate': np.mean(all_successes),
+            'validation_success_rate_std': np.std(all_successes),
             'validation_step': self.num_timesteps,
-            'validation_stage': self.stage
+            'validation_stage': self.stage,
+            'validation_environments': self.num_val_envs
         }
 
         # store in history
         self.validation_history.append(validation_metrics)
 
         # log to console
-        logging.info(f"[VALIDATION] reward: {validation_metrics['validation_avg_reward']:.3f}, Success: {validation_metrics['validation_success_rate']:.3f}")
+        logging.info(f"[VALIDATION] Overall: reward={validation_metrics['validation_avg_reward']:.3f}, " 
+                     f"success={validation_metrics['validation_success_rate']:.3f}, "
+                     f"std={validation_metrics['validation_reward_std']:.3f}")
 
         # log to CSV
         if self.csv_logger:
             self.csv_logger.log_validation_episode(
                 self.stage, self.num_timesteps + self.cumulative_timesteps,
                 validation_metrics['validation_avg_reward'],
+                validation_metrics['validation_reward_std'],
                 validation_metrics['validation_success_rate'],
-                validation_metrics['validation_avg_length']
+                validation_metrics['validation_success_rate_std'],
+                validation_metrics['validation_avg_length'],
+                validation_metrics['validation_length_std'],
+                self.baseline_type
             )
         
         # log to WandB
@@ -1704,11 +1813,70 @@ class ValidationCallback(BaseCallback):
                 'validation/success_rate': validation_metrics['validation_success_rate'],
                 'validation/avg_length': validation_metrics['validation_avg_length'],
                 'validation/reward_std': validation_metrics['validation_reward_std'],
+                'validation/environments': validation_metrics['validation_environments'],
                 'stage': self.stage,
                 'timesteps': self.num_timesteps + self.cumulative_timesteps
             })
         
         return validation_metrics
+    
+    def _execute_validation(self, model):
+        """run validation after a meta-episode completes"""
+        logging.info(f"[VALIDATION] Running post-episode validation for stage {self.stage}")
+        self.model = model    # set the model to use for evaluation
+        return self._evaluate_validation()
+
+# utility functions for the validation env
+def check_validation_envs(task_name, num_envs=10):
+    """check if validation envs exist for the specified task"""
+    val_env_dir = os.path.join("envs", task_name)
+    if not os.path.exists(val_env_dir):
+        return False
+    
+    # check if all env files exist
+    for i in range(num_envs):
+        env_path = os.path.join(val_env_dir, f"val_env_{i}.pkl")
+        if not os.path.exists(env_path):
+            return False
+
+    return True
+
+def ensure_validation_envs(task_name, num_envs=10, base_seed=42):
+    """ensure validation environments exist, creating them if needed"""
+    if not check_validation_envs(task_name, num_envs):
+        logging.info(f"Validation environments for {task_name} not found. Creating them now...")
+
+        # import the environment creation function
+        try:
+            from create_validation_envs import create_and_save_validation_envs
+            create_and_save_validation_envs(base_seed, num_envs)
+            return True
+        except ImportError:
+            logging.error("Could not import create_validation_envs module.")
+            logging.error("Please run create_validation_envs.py separately to generate validation environments.")
+            return False
+    
+    return True
+
+# another helper function for validation
+def run_post_episode_validation(student_model, task_name, stage_num, args, csv_logger, cumulative_timesteps, baseline_type):
+    """run validation after each meta-episode"""
+    logging.info(f"[{baseline_type.upper()}] Running validation after meta-episode {stage_num}")
+
+    # create a validation callback with the same settings across all baselines
+    validation_callback = ValidationCallback(
+        validation_frequency=float('inf'),  # do not validate during training
+        task_name=task_name,
+        csv_logger=csv_logger,
+        stage=stage_num,
+        cumulative_timesteps=cumulative_timesteps,
+        validation_episodes=args.test_episodes,
+        seed=args.seed + stage_num * 10000,
+        baseline_type=baseline_type
+    )
+
+    # running validation and returning metrics
+    return validation_callback._execute_validation(student_model)
 
 def create_environment(task_name, intervention=None, seed=0, skip_frame=3, max_episode_length=500):
     """create a causalworld environment with optional intervention"""
@@ -1805,6 +1973,40 @@ def test_intervention_performance(student_model, intervention, task_name, num_ep
     logging.info(f"Results: avg_reward={avg_reward:.3f}, success_rate={success_rate:.3f}, avg_length={avg_length:.1f}")
     return metrics
 
+def test_all_interventions(student_model, task_name, stage_num, args, csv_logger, cumulative_timesteps, baseline_type):
+    """test model on all interventions and log results regardless of baseline type"""
+    logging.info(f"[{baseline_type.upper()}] Testing all interventions at end of meta-episode {stage_num}")
+
+    # test each intervention type
+    for intervention in INTERVENTIONS + [None]:     # including None for no intervention
+        int_type = intervention['type'] if intervention is not None else 'none'
+
+        # test performance on this intervention
+        metrics = test_intervention_performance(
+            student_model=student_model,
+            intervention=intervention,
+            task_name=task_name,
+            num_episodes=args.test_episodes,
+            seed=args.seed + stage_num * 100 + (INTERVENTIONS.index(intervention) if intervention in INTERVENTIONS else 0)
+        )
+
+        # log results to CSV
+        if csv_logger:
+            csv_logger.log_intervention_test(
+                stage=stage_num,
+                intervention_type=int_type,
+                test_avg_reward=metrics['avg_reward'],
+                test_success_rate=metrics['success_rate'],
+                test_avg_length=metrics['avg_length'],
+                selected=False,    # not selected for training, just logging
+                cumulative_timesteps=cumulative_timesteps,
+                baseline_type=baseline_type
+            )
+    
+    logging.info(f"[{baseline_type.upper()}] Completed testing all interventions")
+    return
+
+
 # =====================
 # RND Training Function
 # =====================
@@ -1855,7 +2057,7 @@ def train_rnd_baseline(args):
         )
 
         # set up logging for this segment
-        reward_monitor = RewardMonitorCallback("rnd_baseline", csv_logger, stage, cumulative_timesteps)
+        reward_monitor = RewardMonitorCallback("rnd_baseline", csv_logger, stage, cumulative_timesteps, baseline_type="rnd")
 
         callback_list = CallbackList([
             rnd_callback,
@@ -1893,11 +2095,33 @@ def train_rnd_baseline(args):
             student_model.save(model_path)
             logging.info(f"[RND] Model saved after stage {stage} : {model_path}")
         
+        # after training this segment, test all interventions
+        test_all_interventions(
+            student_model=student_model,
+            task_name=args.task,
+            stage_num=stage,
+            args=args,
+            csv_logger=csv_logger,
+            cumulative_timesteps=cumulative_timesteps,
+            baseline_type="rnd"
+        )
+
+        # run post-episode validation using helper function
+        run_post_episode_validation(
+            student_model=student_model,
+            task_name=args.task,
+            stage_num=stage,
+            args=args,
+            csv_logger=csv_logger,
+            cumulative_timesteps=cumulative_timesteps,
+            baseline_type="rnd"
+        )
+        
         # clean up
         train_env.close()
     
     # save final model
-    final_model_path = os.path.join(args.log_dir, "final_rnd_model.zip")
+    final_model_path = os.path.join(args.log_dir, "final_model_after_sequencing.zip")
     student_model.save(final_model_path)
     logging.info(f"[RND] Final model saved to {final_model_path}")
 
@@ -1909,12 +2133,14 @@ def train_rnd_baseline(args):
 # =====================
 class CountBasedRewardCallback(BaseCallback):
     """callback that augments env rewards with count-based intrinsic rewards"""
-    def __init__(self, beta=0.01, encoding_dim=32, verbose=0):
+    def __init__(self, beta=0.01, encoding_dim=32, verbose=0, stage=1, csv_logger=None):
         super(CountBasedRewardCallback, self).__init__(verbose)
         self.beta = beta                    # intrinsic reward scaling factor
         self.encoding_dim = encoding_dim    # dimension for state hashing
         self.visit_counts = {}              # dictionary to store state visit counts
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        self.stage = stage                  # adding the stage tracking
+        self.csv_logger = csv_logger
         self.projection_matrix = None
         self.total_states_visited = 0
     
@@ -2067,7 +2293,7 @@ def train_count_baseline(args):
         )
 
         # set up logging for this segment
-        reward_monitor = RewardMonitorCallback("count_baseline", csv_logger, stage, cumulative_timesteps)
+        reward_monitor = RewardMonitorCallback("count_baseline", csv_logger, stage, cumulative_timesteps, baseline_type="count")
 
         callback_list = CallbackList([
             count_callback,
@@ -2105,11 +2331,33 @@ def train_count_baseline(args):
             student_model.save(model_path)
             logging.info(f"[Count-Based] Model saved after stage {stage}: {model_path}")
         
+        # after training this segment, test all interventions
+        test_all_interventions(
+            student_model=student_model,
+            task_name=args.task,
+            stage_num=stage,
+            args=args,
+            csv_logger=csv_logger,
+            cumulative_timesteps=cumulative_timesteps,
+            baseline_type="count"
+        )
+
+        # run post-episode validation using helper function
+        run_post_episode_validation(
+            student_model=student_model,
+            task_name=args.task,
+            stage_num=stage,
+            args=args,
+            csv_logger=csv_logger,
+            cumulative_timesteps=cumulative_timesteps,
+            baseline_type="count"
+        )
+
         # clean up
         train_env.close()
 
     # save final model
-    final_model_path = os.path.join(args.log_dir, "final_count_model.zip")
+    final_model_path = os.path.join(args.log_dir, "final_model_after_sequencing.zip")
     student_model.save(final_model_path)
     logging.info(f"[Count-Based] Final model saved to {final_model_path}")
 
@@ -2143,25 +2391,25 @@ def train_on_intervention(student_model, intervention, task_name, timesteps, arg
     train_env = DummyVecEnv([env_factory])
     train_env = VecMonitor(train_env, filename=os.path.join(sb3_log_path, f'monitor.csv'))
 
-    # add validation callback
+    # add validation callback (disabled during training, only for post-episode validation)
     validation_callback = ValidationCallback(
-        validation_frequency=getattr(args, 'validation_frequency', 5000),   # default every 5000 steps
+        validation_frequency=float('inf'),   # disable in-training validation
         task_name=task_name,
         csv_logger=csv_logger,
         stage=stage_num,
         cumulative_timesteps=cumulative_timesteps,
         validation_episodes=getattr(args, 'validation_episodes', 10),   # default is 10 episodes
-        seed=args.seed + stage_num * 10000  # unique seed for validation
+        seed=args.seed + stage_num * 10000,  # unique seed for validation
+        baseline_type=args.curriculum_mode   # pass the curriculum mode as baseline type
     )
 
     # adding the custom SB3-WandB integration callback
     sb3_wandb_callback = SB3WandbIntegrationCallback(stage_num, type) if args.use_wandb else None
 
-    # set up callback for monitoring
-    reward_monitor = RewardMonitorCallback(type, csv_logger, stage_num, cumulative_timesteps)
+    # set up callback for monitoring (excluding validation callback since we only want post-episode validation)
+    reward_monitor = RewardMonitorCallback(type, csv_logger, stage_num, cumulative_timesteps, baseline_type=args.curriculum_mode)
     callback_list = CallbackList([
         reward_monitor,
-        validation_callback,
         InterventionLoggingCallback(type, stage_num),
         sb3_wandb_callback,
         WandbCallback(
@@ -2186,6 +2434,18 @@ def train_on_intervention(student_model, intervention, task_name, timesteps, arg
         reset_num_timesteps=False
     )
     training_duration = time.time() - start_time
+
+    # run post-episode validation using helper function
+    logging.info(f"Running post-episode validation after {type} intervention (stage {stage_num})")
+    validation_metrics = run_post_episode_validation(
+        student_model=student_model,
+        task_name=task_name,
+        stage_num=stage_num,
+        args=args,
+        csv_logger=csv_logger,
+        cumulative_timesteps=cumulative_timesteps,
+        baseline_type=args.curriculum_mode
+    )
 
     # save model after training
     model_path = os.path.join(args.log_dir, f"model_stage_{stage_num}_{type}")
@@ -2314,7 +2574,7 @@ def main():
                         choices=['greedy', 'random', 'none', 'cm', 'rnd', 'count', 'lpm', 'info', 'autocalc'])
     parser.add_argument('--train', action='store_true', help='Train the model')
     parser.add_argument('--eval', action='store_true', help='Evaluate the model')
-    parser.add_argument('--task', type=str, default='pushing', help='Task name')
+    parser.add_argument('--task', type=str, default='pushing', choices=['reaching', 'pushing', 'picking', 'pick_and_place', 'stacking2'], help='Task name')
     parser.add_argument('--meta_episodes', type=int, default=50, help='Number of meta-episodes (intervention selection)')
     parser.add_argument('--timesteps', type=int, default=50000, help='Timesteps for each intervention training block')
     parser.add_argument('--pretrained_path', type=str, help='Path to pretrained PPO model')
@@ -2389,6 +2649,10 @@ def main():
                 config=vars(args),
                 tags=[args.task, args.curriculum_mode, 'curriculum', 'sequencing']
             )
+        
+        # check and ensure validation environments exist
+        if not ensure_validation_envs(args.task):
+            logging.warning("Validation environments not available. Continuing without proper validation.")
 
         if args.curriculum_mode == 'rnd':
             logging.info(f"Starting RND baseline training (no curriculum) with args: {args}")
@@ -2416,9 +2680,12 @@ def main():
                 wandb.log({
                     'final_reward': final_performance['avg_reward'],
                     'final_success_rate': final_performance['success_rate'],
-                    'total_timesteps': args.timesteps * 7  # same as curriculum
+                    'total_timesteps': args.timesteps * args.meta_episodes
                 })
                 wandb.finish()
+            
+            if args.eval:
+                gen_eval(args.log_dir, task_name=args.task, seed=args.seed)
             return
         
         elif args.curriculum_mode == 'count':
@@ -2450,10 +2717,12 @@ def main():
                     'final_reward': final_performance['avg_reward'],
                     'final_success_rate': final_performance['success_rate'],
                     'unique_states_visited': len(count_callback.visit_counts),
-                    'total_timesteps': args.timesteps * 7
+                    'total_timesteps': args.timesteps * args.meta_episodes
                 })
                 wandb.finish()
-
+            
+            if args.eval:
+                gen_eval(args.log_dir, task_name=args.task, seed=args.seed)
             return
         
         elif args.curriculum_mode == 'lpm':
@@ -2483,10 +2752,12 @@ def main():
                 wandb.log({
                     'final_reward': final_performance['avg_reward'],
                     'final_success_rate': final_performance['success_rate'],
-                    'total_timesteps': args.timesteps * 7
+                    'total_timesteps': args.timesteps * args.meta_episodes
                 })
                 wandb.finish()
-
+            
+            if args.eval:
+                gen_eval(args.log_dir, task_name=args.task, seed=args.seed)
             return
 
         elif args.curriculum_mode == 'info':
@@ -2516,10 +2787,12 @@ def main():
                 wandb.log({
                     'final_reward': final_performance['avg_reward'],
                     'final_success_rate': final_performance['success_rate'],
-                    'total_timesteps': args.timesteps * 7
+                    'total_timesteps': args.timesteps * args.meta_episodes
                 })
                 wandb.finish()
-
+            
+            if args.eval:
+                gen_eval(args.log_dir, task_name=args.task, seed=args.seed)
             return
 
         else:
@@ -2576,6 +2849,16 @@ def main():
                     total_stages,
                     csv_logger,
                     cumulative_timesteps
+                )
+
+                test_all_interventions(
+                    student_model=student_model,
+                    task_name=args.task,
+                    stage_num=stage,
+                    args=args,
+                    csv_logger=csv_logger,
+                    cumulative_timesteps=cumulative_timesteps,
+                    baseline_type="none"
                 )
 
                 completed_sequence.append({
