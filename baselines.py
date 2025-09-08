@@ -2578,6 +2578,7 @@ def main():
     parser.add_argument('--meta_episodes', type=int, default=50, help='Number of meta-episodes (intervention selection)')
     parser.add_argument('--timesteps', type=int, default=50000, help='Timesteps for each intervention training block')
     parser.add_argument('--pretrained_path', type=str, help='Path to pretrained PPO model')
+    parser.add_argument('--pretrained_eval', type=str, help='Path to eval model')
     parser.add_argument('--log_dir', type=str, default=None, help='Log directory (will be auto-generated if not specified)')
     parser.add_argument('--seed', type=int, default=0, help='Random seed')
     parser.add_argument('--skip_frame', type=int, default=3, help='Frame skip')
@@ -2685,7 +2686,7 @@ def main():
                 wandb.finish()
             
             if args.eval:
-                gen_eval(args.log_dir, task_name=args.task, seed=args.seed)
+                gen_eval(args, args.log_dir, task_name=args.task, seed=args.seed)
             return
         
         elif args.curriculum_mode == 'count':
@@ -2722,7 +2723,7 @@ def main():
                 wandb.finish()
             
             if args.eval:
-                gen_eval(args.log_dir, task_name=args.task, seed=args.seed)
+                gen_eval(args, args.log_dir, task_name=args.task, seed=args.seed)
             return
         
         elif args.curriculum_mode == 'lpm':
@@ -2757,7 +2758,7 @@ def main():
                 wandb.finish()
             
             if args.eval:
-                gen_eval(args.log_dir, task_name=args.task, seed=args.seed)
+                gen_eval(args, args.log_dir, task_name=args.task, seed=args.seed)
             return
 
         elif args.curriculum_mode == 'info':
@@ -2792,7 +2793,7 @@ def main():
                 wandb.finish()
             
             if args.eval:
-                gen_eval(args.log_dir, task_name=args.task, seed=args.seed)
+                gen_eval(args, args.log_dir, task_name=args.task, seed=args.seed)
             return
 
         else:
@@ -2881,6 +2882,7 @@ def main():
                     })
                 stage += 1
                 continue  # Skip the rest of the loop for 'none' mode
+            # TODO: Sep 7 -- fix the intervention log for random; nothing is getting recorded
             elif args.curriculum_mode == 'random':
                 # random mode: pick one at random, no testing
                 set_seed(args.seed + stage * 100)
@@ -3135,9 +3137,9 @@ def main():
         #     logging.info("Continuing with basic visualizations only")
     
     if args.eval:
-        gen_eval(args.log_dir, task_name=args.task, seed=args.seed)
+        gen_eval(args, args.log_dir, task_name=args.task, seed=args.seed)
 
-def gen_eval(log_dir, task_name='pushing', seed=0, max_episode_length=250, skip_frame=3, num_episodes=10):
+def gen_eval(args, log_dir, task_name='pushing', seed=0, max_episode_length=250, skip_frame=3, num_episodes=10):
     set_seed(seed)
     print(f"running evaluation...")
     dense_weights = DENSE_REWARD_WEIGHTS.get(task_name, [0])
@@ -3156,7 +3158,10 @@ def gen_eval(log_dir, task_name='pushing', seed=0, max_episode_length=250, skip_
         max_episode_length=max_episode_length
     )
 
-    model_path = os.path.join(log_dir, 'final_model_after_sequencing.zip')
+    if args.pretrained_eval:
+        model_path = os.path.join(log_dir, args.pretrained_eval)
+    else:
+        model_path = os.path.join(log_dir, 'final_model_after_sequencing.zip')
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Trained model not found at {model_path}")
 

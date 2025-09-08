@@ -36,6 +36,8 @@ def load_baseline_data(log_base_dir='logs', target_baseline=None):
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
         'info_sequencing_logs': 'info'
+        # TODO: excluding autocalc for now but will add it once training is done
+        # 'autocalc_logs': 'autocalc'  # Added AutoCaLC
     }
 
     # Filter to specific baseline if requested
@@ -89,6 +91,57 @@ def load_baseline_data(log_base_dir='logs', target_baseline=None):
     
     return baseline_data
 
+def load_validation_data(log_base_dir='logs', target_baseline=None):
+    """Load and process validation data from all baseline logs"""
+    validation_data = {}
+    
+    # Define mapping of directory patterns to baseline names
+    baseline_dirs = {
+        'greedy_replacement_sequencing_logs': 'greedy',
+        'cm_replacement_sequencing_logs': 'cm',
+        'random_replacement_sequencing_logs': 'random',
+        'none_sequencing_logs': 'none',
+        'rnd_sequencing_logs': 'rnd',
+        'count_sequencing_logs': 'count',
+        'lpm_sequencing_logs': 'lpm',
+        'info_sequencing_logs': 'info'
+        # TODO: excluding autocalc for now but will add it once training is done
+        # 'autocalc_logs': 'autocalc'  # Added AutoCaLC
+    }
+
+    # Filter to specific baseline if requested
+    if target_baseline:
+        filtered_dirs = {k: v for k, v in baseline_dirs.items() if v == target_baseline}
+        if not filtered_dirs:
+            print(f"Error: Baseline '{target_baseline}' not found. Available baselines: {list(baseline_dirs.values())}")
+            return {}
+        baseline_dirs = filtered_dirs
+    
+    for dir_pattern, baseline_name in baseline_dirs.items():
+        # Find all matching directories
+        matching_dirs = glob.glob(os.path.join(log_base_dir, f"{dir_pattern}*"))
+        
+        if not matching_dirs:
+            print(f"Warning: No logs found for {baseline_name} baseline")
+            continue
+            
+        log_dir = matching_dirs[0]  # Use the first matching directory
+        
+        # Load validation log
+        validation_log_path = os.path.join(log_dir, 'validation_log.csv')
+        if os.path.exists(validation_log_path):
+            df = pd.read_csv(validation_log_path)
+            
+            # Add baseline identifier if not present
+            if 'baseline_type' not in df.columns:
+                df['baseline_type'] = baseline_name
+                
+            validation_data[baseline_name] = df
+        else:
+            print(f"Warning: No validation_log.csv found for {baseline_name}")
+    
+    return validation_data
+
 def load_intervention_test_data(log_base_dir='logs', target_baseline=None):
     """load and process intervention test data from all baseline logs"""
     intervention_data = {}
@@ -103,6 +156,8 @@ def load_intervention_test_data(log_base_dir='logs', target_baseline=None):
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
         'info_sequencing_logs': 'info'
+        # TODO: excluding autocalc for now but will add it once training is done
+        # 'autocalc_logs': 'autocalc'  # Added AutoCaLC
     }
 
     # Filter to specific baseline if requested
@@ -150,6 +205,7 @@ def load_benchmark_results(log_base_dir='logs', target_baseline=None):
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
         'info_sequencing_logs': 'info'
+        # 'autocalc_logs': 'autocalc'  # Added AutoCaLC
     }
 
     # Filter to specific baseline if requested
@@ -297,87 +353,12 @@ def plot_intervention_effectiveness(intervention_data, output_dir='visualization
     
     print(f"Intervention effectiveness plot saved to {output_dir}")
 
-def plot_baseline_comparison(reward_df, success_df, output_dir='visualizations'):
-    """Create plots comparing baseline performance"""
-    os.makedirs(output_dir, exist_ok=True)
-    
-    # Check if we have data
-    if reward_df.empty and success_df.empty:
-        print("No data available for baseline comparison")
-        return
-    
-    # Set up the style
-    sns.set_style("whitegrid")
-    plt.rcParams.update({'font.size': 12})
-    
-    # Define colors for consistency
-    if not reward_df.empty:
-        unique_baselines = reward_df['baseline'].unique()
-    elif not success_df.empty:
-        unique_baselines = success_df['baseline'].unique()
-    else:
-        print("No baseline data found")
-        return
-        
-    palette = sns.color_palette("husl", n_colors=len(unique_baselines))
-    color_map = dict(zip(sorted(unique_baselines), palette))
-    
-    # PLOT 1: Average reward across meta-episodes
-    if not reward_df.empty:
-        plt.figure(figsize=(12, 8))
-        
-        for baseline in sorted(reward_df['baseline'].unique()):
-            data = reward_df[reward_df['baseline'] == baseline]
-            plt.plot(data['stage'], data['mean'], label=baseline, 
-                     color=color_map[baseline], linewidth=2)
-            
-            # Add shaded region for standard deviation
-            plt.fill_between(data['stage'], 
-                             data['mean'] - data['std'], 
-                             data['mean'] + data['std'], 
-                             alpha=0.2, color=color_map[baseline])
-        
-        plt.xlabel('Meta-Episode')
-        plt.ylabel('Average Reward')
-        plt.title('Average Reward Across Meta-Episodes by Baseline')
-        plt.legend(loc='best')
-        plt.grid(True, linestyle='--', alpha=0.7)
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'baseline_reward_comparison.png'), dpi=300)
-        plt.savefig(os.path.join(output_dir, 'baseline_reward_comparison.pdf'))
-        plt.close()
-    
-    # PLOT 2: Success rate across meta-episodes
-    if not success_df.empty:
-        plt.figure(figsize=(12, 8))
-        
-        for baseline in sorted(success_df['baseline'].unique()):
-            data = success_df[success_df['baseline'] == baseline]
-            plt.plot(data['stage'], data['mean'], label=baseline, 
-                     color=color_map[baseline], linewidth=2)
-            
-            # Add shaded region for standard deviation
-            plt.fill_between(data['stage'], 
-                             np.maximum(0, data['mean'] - data['std']),  # Ensure not below 0
-                             np.minimum(1, data['mean'] + data['std']),  # Ensure not above 1
-                             alpha=0.2, color=color_map[baseline])
-        
-        plt.xlabel('Meta-Episode')
-        plt.ylabel('Success Rate')
-        plt.title('Success Rate Across Meta-Episodes by Baseline')
-        plt.ylim(0, 1)  # Success rate should be between 0 and 1
-        plt.legend(loc='best')
-        plt.grid(True, linestyle='--', alpha=0.7)
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'baseline_success_comparison.png'), dpi=300)
-        plt.savefig(os.path.join(output_dir, 'baseline_success_comparison.pdf'))
-        plt.close()
-    
-    print(f"Baseline comparison plots saved to {output_dir}")
+def compute_moving_average(data, window=5):
+    """Compute moving average for a pandas Series"""
+    return data.rolling(window=window, min_periods=1).mean()
 
-
-def process_for_plots(baseline_data):
-    """Process the data for plotting rewards and success rates by stage using groupby"""
+def process_training_data_for_plots(baseline_data):
+    """Process the training data for plotting rewards and success rates by stage using groupby"""
     reward_data = []
     success_data = []
     
@@ -405,11 +386,11 @@ def process_for_plots(baseline_data):
             print(f"Warning: Required columns (reward, success) not found for {baseline_name}")
     
     if not reward_data:
-        print("No reward data found across baselines")
+        print("No training reward data found across baselines")
         return pd.DataFrame(), pd.DataFrame()
         
     if not success_data:
-        print("No success data found across baselines")
+        print("No training success data found across baselines")
         return pd.DataFrame(), pd.DataFrame()
     
     reward_df = pd.concat(reward_data, ignore_index=True)
@@ -417,99 +398,380 @@ def process_for_plots(baseline_data):
     
     return reward_df, success_df
 
-def plot_baseline_comparison(reward_df, success_df, output_dir='visualizations'):
-    """Create plots comparing baseline performance"""
+def process_validation_data_for_plots(validation_data):
+    """Process the validation data for plotting rewards, success rates, and episode lengths by stage"""
+    reward_data = []
+    success_data = []
+    length_data = []
+    
+    for baseline_name, df in validation_data.items():
+        # Ensure we have the required columns
+        if 'stage' not in df.columns:
+            print(f"Warning: No stage column found for {baseline_name}")
+            continue
+        
+        # Process validation_avg_reward
+        if 'validation_avg_reward' in df.columns and 'validation_reward_std' in df.columns:
+            reward_df = df[['stage', 'validation_avg_reward', 'validation_reward_std']].copy()
+            reward_df.columns = ['stage', 'mean', 'std']
+            reward_df['baseline'] = baseline_name
+            reward_data.append(reward_df)
+        
+        # Process validation_success_rate
+        if 'validation_success_rate' in df.columns and 'validation_success_rate_std' in df.columns:
+            success_df = df[['stage', 'validation_success_rate', 'validation_success_rate_std']].copy()
+            success_df.columns = ['stage', 'mean', 'std']
+            success_df['baseline'] = baseline_name
+            success_data.append(success_df)
+        
+        # Process validation_avg_length
+        if 'validation_avg_length' in df.columns and 'validation_length_std' in df.columns:
+            length_df = df[['stage', 'validation_avg_length', 'validation_length_std']].copy()
+            length_df.columns = ['stage', 'mean', 'std']
+            length_df['baseline'] = baseline_name
+            length_data.append(length_df)
+    
+    # Concatenate all data
+    reward_df = pd.concat(reward_data, ignore_index=True) if reward_data else pd.DataFrame()
+    success_df = pd.concat(success_data, ignore_index=True) if success_data else pd.DataFrame()
+    length_df = pd.concat(length_data, ignore_index=True) if length_data else pd.DataFrame()
+    
+    return reward_df, success_df, length_df
+
+def plot_training_comparison(reward_df, success_df, output_dir='visualizations'):
+    """Create plots comparing baseline training performance with and without std dev"""
     os.makedirs(output_dir, exist_ok=True)
+    
+    # Check if we have data
+    if reward_df.empty and success_df.empty:
+        print("No training data available for baseline comparison")
+        return
     
     # Set up the style
     sns.set_style("whitegrid")
     plt.rcParams.update({'font.size': 12})
     
     # Define colors for consistency
-    palette = sns.color_palette("husl", n_colors=len(reward_df['baseline'].unique()))
-    color_map = dict(zip(sorted(reward_df['baseline'].unique()), palette))
-    
-    # PLOT 1: Average reward across meta-episodes
-    plt.figure(figsize=(12, 8))
-    
-    for baseline in sorted(reward_df['baseline'].unique()):
-        data = reward_df[reward_df['baseline'] == baseline]
-        plt.plot(data['stage'], data['mean'], label=baseline, 
-                 color=color_map[baseline], linewidth=2)
+    if not reward_df.empty:
+        unique_baselines = reward_df['baseline'].unique()
+    elif not success_df.empty:
+        unique_baselines = success_df['baseline'].unique()
+    else:
+        print("No baseline data found")
+        return
         
-        # Add shaded region for standard deviation
-        plt.fill_between(data['stage'], 
-                         data['mean'] - data['std'], 
-                         data['mean'] + data['std'], 
-                         alpha=0.2, color=color_map[baseline])
+    palette = sns.color_palette("husl", n_colors=len(unique_baselines))
+    color_map = dict(zip(sorted(unique_baselines), palette))
     
-    plt.xlabel('Meta-Episode')
-    plt.ylabel('Average Reward')
-    plt.title('Average Reward Across Meta-Episodes by Baseline')
-    plt.legend(loc='best')
-    plt.grid(True, linestyle='--', alpha=0.7)
-    plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, 'baseline_reward_comparison.png'), dpi=300)
-    plt.savefig(os.path.join(output_dir, 'baseline_reward_comparison.pdf'))
-    plt.close()
-    
-    # PLOT 2: Success rate across meta-episodes
-    plt.figure(figsize=(12, 8))
-    
-    for baseline in sorted(success_df['baseline'].unique()):
-        data = success_df[success_df['baseline'] == baseline]
-        plt.plot(data['stage'], data['mean'], label=baseline, 
-                 color=color_map[baseline], linewidth=2)
+    # PLOT 1: Training Average reward with moving average (with std)
+    if not reward_df.empty:
+        plt.figure(figsize=(12, 8))
         
-        # Add shaded region for standard deviation
-        plt.fill_between(data['stage'], 
-                         np.maximum(0, data['mean'] - data['std']),  # Ensure not below 0
-                         np.minimum(1, data['mean'] + data['std']),  # Ensure not above 1
-                         alpha=0.2, color=color_map[baseline])
+        for baseline in sorted(reward_df['baseline'].unique()):
+            data = reward_df[reward_df['baseline'] == baseline].sort_values('stage')
+            
+            # Compute moving average
+            data['moving_avg'] = compute_moving_average(data['mean'], window=5)
+            
+            plt.plot(data['stage'], data['moving_avg'], label=f'{baseline} (5-ep MA)', 
+                     color=color_map[baseline], linewidth=2)
+            
+            # Add shaded region for standard deviation around moving average
+            plt.fill_between(data['stage'], 
+                             data['moving_avg'] - data['std'], 
+                             data['moving_avg'] + data['std'], 
+                             alpha=0.2, color=color_map[baseline])
+        
+        plt.xlabel('Meta-Episode')
+        plt.ylabel('Average Reward')
+        plt.title('Training: Average Reward Across Meta-Episodes by Baseline (5-episode Moving Average with std dev)')
+        plt.legend(loc='best')
+        plt.grid(True, linestyle='--', alpha=0.7)
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, 'training_reward_comparison_with_std.png'), dpi=300)
+        plt.savefig(os.path.join(output_dir, 'training_reward_comparison_with_std.pdf'))
+        plt.close()
+        
+        # PLOT 1b: Training Average reward with moving average (without std)
+        plt.figure(figsize=(12, 8))
+        
+        for baseline in sorted(reward_df['baseline'].unique()):
+            data = reward_df[reward_df['baseline'] == baseline].sort_values('stage')
+            
+            # Compute moving average
+            data['moving_avg'] = compute_moving_average(data['mean'], window=5)
+            
+            plt.plot(data['stage'], data['moving_avg'], label=f'{baseline} (5-ep MA)', 
+                     color=color_map[baseline], linewidth=2)
+        
+        plt.xlabel('Meta-Episode')
+        plt.ylabel('Average Reward')
+        plt.title('Training: Average Reward Across Meta-Episodes by Baseline (5-episode Moving Average)')
+        plt.legend(loc='best')
+        plt.grid(True, linestyle='--', alpha=0.7)
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, 'training_reward_comparison.png'), dpi=300)
+        plt.savefig(os.path.join(output_dir, 'training_reward_comparison.pdf'))
+        plt.close()
     
-    plt.xlabel('Meta-Episode')
-    plt.ylabel('Success Rate')
-    plt.title('Success Rate Across Meta-Episodes by Baseline')
-    plt.ylim(0, 1)  # Success rate should be between 0 and 1
-    plt.legend(loc='best')
-    plt.grid(True, linestyle='--', alpha=0.7)
-    plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, 'baseline_success_comparison.png'), dpi=300)
-    plt.savefig(os.path.join(output_dir, 'baseline_success_comparison.pdf'))
-    plt.close()
+    # PLOT 2: Training Success rate frequency histogram
+    if not success_df.empty:
+        # Create frequency bins for success rate
+        labels = ['0.0 (No overlap)', '(0.0, 0.99]', '1.0 (Perfect)']
+        
+        fig, ax = plt.subplots(figsize=(12, 8))
+        
+        baseline_names = sorted(success_df['baseline'].unique())
+        x_pos = np.arange(len(labels))
+        width = 0.8 / len(baseline_names)
+        
+        for i, baseline in enumerate(baseline_names):
+            baseline_data = success_df[success_df['baseline'] == baseline]['mean']
+            
+            # Calculate frequencies for each bin
+            frequencies = []
+            # Bin 1: Exactly 0.0
+            count_zero = np.sum(baseline_data == 0.0)
+            frequencies.append(count_zero)
+            
+            # Bin 2: (0.0, 0.99] - greater than 0 but less than 1
+            count_middle = np.sum((baseline_data > 0.0) & (baseline_data <= 0.99))
+            frequencies.append(count_middle)
+            
+            # Bin 3: Exactly 1.0 (perfect success)
+            count_perfect = np.sum(baseline_data == 1.0)
+            frequencies.append(count_perfect)
+            
+            # Plot bars
+            ax.bar(x_pos + i * width, frequencies, width, 
+                   label=baseline, color=color_map[baseline], alpha=0.8)
+        
+        ax.set_xlabel('Success Rate Bins')
+        ax.set_ylabel('Frequency (Number of Meta-Episodes)')
+        ax.set_title('Training: Success Rate Distribution by Baseline')
+        ax.set_xticks(x_pos + width * (len(baseline_names) - 1) / 2)
+        ax.set_xticklabels(labels)
+        ax.legend()
+        ax.grid(True, linestyle='--', alpha=0.7)
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, 'training_success_distribution.png'), dpi=300)
+        plt.savefig(os.path.join(output_dir, 'training_success_distribution.pdf'))
+        plt.close()
     
-    print(f"Plots saved to {output_dir}")
+    print(f"Training comparison plots saved to {output_dir}")
+
+def plot_validation_comparison(reward_df, success_df, length_df, output_dir='visualizations'):
+    """Create plots comparing baseline validation performance with and without std dev"""
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Check if we have data
+    if reward_df.empty and success_df.empty and length_df.empty:
+        print("No validation data available for baseline comparison")
+        return
+    
+    # Set up the style
+    sns.set_style("whitegrid")
+    plt.rcParams.update({'font.size': 12})
+    
+    # Define colors for consistency
+    if not reward_df.empty:
+        unique_baselines = reward_df['baseline'].unique()
+    elif not success_df.empty:
+        unique_baselines = success_df['baseline'].unique()
+    elif not length_df.empty:
+        unique_baselines = length_df['baseline'].unique()
+    else:
+        print("No baseline validation data found")
+        return
+        
+    palette = sns.color_palette("husl", n_colors=len(unique_baselines))
+    color_map = dict(zip(sorted(unique_baselines), palette))
+    
+    # PLOT 1: Validation Average reward with moving average (with std)
+    if not reward_df.empty:
+        plt.figure(figsize=(12, 8))
+        
+        for baseline in sorted(reward_df['baseline'].unique()):
+            data = reward_df[reward_df['baseline'] == baseline].sort_values('stage')
+            
+            # Compute moving average
+            data['moving_avg'] = compute_moving_average(data['mean'], window=5)
+            
+            plt.plot(data['stage'], data['moving_avg'], label=f'{baseline} (5-ep MA)', 
+                     color=color_map[baseline], linewidth=2)
+            
+            # Add shaded region for standard deviation around moving average
+            plt.fill_between(data['stage'], 
+                             data['moving_avg'] - data['std'], 
+                             data['moving_avg'] + data['std'], 
+                             alpha=0.2, color=color_map[baseline])
+        
+        plt.xlabel('Meta-Episode')
+        plt.ylabel('Average Reward')
+        plt.title('Validation: Average Reward Across Meta-Episodes by Baseline (5-episode Moving Average with std dev)')
+        plt.legend(loc='best')
+        plt.grid(True, linestyle='--', alpha=0.7)
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, 'validation_reward_comparison_with_std.png'), dpi=300)
+        plt.savefig(os.path.join(output_dir, 'validation_reward_comparison_with_std.pdf'))
+        plt.close()
+        
+        # PLOT 1b: Validation Average reward with moving average (without std)
+        plt.figure(figsize=(12, 8))
+        
+        for baseline in sorted(reward_df['baseline'].unique()):
+            data = reward_df[reward_df['baseline'] == baseline].sort_values('stage')
+            
+            # Compute moving average
+            data['moving_avg'] = compute_moving_average(data['mean'], window=5)
+            
+            plt.plot(data['stage'], data['moving_avg'], label=f'{baseline} (5-ep MA)', 
+                     color=color_map[baseline], linewidth=2)
+        
+        plt.xlabel('Meta-Episode')
+        plt.ylabel('Average Reward')
+        plt.title('Validation: Average Reward Across Meta-Episodes by Baseline (5-episode Moving Average)')
+        plt.legend(loc='best')
+        plt.grid(True, linestyle='--', alpha=0.7)
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, 'validation_reward_comparison.png'), dpi=300)
+        plt.savefig(os.path.join(output_dir, 'validation_reward_comparison.pdf'))
+        plt.close()
+    
+    # PLOT 2: Validation Success rate frequency histogram
+    if not success_df.empty:
+        # Create frequency bins for success rate
+        labels = ['0.0 (No overlap)', '(0.0, 0.99]', '1.0 (Perfect)']
+        
+        fig, ax = plt.subplots(figsize=(12, 8))
+        
+        baseline_names = sorted(success_df['baseline'].unique())
+        x_pos = np.arange(len(labels))
+        width = 0.8 / len(baseline_names)
+        
+        for i, baseline in enumerate(baseline_names):
+            baseline_data = success_df[success_df['baseline'] == baseline]['mean']
+            
+            # Calculate frequencies for each bin
+            frequencies = []
+            # Bin 1: Exactly 0.0
+            count_zero = np.sum(baseline_data == 0.0)
+            frequencies.append(count_zero)
+            
+            # Bin 2: (0.0, 0.99] - greater than 0 but less than 1
+            count_middle = np.sum((baseline_data > 0.0) & (baseline_data <= 0.99))
+            frequencies.append(count_middle)
+            
+            # Bin 3: Exactly 1.0 (perfect success)
+            count_perfect = np.sum(baseline_data == 1.0)
+            frequencies.append(count_perfect)
+            
+            # Plot bars
+            ax.bar(x_pos + i * width, frequencies, width, 
+                   label=baseline, color=color_map[baseline], alpha=0.8)
+        
+        ax.set_xlabel('Success Rate Bins')
+        ax.set_ylabel('Frequency (Number of Meta-Episodes)')
+        ax.set_title('Validation: Success Rate Distribution by Baseline')
+        ax.set_xticks(x_pos + width * (len(baseline_names) - 1) / 2)
+        ax.set_xticklabels(labels)
+        ax.legend()
+        ax.grid(True, linestyle='--', alpha=0.7)
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, 'validation_success_distribution.png'), dpi=300)
+        plt.savefig(os.path.join(output_dir, 'validation_success_distribution.pdf'))
+        plt.close()
+    
+    # PLOT 3: Validation Episode Length frequency histogram
+    if not length_df.empty:
+        # Create frequency bins for episode length
+        labels = ['[0-100) (Efficient)', '[100-500) (Medium)', '500 (Max)']
+        
+        fig, ax = plt.subplots(figsize=(12, 8))
+        
+        baseline_names = sorted(length_df['baseline'].unique())
+        x_pos = np.arange(len(labels))
+        width = 0.8 / len(baseline_names)
+        
+        for i, baseline in enumerate(baseline_names):
+            baseline_data = length_df[length_df['baseline'] == baseline]['mean']
+            
+            # Calculate frequencies for each bin
+            frequencies = []
+            # Bin 1: [0-100) - efficient completion
+            count_efficient = np.sum((baseline_data >= 0) & (baseline_data < 100))
+            frequencies.append(count_efficient)
+            
+            # Bin 2: [100-500) - medium completion time
+            count_medium = np.sum((baseline_data >= 100) & (baseline_data < 500))
+            frequencies.append(count_medium)
+            
+            # Bin 3: Exactly 500 (max length)
+            count_max = np.sum(baseline_data >= 500)
+            frequencies.append(count_max)
+            
+            # Plot bars
+            ax.bar(x_pos + i * width, frequencies, width, 
+                   label=baseline, color=color_map[baseline], alpha=0.8)
+        
+        ax.set_xlabel('Episode Length Bins')
+        ax.set_ylabel('Frequency (Number of Meta-Episodes)')
+        ax.set_title('Validation: Episode Length Distribution by Baseline')
+        ax.set_xticks(x_pos + width * (len(baseline_names) - 1) / 2)
+        ax.set_xticklabels(labels)
+        ax.legend()
+        ax.grid(True, linestyle='--', alpha=0.7)
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, 'validation_length_distribution.png'), dpi=300)
+        plt.savefig(os.path.join(output_dir, 'validation_length_distribution.pdf'))
+        plt.close()
+    
+    print(f"Validation comparison plots saved to {output_dir}")
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate the four required visualizations")
+    parser = argparse.ArgumentParser(description="Generate comprehensive visualizations for training and validation data")
     parser.add_argument('--log_dir', type=str, default='logs', help='Base directory containing log folders')
     parser.add_argument('--output_dir', type=str, default='visualizations', help='Output directory for visualizations')
-    parser.add_argument('--baseline', type=str, help='Analyze only a specific baseline (greedy, cm, random, none, rnd, count, lpm, info)')
+    parser.add_argument('--baseline', type=str, help='Analyze only a specific baseline (greedy, cm, random, none, rnd, count, lpm, info, autocalc)')
     
     args = parser.parse_args()
     
     if args.baseline:
         print(f"=== Generating Visualizations for {args.baseline.upper()} Baseline Only ===")
     else:
-        print("=== Generating Four Required Visualizations for All Baselines ===")
+        print("=== Generating Comprehensive Visualizations for All Baselines ===")
     
-    # 1. Load baseline training data and generate reward/success plots
+    # 1. Load baseline training data and generate training plots
     print("1. Loading baseline training data...")
-    baseline_data = load_baseline_data(args.log_dir)
+    baseline_data = load_baseline_data(args.log_dir, args.baseline)
     
     if baseline_data:
-        print("   Processing data for training plots...")
-        reward_df, success_df = process_for_plots(baseline_data)
+        print("   Processing training data for plots...")
+        reward_df, success_df = process_training_data_for_plots(baseline_data)
         
-        if not reward_df.empty and not success_df.empty:
-            print("   Generating training reward and success rate plots...")
-            plot_baseline_comparison(reward_df, success_df, args.output_dir)
+        if not reward_df.empty or not success_df.empty:
+            print("   Generating training plots...")
+            plot_training_comparison(reward_df, success_df, args.output_dir)
         else:
             print("   Warning: No valid training data found for baseline comparison")
     
-    # 2. Load intervention test data and generate effectiveness plot
-    print("2. Loading intervention test data...")
-    intervention_data = load_intervention_test_data(args.log_dir)
+    # 2. Load validation data and generate validation plots
+    print("2. Loading validation data...")
+    validation_data = load_validation_data(args.log_dir, args.baseline)
+    
+    if validation_data:
+        print("   Processing validation data for plots...")
+        val_reward_df, val_success_df, val_length_df = process_validation_data_for_plots(validation_data)
+        
+        if not val_reward_df.empty or not val_success_df.empty or not val_length_df.empty:
+            print("   Generating validation plots...")
+            plot_validation_comparison(val_reward_df, val_success_df, val_length_df, args.output_dir)
+        else:
+            print("   Warning: No valid validation data found for baseline comparison")
+    
+    # 3. Load intervention test data and generate effectiveness plot
+    print("3. Loading intervention test data...")
+    intervention_data = load_intervention_test_data(args.log_dir, args.baseline)
     
     if intervention_data:
         print("   Generating intervention effectiveness plot...")
@@ -517,9 +779,9 @@ def main():
     else:
         print("   Warning: No intervention test data found")
     
-    # 3. Load benchmark results and generate radar plot
-    print("3. Loading benchmark results...")
-    benchmark_data = load_benchmark_results(args.log_dir)
+    # 4. Load benchmark results and generate radar plot
+    print("4. Loading benchmark results...")
+    benchmark_data = load_benchmark_results(args.log_dir, args.baseline)
     
     if benchmark_data:
         print("   Generating radar plot...")

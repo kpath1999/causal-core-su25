@@ -111,6 +111,28 @@ from validation_actor import ValidationInterventionActorPolicy
 import wandb
 from wandb.integration.sb3 import WandbCallback
 
+# obtaining the exploration rate
+def get_exploration_rate(meta_step, meta_episodes):
+    """
+    advanced exploration strategy with three phases:
+    1. initial pure exploration phase
+    2. guided exploration phase with faster decay
+    3. fine-tuning phase with minimal exploration
+    """
+    # phase 1: initial pure exploration (first 10% of episodes)
+    if meta_step < meta_episodes * 0.1:
+        return 1.0
+
+    # phase 2: guided exploration (next 60% of episodes)
+    elif meta_step < meta_episodes * 0.7:
+        # start at 0.8 and decay to 0.2 over this phase
+        phase_progress = (meta_step - meta_episodes * 0.1) / (meta_episodes * 0.6)
+        return 0.8 - 0.6 * phase_progress
+    
+    # phase 3: fine-tuning (last 30% of episodes)
+    else:
+        # low exploration rate for fine-tuning
+        return 0.2 - 0.15 * ((meta_step - meta_episodes * 0.7) / (meta_episodes * 0.3))
 
 # setting random seed
 def set_seed(seed):
@@ -295,7 +317,7 @@ class DQN(nn.Module):
         return self.net(x)
 
 class TeacherDQNAgent:
-    def __init__(self, state_dim, action_dim, lr=1e-4, gamma=0.99, device='cpu', buffer_size=10000, batch_size=64, target_update=5):
+    def __init__(self, state_dim, action_dim, lr=1e-4, gamma=0.99, device='cpu', buffer_size=50000, batch_size=64, target_update=5):
         self.device = device
         self.q_net = DQN(state_dim, action_dim).to(device)
         self.target_net = deepcopy(self.q_net)
@@ -500,7 +522,7 @@ def main():
         current_meta_state = get_teacher_state(student_model, args.task, INTERVENTIONS, device=device, seed=args.seed + meta_step)
 
         # 4. Teacher selects an intervention
-        epsilon = max(0.1, 1.0 - meta_step / (args.meta_episodes * 1.5))    # epsilon decay, made slow
+        epsilon = get_exploration_rate(meta_step, args.meta_episodes)
         selected_intervention_idx = teacher.select_action(current_meta_state, epsilon)
         selected_intervention = INTERVENTIONS[selected_intervention_idx]
         selected_intervention_type = selected_intervention['type']
@@ -573,6 +595,10 @@ def main():
                 'cumulative_timesteps': cumulative_timesteps,
                 **{f"cm_score_{inter['type']}": score for inter, score in zip(INTERVENTIONS, current_meta_state[1::2])}
             })
+        
+        stage_model_path = os.path.join(args.log_dir, f"student_model_stage_{meta_step+1}.zip")
+        student_model.save(stage_model_path)
+        logging.info(f"Saved intermediate model for stage {meta_step+1} to {stage_model_path}")
         
         # Clean up
         train_env.close()
