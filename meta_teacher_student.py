@@ -302,6 +302,7 @@ class ReplayBuffer:
     def __len__(self):
         return len(self.buffer)
 
+# TODO: modify this to leakyrelu if you get a vanishing gradient issue
 class DQN(nn.Module):
     def __init__(self, state_dim, action_dim):
         super().__init__()
@@ -365,7 +366,7 @@ class TeacherDQNAgent:
         return loss.item()
 
 # the eval function
-def evaluate_autocalc_performance(log_dir, task_name='pushing', seed=0, max_episode_length=250, skip_frame=3, num_episodes=10):
+def evaluate_autocalc_performance(log_dir, task_name, eval_model, seed=0, max_episode_length=250, skip_frame=3, num_episodes=10):
     """made similar to baselines evaluation"""
     set_seed(seed)
     logging.info("Running AutoCaLC evaluation...")
@@ -388,7 +389,7 @@ def evaluate_autocalc_performance(log_dir, task_name='pushing', seed=0, max_epis
     )
 
     # load the final model
-    model_path = os.path.join(log_dir, "final_student_model.zip")
+    model_path = os.path.join(log_dir, eval_model)
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Trained model not found at {model_path}")
     
@@ -617,6 +618,7 @@ if __name__ == '__main__':
     parser.add_argument('--student_train_steps', type=int, default=50000, help='Timesteps per student training block')
     parser.add_argument('--meta_episodes', type=int, default=50, help='Number of meta-episodes (teacher steps)')
     parser.add_argument('--student_pretrained_path', type=str, default=None, help='Path to pretrained PPO model (optional)')
+    parser.add_argument('--pretrained_eval', type=str, help='Path to eval model')
     parser.add_argument('--seed', type=int, default=0, help='Random seed')
     parser.add_argument('--use_wandb', action='store_true', help='Enable wandb logging')
     parser.add_argument('--log_dir', type=str, default=None, help='Log directory (will be auto-generated if not specified)')
@@ -633,6 +635,6 @@ if __name__ == '__main__':
             args.log_dir = f'logs/autocalc_{args.task}_seed{args.seed}'
 
     if args.eval:
-        evaluate_autocalc_performance(args.log_dir, task_name=args.task, seed=args.seed)
+        evaluate_autocalc_performance(args.log_dir, task_name=args.task, eval_model=args.pretrained_eval, seed=args.seed)
     else:
         main()

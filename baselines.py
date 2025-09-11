@@ -4,6 +4,8 @@
 This section provides all possible terminal commands to generate logs from the baselines.
 Copy and paste any of these commands to run different curriculum learning experiments.
 
+# Sep 9: modifying timesteps from 50K to 5K
+
 BASIC TRAINING COMMANDS:
 -----------------------
 
@@ -69,10 +71,6 @@ python baselines.py --train --curriculum_mode greedy --task pushing --timesteps 
 Note: Replace 'pushing' with any supported task: reaching, picking, pick_and_place, stacking2
 Note: All commands assume you have the required pretrained models in models/{task} directories (e.g., models/ppo_pushing_sb3/final_model.zip)
 """
-
-# TODO: fix the logging such that it is easy to compare all algorithms side-by-side in a Colab notebook, upon uploading all the baseline csv files
-# note: they should training and validation related data
-# and of course evaluation with the radar plots in the end
 
 import numpy as np
 import torch
@@ -163,18 +161,18 @@ class RNDIntrinsicModel:
         # target network (frozen)
         self.target = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
+            nn.LeakyReLU(negative_slope=0.01),
             nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
+            nn.LeakyReLU(negative_slope=0.01),
             nn.Linear(hidden_dim, output_dim)
         ).to(device)
 
         # predictor network (trainable)
         self.predictor = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
+            nn.LeakyReLU(negative_slope=0.01),
             nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
+            nn.LeakyReLU(negative_slope=0.01),
             nn.Linear(hidden_dim, output_dim)
         ).to(device)
 
@@ -358,7 +356,7 @@ class RewardPrediction(nn.Module):
         self.fc2 = nn.Linear(hidden_dim, 1)
     def forward(self, s, a):
         x = torch.cat([s, a], dim=-1)
-        x = torch.relu(self.fc1(x))
+        x = nn.LeakyReLU(negative_slope=0.01)(self.fc1(x))
         return self.fc2(x)
 
 class BetaVAE(nn.Module):
@@ -367,12 +365,12 @@ class BetaVAE(nn.Module):
         # added a hidden layer for better capacity
         self.encoder = nn.Sequential(
             nn.Linear(input_dim, 64),
-            nn.ReLU(),
+            nn.LeakyReLU(negative_slope=0.01),
             nn.Linear(64, latent_dim * 2)
         )
         self.decoder = nn.Sequential(
             nn.Linear(latent_dim, 64),
-            nn.ReLU(),
+            nn.LeakyReLU(negative_slope=0.01),
             nn.Linear(64, input_dim)
         )
         self.beta = beta
@@ -3207,10 +3205,10 @@ def gen_eval(args, log_dir, task_name='pushing', seed=0, max_episode_length=250,
         model = PPO.load(model_path)
         action, _ = model.predict(obs, deterministic=True)
         return action
-    
+
+    logging.info("[EVAL] Running all evaluation protocols via EvaluationPipeline...")
     scores_model = evaluation.evaluate_policy(policy_fn, fraction=0.005)
-    
-    logging.info("\nEvaluation Results:")
+    logging.info("[EVAL] Evaluation Results:")
     logging.info(scores_model)
 
     import json
@@ -3220,7 +3218,7 @@ def gen_eval(args, log_dir, task_name='pushing', seed=0, max_episode_length=250,
             'final_evals': scores_model
         }, f, indent=2)
     logging.info(f"final evals saved to {benchmark_path}")
-    
+
     plots_dir = os.path.join(log_dir, "plots")
     vis.generate_visual_analysis(plots_dir, experiments={task_name: scores_model})
     print("Visualization saved to:", plots_dir)

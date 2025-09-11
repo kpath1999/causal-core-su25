@@ -19,6 +19,15 @@ python visualize_baselines.py --log_dir logs --output_dir greedy_analysis --base
 
 # Analyze only the cm baseline
 python visualize_baselines.py --log_dir logs --output_dir cm_analysis --baseline cm
+
+# Analyze only the Random Intervention baseline
+python visualize_baselines.py --log_dir logs --output_dir random_analysis --baseline "Random Intervention"
+
+# Analyze only the No Intervention baseline
+python visualize_baselines.py --log_dir logs --output_dir none_analysis --baseline "No Intervention"
+
+# Analyze only the RND baseline
+python visualize_baselines.py --log_dir logs --output_dir rnd_analysis --baseline RND
 """
 
 
@@ -30,14 +39,13 @@ def load_baseline_data(log_base_dir='logs', target_baseline=None):
     baseline_dirs = {
         'greedy_replacement_sequencing_logs': 'greedy',
         'cm_replacement_sequencing_logs': 'cm',
-        'random_replacement_sequencing_logs': 'random',
-        'none_sequencing_logs': 'none',
-        'rnd_sequencing_logs': 'rnd',
+        'random_replacement_sequencing_logs': 'Random Intervention',
+        'none_sequencing_logs': 'No Intervention',
+        'rnd_sequencing_logs': 'RND',
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
-        'info_sequencing_logs': 'info'
-        # TODO: excluding autocalc for now but will add it once training is done
-        # 'autocalc_logs': 'autocalc'  # Added AutoCaLC
+        'info_sequencing_logs': 'info',
+        'autocalc_logs': 'autocalc'  # Added AutoCaLC
     }
 
     # Filter to specific baseline if requested
@@ -99,14 +107,13 @@ def load_validation_data(log_base_dir='logs', target_baseline=None):
     baseline_dirs = {
         'greedy_replacement_sequencing_logs': 'greedy',
         'cm_replacement_sequencing_logs': 'cm',
-        'random_replacement_sequencing_logs': 'random',
-        'none_sequencing_logs': 'none',
-        'rnd_sequencing_logs': 'rnd',
+        'random_replacement_sequencing_logs': 'Random Intervention',
+        'none_sequencing_logs': 'No Intervention',
+        'rnd_sequencing_logs': 'RND',
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
-        'info_sequencing_logs': 'info'
-        # TODO: excluding autocalc for now but will add it once training is done
-        # 'autocalc_logs': 'autocalc'  # Added AutoCaLC
+        'info_sequencing_logs': 'info',
+        'autocalc_logs': 'autocalc'  # Added AutoCaLC
     }
 
     # Filter to specific baseline if requested
@@ -131,6 +138,11 @@ def load_validation_data(log_base_dir='logs', target_baseline=None):
         validation_log_path = os.path.join(log_dir, 'validation_log.csv')
         if os.path.exists(validation_log_path):
             df = pd.read_csv(validation_log_path)
+
+            # check for empty or all-null data
+            if df.empty or df.isnull().all().all():
+                print(f"Warning: Validation log for {baseline_name} is empty or all nulls.")
+                continue
             
             # Add baseline identifier if not present
             if 'baseline_type' not in df.columns:
@@ -142,6 +154,78 @@ def load_validation_data(log_base_dir='logs', target_baseline=None):
     
     return validation_data
 
+def process_validation_data_for_plots(validation_data):
+    """Process the validation data for plotting rewards, success rates, and episode lengths by stage"""
+    reward_data = []
+    success_data = []
+    length_data = []
+    
+    # Debug information
+    print("\nValidation data processing diagnostics:")
+    for baseline_name, df in validation_data.items():
+        print(f"\n  Baseline: {baseline_name}")
+        print(f"  - Dataframe shape: {df.shape}")
+        print(f"  - Columns: {df.columns.tolist()}")
+        
+        # Ensure we have the required columns
+        if 'stage' not in df.columns:
+            print(f"  - WARNING: No stage column found for {baseline_name}")
+            continue
+        
+        # Process validation_avg_reward
+        if 'validation_avg_reward' in df.columns and 'validation_reward_std' in df.columns:
+            # Check for non-numeric or all NaN data
+            reward_valid = df['validation_avg_reward'].notna().any() and df['validation_reward_std'].notna().any()
+            print(f"  - Reward columns present: Yes, contains valid data: {reward_valid}")
+            
+            if reward_valid:
+                reward_df = df[['stage', 'validation_avg_reward', 'validation_reward_std']].copy()
+                reward_df.columns = ['stage', 'mean', 'std']
+                reward_df['baseline'] = baseline_name
+                reward_data.append(reward_df)
+            else:
+                print(f"  - WARNING: Reward columns for {baseline_name} contain only NaN values")
+        else:
+            missing = []
+            if 'validation_avg_reward' not in df.columns:
+                missing.append('validation_avg_reward')
+            if 'validation_reward_std' not in df.columns:
+                missing.append('validation_reward_std')
+            print(f"  - Reward columns missing: {', '.join(missing)}")
+        
+        # Process validation_success_rate (similar checks)
+        if 'validation_success_rate' in df.columns and 'validation_success_rate_std' in df.columns:
+            success_valid = df['validation_success_rate'].notna().any() and df['validation_success_rate_std'].notna().any()
+            if success_valid:
+                success_df = df[['stage', 'validation_success_rate', 'validation_success_rate_std']].copy()
+                success_df.columns = ['stage', 'mean', 'std']
+                success_df['baseline'] = baseline_name
+                success_data.append(success_df)
+            else:
+                print(f"  - WARNING: Success rate columns for {baseline_name} contain only NaN values")
+                
+        # Process validation_avg_length (similar checks)  
+        if 'validation_avg_length' in df.columns and 'validation_length_std' in df.columns:
+            length_valid = df['validation_avg_length'].notna().any() and df['validation_length_std'].notna().any()
+            if length_valid:
+                length_df = df[['stage', 'validation_avg_length', 'validation_length_std']].copy()
+                length_df.columns = ['stage', 'mean', 'std']
+                length_df['baseline'] = baseline_name
+                length_data.append(length_df)
+            else:
+                print(f"  - WARNING: Length columns for {baseline_name} contain only NaN values")
+    
+    # Concatenate all data
+    reward_df = pd.concat(reward_data, ignore_index=True) if reward_data else pd.DataFrame()
+    success_df = pd.concat(success_data, ignore_index=True) if success_data else pd.DataFrame()
+    length_df = pd.concat(length_data, ignore_index=True) if length_data else pd.DataFrame()
+    
+    print(f"\nSummary: Found reward data for {len(reward_data)}/{len(validation_data)} baselines")
+    if reward_data:
+        print(f"Baselines with valid reward data: {[df['baseline'].iloc[0] for df in reward_data]}")
+    
+    return reward_df, success_df, length_df
+
 def load_intervention_test_data(log_base_dir='logs', target_baseline=None):
     """load and process intervention test data from all baseline logs"""
     intervention_data = {}
@@ -150,14 +234,13 @@ def load_intervention_test_data(log_base_dir='logs', target_baseline=None):
     baseline_dirs = {
         'greedy_replacement_sequencing_logs': 'greedy',
         'cm_replacement_sequencing_logs': 'cm',
-        'random_replacement_sequencing_logs': 'random',
-        'none_sequencing_logs': 'none',
-        'rnd_sequencing_logs': 'rnd',
+        'random_replacement_sequencing_logs': 'Random Intervention',
+        'none_sequencing_logs': 'No Intervention',
+        'rnd_sequencing_logs': 'RND',
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
-        'info_sequencing_logs': 'info'
-        # TODO: excluding autocalc for now but will add it once training is done
-        # 'autocalc_logs': 'autocalc'  # Added AutoCaLC
+        'info_sequencing_logs': 'info',
+        'autocalc_logs': 'autocalc'  # Added AutoCaLC
     }
 
     # Filter to specific baseline if requested
@@ -199,13 +282,13 @@ def load_benchmark_results(log_base_dir='logs', target_baseline=None):
     baseline_dirs = {
         'greedy_replacement_sequencing_logs': 'greedy',
         'cm_replacement_sequencing_logs': 'cm',
-        'random_replacement_sequencing_logs': 'random',
-        'none_sequencing_logs': 'none',
-        'rnd_sequencing_logs': 'rnd',
+        'random_replacement_sequencing_logs': 'Random Intervention',
+        'none_sequencing_logs': 'No Intervention',
+        'rnd_sequencing_logs': 'RND',
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
-        'info_sequencing_logs': 'info'
-        # 'autocalc_logs': 'autocalc'  # Added AutoCaLC
+        'info_sequencing_logs': 'info',
+        'autocalc_logs': 'autocalc'  # Added AutoCaLC
     }
 
     # Filter to specific baseline if requested
@@ -277,7 +360,7 @@ def plot_radar_chart(benchmark_data, output_dir='visualizations'):
     angles = np.concatenate((angles, [angles[0]]))  # Close the plot
     
     # Define colors for baselines
-    colors = plt.cm.Set3(np.linspace(0, 1, len(baselines)))
+    colors = plt.cm.tab10(np.linspace(0, 1, len(baselines)))
     
     # Plot each baseline
     for i, (baseline, values) in enumerate(zip(baselines, success_values)):
@@ -398,46 +481,6 @@ def process_training_data_for_plots(baseline_data):
     
     return reward_df, success_df
 
-def process_validation_data_for_plots(validation_data):
-    """Process the validation data for plotting rewards, success rates, and episode lengths by stage"""
-    reward_data = []
-    success_data = []
-    length_data = []
-    
-    for baseline_name, df in validation_data.items():
-        # Ensure we have the required columns
-        if 'stage' not in df.columns:
-            print(f"Warning: No stage column found for {baseline_name}")
-            continue
-        
-        # Process validation_avg_reward
-        if 'validation_avg_reward' in df.columns and 'validation_reward_std' in df.columns:
-            reward_df = df[['stage', 'validation_avg_reward', 'validation_reward_std']].copy()
-            reward_df.columns = ['stage', 'mean', 'std']
-            reward_df['baseline'] = baseline_name
-            reward_data.append(reward_df)
-        
-        # Process validation_success_rate
-        if 'validation_success_rate' in df.columns and 'validation_success_rate_std' in df.columns:
-            success_df = df[['stage', 'validation_success_rate', 'validation_success_rate_std']].copy()
-            success_df.columns = ['stage', 'mean', 'std']
-            success_df['baseline'] = baseline_name
-            success_data.append(success_df)
-        
-        # Process validation_avg_length
-        if 'validation_avg_length' in df.columns and 'validation_length_std' in df.columns:
-            length_df = df[['stage', 'validation_avg_length', 'validation_length_std']].copy()
-            length_df.columns = ['stage', 'mean', 'std']
-            length_df['baseline'] = baseline_name
-            length_data.append(length_df)
-    
-    # Concatenate all data
-    reward_df = pd.concat(reward_data, ignore_index=True) if reward_data else pd.DataFrame()
-    success_df = pd.concat(success_data, ignore_index=True) if success_data else pd.DataFrame()
-    length_df = pd.concat(length_data, ignore_index=True) if length_data else pd.DataFrame()
-    
-    return reward_df, success_df, length_df
-
 def plot_training_comparison(reward_df, success_df, output_dir='visualizations'):
     """Create plots comparing baseline training performance with and without std dev"""
     os.makedirs(output_dir, exist_ok=True)
@@ -460,7 +503,7 @@ def plot_training_comparison(reward_df, success_df, output_dir='visualizations')
         print("No baseline data found")
         return
         
-    palette = sns.color_palette("husl", n_colors=len(unique_baselines))
+    palette = sns.color_palette("tab10", n_colors=len(unique_baselines))
     color_map = dict(zip(sorted(unique_baselines), palette))
     
     # PLOT 1: Training Average reward with moving average (with std)
@@ -584,31 +627,41 @@ def plot_validation_comparison(reward_df, success_df, length_df, output_dir='vis
         print("No baseline validation data found")
         return
         
-    palette = sns.color_palette("husl", n_colors=len(unique_baselines))
+    palette = sns.color_palette("tab10", n_colors=len(unique_baselines))
     color_map = dict(zip(sorted(unique_baselines), palette))
+
+    # Add debugging for reward dataframe
+    print("\nDebugging reward_df:")
+    print(f"Shape: {reward_df.shape}")
+    print(f"Unique baselines in reward_df: {sorted(reward_df['baseline'].unique())}")
+    print(f"Expected baselines: {sorted(unique_baselines)}")
+    print(f"Missing baselines: {set(unique_baselines) - set(reward_df['baseline'].unique())}")
     
-    # PLOT 1: Validation Average reward with moving average (with std)
+    # PLOT 1: Validation Average reward with std (no moving average)
     if not reward_df.empty:
+        # Export processed reward dataframe
+        reward_df.to_csv('processed_validation_rewards.csv', index=False)
+        print("Exported processed validation rewards to processed_validation_rewards.csv")
+
         plt.figure(figsize=(12, 8))
+        print(f"Plotting validation rewards for baselines: {sorted(reward_df['baseline'].unique())}")
         
-        for baseline in sorted(reward_df['baseline'].unique()):
-            data = reward_df[reward_df['baseline'] == baseline].sort_values('stage')
-            
-            # Compute moving average
-            data['moving_avg'] = compute_moving_average(data['mean'], window=5)
-            
-            plt.plot(data['stage'], data['moving_avg'], label=f'{baseline} (5-ep MA)', 
-                     color=color_map[baseline], linewidth=2)
-            
-            # Add shaded region for standard deviation around moving average
-            plt.fill_between(data['stage'], 
-                             data['moving_avg'] - data['std'], 
-                             data['moving_avg'] + data['std'], 
-                             alpha=0.2, color=color_map[baseline])
-        
+        # Loop through ALL unique baselines from any dataframe
+        for baseline in sorted(unique_baselines):
+            # Only plot if this baseline exists in reward_df
+            if baseline in reward_df['baseline'].unique():
+                data = reward_df[reward_df['baseline'] == baseline].sort_values('stage')
+                plt.plot(data['stage'], data['mean'], label=f'{baseline}', 
+                        color=color_map[baseline], linewidth=2)
+                plt.fill_between(data['stage'], 
+                                data['mean'] - data['std'], 
+                                data['mean'] + data['std'], 
+                                alpha=0.2, color=color_map[baseline])
+            else:
+                print(f"Warning: Baseline '{baseline}' has no reward data to plot")
         plt.xlabel('Meta-Episode')
         plt.ylabel('Average Reward')
-        plt.title('Validation: Average Reward Across Meta-Episodes by Baseline (5-episode Moving Average with std dev)')
+        plt.title('Validation: Average Reward Across Meta-Episodes by Baseline (with std dev)')
         plt.legend(loc='best')
         plt.grid(True, linestyle='--', alpha=0.7)
         plt.tight_layout()
@@ -732,7 +785,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate comprehensive visualizations for training and validation data")
     parser.add_argument('--log_dir', type=str, default='logs', help='Base directory containing log folders')
     parser.add_argument('--output_dir', type=str, default='visualizations', help='Output directory for visualizations')
-    parser.add_argument('--baseline', type=str, help='Analyze only a specific baseline (greedy, cm, random, none, rnd, count, lpm, info, autocalc)')
+    parser.add_argument('--baseline', type=str, help='Analyze only a specific baseline (greedy, cm, "Random Intervention", "No Intervention", RND, count, lpm, info, autocalc)')
     
     args = parser.parse_args()
     
@@ -762,7 +815,7 @@ def main():
     if validation_data:
         print("   Processing validation data for plots...")
         val_reward_df, val_success_df, val_length_df = process_validation_data_for_plots(validation_data)
-        
+    
         if not val_reward_df.empty or not val_success_df.empty or not val_length_df.empty:
             print("   Generating validation plots...")
             plot_validation_comparison(val_reward_df, val_success_df, val_length_df, args.output_dir)
