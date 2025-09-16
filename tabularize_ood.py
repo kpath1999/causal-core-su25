@@ -11,6 +11,7 @@ baselines = [
     "info_sequencing_logs",
     "lpm_sequencing_logs",
     "none_sequencing_logs",
+    "pretrained_baseline_logs",
     "autocalc_logs"   
 ]
 

@@ -288,6 +288,7 @@ def load_benchmark_results(log_base_dir='logs', target_baseline=None):
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
         'info_sequencing_logs': 'info',
+        'pretrained_baseline_logs': 'pretrained',
         'autocalc_logs': 'autocalc'  # Added AutoCaLC
     }
 

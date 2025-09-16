@@ -10,28 +10,31 @@ BASIC TRAINING COMMANDS:
 -----------------------
 
 1. GREEDY CURRICULUM (highest reward intervention selection):
-python baselines.py --train --eval --curriculum_mode greedy --task pushing --meta_episodes 50 --timesteps 50000 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode greedy --task pushing --meta_episodes 50 --timesteps 50000 --replacement --use_wandb --device_id 6
 
 2. CAUSAL MISMATCH CURRICULUM (CM score-based selection):
-python baselines.py --train --eval --curriculum_mode cm --task pushing --meta_episodes 50 --timesteps 50000 --alpha_cm 0.5 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode cm --task pushing --meta_episodes 50 --timesteps 50000 --alpha_cm 0.5 --replacement --use_wandb --device_id 6
 
 3. RANDOM CURRICULUM (random intervention selection):
-python baselines.py --train --eval --curriculum_mode random --task pushing --meta_episodes 50 --timesteps 50000 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode random --task pushing --meta_episodes 50 --timesteps 50000 --replacement --use_wandb --device_id 6
 
 4. NO CURRICULUM (baseline without interventions):
-python baselines.py --train --eval --curriculum_mode none --task pushing --meta_episodes 50 --timesteps 50000 --replacement --use_wandb
+python baselines.py --train --eval --curriculum_mode none --task pushing --meta_episodes 50 --timesteps 50000 --replacement --use_wandb --device_id 6
 
 5. RND INTRINSIC MOTIVATION (Random Network Distillation):
-python baselines.py --train --eval --curriculum_mode rnd --task pushing --meta_episodes 50 --timesteps 50000 --rnd_beta 0.01 --rnd_update_freq 1000 --rnd_batch_size 1024 --use_wandb
+python baselines.py --train --eval --curriculum_mode rnd --task pushing --meta_episodes 50 --timesteps 50000 --rnd_beta 0.01 --rnd_update_freq 1000 --rnd_batch_size 1024 --use_wandb --device_id 6
 
 6. COUNT-BASED EXPLORATION (state visitation counts):
-python baselines.py --train --eval --curriculum_mode count --task pushing --meta_episodes 50 --timesteps 50000 --count_beta 0.01 --count_encoding_dim 32 --use_wandb
+python baselines.py --train --eval --curriculum_mode count --task pushing --meta_episodes 50 --timesteps 50000 --count_beta 0.01 --count_encoding_dim 32 --use_wandb --device_id 6
 
 7. LEARNING PROGRESS MOTIVATION (improvement in transition model prediction accuracy):
-python baselines.py --train --eval --curriculum_mode lpm --task pushing --meta_episodes 50 --timesteps 50000 --lpm_beta 1.0 --use_wandb
+python baselines.py --train --eval --curriculum_mode lpm --task pushing --meta_episodes 50 --timesteps 50000 --lpm_beta 1.0 --use_wandb --device_id 6
 
 8. INFORMATION GAIN REWARD (rewards "surprise" measured by model uncertainty):
-python baselines.py --train --eval --curriculum_mode info --task pushing --meta_episodes 50 --timesteps 50000 --info_beta 1.0 --use_wandb
+python baselines.py --train --eval --curriculum_mode info --task pushing --meta_episodes 50 --timesteps 50000 --info_beta 1.0 --use_wandb --device_id 6
+
+9. PRETRAINED BASELINE (evaluate pretrained model without training):
+python baselines.py --train --eval --curriculum_mode pretrained --task pushing --use_wandb --device_id 6
 
 LOG DIRECTORY STRUCTURE:
 -----------------------
@@ -52,7 +55,7 @@ CUSTOM LOG DIRECTORY:
 --------------------
 
 12. SPECIFY CUSTOM LOG DIRECTORY:
-python baselines.py --train --curriculum_mode greedy --task pushing --timesteps 50000 --log_dir custom_experiment --use_wandb
+python baselines.py --train --curriculum_mode greedy --task pushing --timesteps 50000 --log_dir custom_experiment --use_wandb --device_id 6
 
 MODEL DIRECTORY STRUCTURE:
 -------------------------
@@ -66,7 +69,7 @@ All pretrained models are expected to be in a centralized 'models/' directory:
 - models/ppo_stacking2_sb3/final_model.zip
 
 13. SPECIFY CUSTOM PRETRAINED MODEL PATH:
-python baselines.py --train --curriculum_mode greedy --task pushing --timesteps 50000 --pretrained_path path/to/custom_model.zip --use_wandb
+python baselines.py --train --curriculum_mode greedy --task pushing --timesteps 50000 --pretrained_path path/to/custom_model.zip --use_wandb --device_id 6
 
 Note: Replace 'pushing' with any supported task: reaching, picking, pick_and_place, stacking2
 Note: All commands assume you have the required pretrained models in models/{task} directories (e.g., models/ppo_pushing_sb3/final_model.zip)
@@ -2455,6 +2458,71 @@ def train_on_intervention(student_model, intervention, task_name, timesteps, arg
 
     return reward_monitor.cumulative_timesteps, validation_callback.validation_history
 
+def evaluate_pretrained_baseline(args):
+    """evaluate the pretrained PPO policy without any additional training"""
+    logging.info("=== evaluating pretrained baseline (no training) ===")
+
+    # load pretrained model
+    if args.pretrained_path is None:
+        args.pretrained_path = f'models/ppo_{args.task}_sb3/final_model.zip'
+    
+    set_random_seed(args.seed)
+    student_model = PPO.load(args.pretrained_path)
+    logging.info(f"[PRETRAINED] using pretrained model: {args.pretrained_path}")
+
+    # set up csv logger
+    csv_logger = CSVLogger(args.log_dir)
+
+    # test all interventions on the pretrained model (without training)
+    cumulative_timesteps = 0
+    stage = 1
+
+    logging.info(f"[PRETRAINED] tesing all interventions on pretrained model")
+    test_all_interventions(
+        student_model=student_model,
+        task_name=args.task,
+        stage_num=stage,
+        args=args,
+        csv_logger=csv_logger,
+        cumulative_timesteps=cumulative_timesteps,
+        baseline_type="pretrained"
+    )
+
+    # run validation on the pretrained model
+    run_post_episode_validation(
+        student_model=student_model,
+        task_name=args.task,
+        stage_num=stage,
+        args=args,
+        csv_logger=csv_logger,
+        cumulative_timesteps=cumulative_timesteps,
+        baseline_type="pretrained"
+    )
+
+    # evaluate final performance (same as initial performance)
+    final_performance = evaluate_final_performance(student_model, args.task, num_episodes=20, seed=args.seed)
+    logging.info(f"Pretrained baseline performance: {final_performance}")
+
+    # save the results
+    import json
+    results_path = os.path.join(args.log_dir, "pretrained_results.json")
+    with open(results_path, 'w') as f:
+        json.dump({
+            'final_performance': final_performance,
+            'args': vars(args)
+        }, f, indent=2)
+    logging.info(f"Results saved to {results_path}")
+
+    if args.use_wandb:
+        wandb.log({
+            'final_reward': final_performance['avg_reward'],
+            'final_success_rate': final_performance['success_rate'],
+            'total_timesteps': 0    # no training timesteps
+        })
+        wandb.finish()
+    
+    return student_model
+
 def evaluate_final_performance(student_model, task_name, num_episodes=20, seed=0):
     set_seed(seed)
     """evaluate final performance on validation environment (no interventions)"""
@@ -2569,7 +2637,7 @@ def aggregate_sb3_progress(log_dir):
 def main():
     parser = argparse.ArgumentParser(description="Baselines for curriculum learning in CausalWorld")
     parser.add_argument('--curriculum_mode', type=str, default='greedy',
-                        choices=['greedy', 'random', 'none', 'cm', 'rnd', 'count', 'lpm', 'info', 'autocalc'])
+                        choices=['greedy', 'random', 'none', 'cm', 'rnd', 'count', 'lpm', 'info', 'autocalc', 'pretrained'])
     parser.add_argument('--train', action='store_true', help='Train the model')
     parser.add_argument('--eval', action='store_true', help='Evaluate the model')
     parser.add_argument('--task', type=str, default='pushing', choices=['reaching', 'pushing', 'picking', 'pick_and_place', 'stacking2'], help='Task name')
@@ -2599,8 +2667,17 @@ def main():
     parser.add_argument('--info_update_freq', type=int, default=1000, help='Info ensemble update frequency')
     parser.add_argument('--info_batch_size', type=int, default=256, help='Info ensemble training batch size')
     parser.add_argument('--replacement', action='store_true', help='Allow intervention replacement (same intervention can be selected multiple times)')
+    parser.add_argument('--device_id', type=int, default=6, choices=[6, 7], help='GPU device ID to use (6 or 7)')
 
     args = parser.parse_args()
+
+    # Set up GPU device
+    device = torch.device(f"cuda:{args.device_id}")
+    torch.cuda.set_device(args.device_id)
+    logging.info(f"Using GPU device: {device}")
+    
+    # Store device in args for access throughout the script
+    args.device = device
 
     # Only set log directory automatically if not provided by user
     if args.log_dir is None:
@@ -2611,6 +2688,10 @@ def main():
         if args.replacement and args.curriculum_mode in ['random', 'greedy', 'cm']:
             base_log_name = f"{args.curriculum_mode}_replacement_sequencing_logs"
         
+        # special case for pretrained baseline
+        if args.curriculum_mode == 'pretrained':
+            base_log_name = "pretrained_baseline_logs"
+
         # Place all logs in a centralized 'logs' directory
         args.log_dir = os.path.join('logs', base_log_name)
 
@@ -2790,6 +2871,16 @@ def main():
                 })
                 wandb.finish()
             
+            if args.eval:
+                gen_eval(args, args.log_dir, task_name=args.task, seed=args.seed)
+            return
+
+        elif args.curriculum_mode == 'pretrained':
+            logging.info(f"Starting pretrained baseline evaluation (no training) with args {args}")
+
+            # evaluate pretrained baseline (no training)
+            final_model = evaluate_pretrained_baseline(args)
+
             if args.eval:
                 gen_eval(args, args.log_dir, task_name=args.task, seed=args.seed)
             return
@@ -3111,29 +3202,6 @@ def main():
             })
             wandb.finish()
         
-        # Generate enhanced comprehensive visualizations
-        # try:
-        #     from src.visualization import create_enhanced_visualizations
-            
-        #     logging.info("🎨 Generating enhanced comprehensive visualizations...")
-        #     # Use the logs directory as the base directory for finding all log directories
-        #     logs_base_dir = 'logs'
-            
-        #     # Generate visualizations for all available heuristics (including replacement variants)
-        #     create_enhanced_visualizations(
-        #         log_base_dir=logs_base_dir,
-        #         heuristics=['greedy', 'greedy_replacement', 'cm', 'cm_replacement', 'none', 'random', 'random_replacement', 'rnd', 'count'],
-        #         output_dir=os.path.join(logs_base_dir, 'comprehensive_visualizations')
-        #     )
-            
-        #     logging.info("✅ Enhanced visualizations completed!")
-            
-        # except ImportError:
-        #     logging.warning("Enhanced visualization module not available")
-        # except Exception as e:
-        #     logging.warning(f"Enhanced visualization failed: {e}")
-        #     logging.info("Continuing with basic visualizations only")
-    
     if args.eval:
         gen_eval(args, args.log_dir, task_name=args.task, seed=args.seed)
 
@@ -3158,6 +3226,9 @@ def gen_eval(args, log_dir, task_name='pushing', seed=0, max_episode_length=250,
 
     if args.pretrained_eval:
         model_path = os.path.join(log_dir, args.pretrained_eval)
+    elif args.curriculum_mode == 'pretrained':
+        # for pretrained baseline, use the original base PPO policy
+        model_path = f'models/ppo_{task_name}_sb3/final_model.zip'
     else:
         model_path = os.path.join(log_dir, 'final_model_after_sequencing.zip')
     if not os.path.exists(model_path):
