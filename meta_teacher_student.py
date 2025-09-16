@@ -20,7 +20,8 @@ for meta_step in range(M=50):
  	# 5. student trains on that intervention
  	student_agent.learn(total_timesteps=50000, env=create_intervened_env(selected_intervention))
 
-	# 6. evaluate new generalization performance
+	        # 3. Compute the current meta-state
+        current_meta_state = get_teacher_state(student_model, args.task, INTERVENTIONS, device=args.device, seed=args.seed + meta_step)6. evaluate new generalization performance
 	current_validation_performance = run_validation_protocol(student_agent, validation_env)
 
 	# 7. calculate the meta-reward
@@ -60,10 +61,56 @@ and we have 50 meta-episodes for a full training run; must tune epsilon based on
 TERMINAL COMMANDS:
 
 Training + Evaluation --
-python meta_teacher_student.py --task pushing --student_train_steps 50000 --meta_episodes 50 --eval --seed 0 --log_dir logs/autocalc_logs --use_wandb
+python meta_teacher_student.py --task pushing --student_train_steps 50000 --meta_episodes 50 --eval --seed 0 --log_dir logs/autocalc_logs --use_wandb --device_id 6
 
 Short Training (for testing) --
-python meta_teacher_student.py --task pushing --student_train_steps 5000 --meta_episodes 5 --eval --seed 0 --log_dir logs/autocalc_test --use_wandb
+python meta_teacher_student.py --task pushing --student_train_steps 5000 --meta_episodes 5 --eval --seed 0 --log_dir logs/autocalc_test --use_wandb --device_id 6
+
+Multi seed experimental setup:
+
+Teacher seed 1, student seed 1 --
+python meta_teacher_student.py --task pushing --teacher_seed 1 --student_seed 1 --log_dir logs/autocalc_t1_s1 --device_id 6
+
+Teacher seed 1, student seed 2 --
+python meta_teacher_student.py --task pushing --teacher_seed 1 --student_seed 2 --log_dir logs/autocalc_t1_s2 --device_id 6
+
+A) Pretraining teachers with different step counts:
+
+Train a teacher for 100K steps --
+python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
+    --teacher_pretrain_steps 100000 --teacher_pretrain_only \
+    --save_pretrained_teacher models/teacher_100k.pt \
+    --log_dir logs/teacher_pretrain_100k --use_wandb --device_id 6
+
+Train a teacher for 175K steps --
+python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
+    --teacher_pretrain_steps 175000 --teacher_pretrain_only \
+    --save_pretrained_teacher models/teacher_175k.pt \
+    --log_dir logs/teacher_pretrain_175k --use_wandb --device_id 6
+
+Train a teacher for 250K steps --
+python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
+    --teacher_pretrain_steps 250000 --teacher_pretrain_only \
+    --save_pretrained_teacher models/teacher_250k.pt \
+    --log_dir logs/teacher_pretrain_250k --use_wandb --device_id 6
+
+B) Using pretrained teachers for student training    
+
+Train a student using the 100K pretrained teacher --
+python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
+    --load_pretrained_teacher models/teacher_100k.pt \
+    --log_dir logs/autocalc_teacher100k --use_wandb --device_id 6
+
+Train a student using the 175K pretrained teacher --
+python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
+    --load_pretrained_teacher models/teacher_175k.pt \
+    --log_dir logs/autocalc_teacher175k --use_wandb --device_id 6
+
+Train a student using the 250K pretrained teacher --
+python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
+    --load_pretrained_teacher models/teacher_250k.pt \
+    --log_dir logs/autocalc_teacher250k --use_wandb --device_id 6
+    
 """
 
 import numpy as np
@@ -141,7 +188,11 @@ def set_seed(seed):
     np.random.seed(seed)
     torch.manual_seed(seed)
     if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
+    # ensuring deterministic behavior
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
     logging.info(f"random seed set to {seed}")
 
 # get the teacher state
@@ -365,6 +416,165 @@ class TeacherDQNAgent:
 
         return loss.item()
 
+    def save(self, path):
+        """save the teacher model and optimizer state"""
+        torch.save({
+            'q_net_state_dict': self.q_net.state_dict(),
+            'target_net_state_dict': self.target_net.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'buffer': self.replay_buffer.buffer,
+            'update_count': self.update_count
+        }, path)
+        logging.info(f"teacher model saved to {path}")
+    
+    def load(self, path):
+        """load the teacher model and optimizer state"""
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"No teacher model found at {path}")
+        
+        checkpoint = torch.load(path, map_location=self.device)
+        self.q_net.load_state_dict(checkpoint['q_net_state_dict'])
+        self.target_net.load_state_dict(checkpoint['target_net_state_dict'])
+        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+
+        # restore the replay buffer if it exists in the checkpoint
+        if 'buffer' in checkpoint:
+            self.replay_buffer.buffer = checkpoint['buffer']
+        if 'update_count' in checkpoint:
+            self.update_count = checkpoint['update_count']
+        
+        logging.info(f"Teacher model loaded from {path}")
+
+# our pretraining logic
+def pretrain_teacher(teacher, student_model, args, device='cpu'):
+    """
+    Pretrain the teacher agent using a frozen student model
+
+    Args:
+        teacher: TeacherDQNAgent instance
+        student_model: Frozen PPO student model
+        args: command line arguments
+        device: the device to use (cpu or cuda)
+    """
+
+    logging.info(f"=== Starting teacher pretraining for {args.teacher_pretrain_steps} steps ===")
+
+    # initialize metrics tracking
+    pretraining_losses = []
+    pretraining_rewards = []
+    pretraining_interventions = []
+
+    # set up csv logger for pretraining data
+    pretrain_log_path = os.path.join(args.log_dir, "teacher_pretraining.csv")
+    with open(pretrain_log_path, 'w') as f:
+        f.write("step,intervention,meta_reward,loss\n")
+    
+    # number of teacher training steps
+    num_pretrain_steps = args.teacher_pretrain_steps
+
+    # use fixed validation env for consistent meta-reward evaluation
+    validation_csv_logger = CSVLogger(os.path.join(args.log_dir, "pretrain_validation"))
+
+    # pre-training loop
+    for step in range(1, num_pretrain_steps + 1):
+        # 1. compute current meta-state (with fixed student)
+        current_meta_state = get_teacher_state(
+            student_model,
+            args.task,
+            INTERVENTIONS,
+            device=device,
+            seed=args.seed + step
+        )
+
+        # 2. teacher selects an intervention
+        # we would use an exploratory epsilon during pretraining
+        epsilon = max(0.1, 1.0 - (step / num_pretrain_steps) * 0.9)
+        selected_intervention_idx = teacher.select_action(current_meta_state, epsilon)
+        selected_intervention = INTERVENTIONS[selected_intervention_idx]
+        selected_intervention_type = selected_intervention['type']
+
+        # 3. no student training happens here! we simply evaluate the student on this intervention
+
+        # 4. run validation to measure generalization
+        validation_metrics = run_validation_protocol(
+            student_model,
+            args.task,
+            step,
+            args,
+            validation_csv_logger,
+            0   # no cumulative timesteps since the student is not training
+        )
+
+        # 5. calculate meta-reward (same formula as the main loop)
+        # NOTE: i removed the weighting for success rate, keeping it simple by only considering val reward
+        meta_reward = (0 * validation_metrics['validation_success_rate']) + validation_metrics['validation_avg_reward']
+
+        # 6. compute next meta-state (with fixed student)
+        next_meta_state = get_teacher_state(
+            student_model,
+            args.task,
+            INTERVENTIONS,
+            device=device,
+            seed=args.seed + step + 1
+        )
+
+        # 7. store experience and update the teacher
+        teacher.replay_buffer.push(current_meta_state, selected_intervention_idx, meta_reward, next_meta_state)
+        loss = teacher.train_step()
+
+        # 8. track metrics
+        pretraining_interventions.append(selected_intervention_type)
+        pretraining_rewards.append(meta_reward)
+        pretraining_losses.append(loss if loss is not None else 0)
+
+        # 9. log progress
+        if step % 10 == 0 or step == 1 or step == num_pretrain_steps:
+            avg_loss = np.mean([l for l in pretraining_losses[-10:] if l is not None])
+            avg_reward = np.mean(pretraining_rewards[-10:])
+            logging.info(f"Pretraining step {step}/{num_pretrain_steps}: " +
+                         f"epsilon={epsilon:.2f}, " +
+                         f"intervention={selected_intervention_type}, " +
+                         f"meta-reward={meta_reward:.2f}, " +
+                         f"avg_loss={avg_loss:.4f}")
+        
+        # 10. log to csv
+        with open(pretrain_log_path, 'a') as f:
+            f.write(f"{step},{selected_intervention_type},{meta_reward:.4f},{loss if loss is not None else 'None'}\n")
+        
+        # 11. log to wandb if enabled
+        if args.use_wandb:
+            wandb.log({
+                'pretrain_step': step,
+                'pretrain_teacher_action': selected_intervention_type,
+                'pretrain_meta_reward': meta_reward,
+                'pretrain_teacher_loss': loss,
+                'pretrain_epsilon': epsilon
+            })
+        
+        # 12. save intermediate models
+        if step % 1000 == 0 or step == num_pretrain_steps:
+            intermediate_path = os.path.join(args.log_dir, f"teacher_pretrained_{step}_steps.pt")
+            teacher.save(intermediate_path)
+
+    # save final pretrained teacher model
+    if args.save_pretrained_teacher:
+        teacher.save(args.save_pretrained_teacher)
+    else:
+        default_save_path = os.path.join(args.log_dir, f"teacher_pretrained_{num_pretrain_steps}_steps.pt")
+        teacher.save(default_save_path)
+    
+    logging.info(f"=== Teacher pretraining completed for {num_pretrain_steps} steps ===")
+
+    # return statistics about pretraining
+    return {
+        'avg_reward': np.mean(pretraining_rewards),
+        'avg_loss': np.mean([l for l in pretraining_losses if l is not None]),
+        'intervention_counts': {
+            int_type: pretraining_interventions.count(int_type)
+            for int_type in set(pretraining_interventions)
+        }
+    }
+
 # the eval function
 def evaluate_autocalc_performance(log_dir, task_name, eval_model, seed=0, max_episode_length=250, skip_frame=3, num_episodes=10):
     """made similar to baselines evaluation"""
@@ -462,10 +672,10 @@ def main():
     # Get arguments from the global parser (already parsed in __main__)
     import sys
     # Re-parse arguments in main for clarity
-    parser = argparse.ArgumentParser(description="Meta-RL Teacher-Student Curriculum (AutoCaLC)")
-    parser.add_argument('--task', type=str, default='pushing', help='CausalWorld task name')
-    parser.add_argument('--student_train_steps', type=int, default=50000, help='Timesteps per student training block')
-    parser.add_argument('--meta_episodes', type=int, default=50, help='Number of meta-episodes (teacher steps)')
+    parser = argparse.ArgumentParser(description="Meta-learning teacher-student framework for CausalWorld")
+    parser.add_argument('--task', type=str, default='pushing', help='CausalWorld task to train on')
+    parser.add_argument('--student_train_steps', type=int, default=50000, help='Timesteps for each student training block')
+    parser.add_argument('--meta_episodes', type=int, default=50, help='Number of meta-episodes')
     parser.add_argument('--student_pretrained_path', type=str, default=None, help='Path to pretrained PPO model (optional)')
     parser.add_argument('--seed', type=int, default=0, help='Random seed')
     parser.add_argument('--use_wandb', action='store_true', help='Enable wandb logging')
@@ -474,14 +684,28 @@ def main():
     parser.add_argument('--validation_episodes', type=int, default=10, help='Episodes per validation environment')
     parser.add_argument('--skip_frame', type=int, default=3, help='Frame skip for environment')
     parser.add_argument('--eval', action='store_true', help='Evaluate the model')
+    parser.add_argument('--teacher_seed', type=int, default=0, help='Seed for the teacher agent')
+    parser.add_argument('--student_seed', type=int, default=0, help='Seed for the student agent initial policy')
+    parser.add_argument('--teacher_pretrain_steps', type=int, default=0, help='Number of steps to pre-train the teacher')
+    parser.add_argument('--save_pretrained_teacher', type=str, default=None, help='Path to save the pretrained teacher model')
+    parser.add_argument('--load_pretrained_teacher', type=str, default=None, help='Path to load a pretrained teacher model')
+    parser.add_argument('--teacher_pretrain_only', action='store_true', help='Only pretrain the teacher, then exit (no student training)')
+    parser.add_argument('--device_id', type=int, default=6, choices=[6, 7], help='GPU device ID to use (6 or 7)')
+
     args = parser.parse_args()
+
+    # Set up GPU device
+    device = torch.device(f"cuda:{args.device_id}")
+    torch.cuda.set_device(args.device_id)
+    logging.info(f"Using GPU device: {device}")
+    
+    # Store device in args for access throughout the script
+    args.device = device
 
     # the initial setup phase
     os.makedirs(args.log_dir, exist_ok=True)
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',
                         handlers=[logging.FileHandler(os.path.join(args.log_dir, 'autocalc.log')), logging.StreamHandler()])
-    set_seed(args.seed)
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # Initialize csv logger
     csv_logger = CSVLogger(args.log_dir)
@@ -498,22 +722,71 @@ def main():
             tags=[args.task, 'autocalc', 'meta-learning']
         )
     
-    logging.info(f"Starting AutoCaLC training for task '{args.task}' on device '{device}'")
+    logging.info(f"Starting AutoCaLC training for task '{args.task}' on device '{args.device}'")
 
     # --- 1. Initialization ---
-    student_model = PPO.load(args.student_pretrained_path, device=device)
-    logging.info(f"Loaded student PPO from {args.student_pretrained_path}")
+    logging.info("=== Initializing student and teacher agents ===")
 
-    teacher = TeacherDQNAgent(state_dim=len(INTERVENTIONS) * 2, action_dim=len(INTERVENTIONS), device=device)
+    # loading the base pretrained model
+    student_model = PPO.load(args.student_pretrained_path, device=args.device)
+    logging.info(f"Loaded base pretrained model from {args.student_pretrained_path}")
+
+    # setting the student's random seed for reproducible weight initialization
+    set_seed(args.student_seed)                         # set the global seeds first
+    student_model.set_random_seed(args.student_seed)    # set the model-specific seed
+    
+    # additional seed setting for the policy and value networks
+    if hasattr(student_model.policy, 'action_net'):
+        torch.manual_seed(args.student_seed)
+        for param in student_model.policy.parameters():
+            if param.requires_grad:
+                # re-initialize parameters with the fixed seed
+                if len(param.shape) > 1:
+                    torch.nn.init.xavier_uniform_(param, generator=torch.Generator().manual_seed(args.student_seed))
+                else:
+                    torch.nn.init.zeros_(param)
+    
+    logging.info(f"Loaded student PPO from {args.student_pretrained_path} with seed {args.student_seed} for reproducible weights")
+
+    # initialize teacher with its own seed
+    set_seed(args.teacher_seed)
+    teacher = TeacherDQNAgent(
+        state_dim=len(INTERVENTIONS) * 2,
+        action_dim=len(INTERVENTIONS),
+        device=args.device
+    )
+    logging.info(f"Teacher DQN initialized with seed {args.teacher_seed}")
+
+    # load the pretrained teacher if specified
+    if args.load_pretrained_teacher:
+        teacher.load(args.load_pretrained_teacher)
+        logging.info(f"Loaded pretrained teaher from {args.load_pretrained_teacher}")
+    
+    # run teacher pretraining if requested
+    if args.teacher_pretrain_steps > 0:
+        pretrain_stats = pretrain_teacher(teacher, student_model, args, args.device)
+        logging.info(f"Teacher pretraining completed with stats: {pretrain_stats}")
+
+        # if only pretraining was requested, then you would exit here
+        if args.teacher_pretrain_only:
+            logging.info("Teacher pretraining only mode - exiting without student training")
+            if args.use_wandb:
+                wandb.finish()
+            return
+
+    # reset to student seed for subsequent operations
+    set_seed(args.student_seed)
 
     # Track cumulative timesteps
     cumulative_timesteps = 0
     
-    # Get initial validation performance
+    # --- Zero-shot validation (meta-episode 0) ---
+    logging.info("--- Running zero-shot validation (meta-episode 0) ---")
     initial_validation_metrics = run_validation_protocol(
         student_model, args.task, 0, args, csv_logger, cumulative_timesteps
     )
     last_validation_metrics = initial_validation_metrics
+    logging.info(f"Zero-shot validation complete: success rate = {initial_validation_metrics['validation_success_rate']:.3f}, avg reward = {initial_validation_metrics['validation_avg_reward']:.3f}")
 
     # --- 2. Main meta-learning loop ---
     for meta_step in range(args.meta_episodes):
@@ -523,7 +796,9 @@ def main():
         current_meta_state = get_teacher_state(student_model, args.task, INTERVENTIONS, device=device, seed=args.seed + meta_step)
 
         # 4. Teacher selects an intervention
-        epsilon = get_exploration_rate(meta_step, args.meta_episodes)
+        # NOTE: here I am skipping teacher exploration since it is already pretrained
+        # epsilon = get_exploration_rate(meta_step, args.meta_episodes)
+        epsilon = 0.1
         selected_intervention_idx = teacher.select_action(current_meta_state, epsilon)
         selected_intervention = INTERVENTIONS[selected_intervention_idx]
         selected_intervention_type = selected_intervention['type']
@@ -572,11 +847,12 @@ def main():
         )
 
         # 8. Calculate the meta-reward using the new formula
-        meta_reward = (10 * current_validation_metrics['validation_success_rate']) + current_validation_metrics['validation_avg_reward']
+        # NOTE: i removed the weighting from success rate, keeping the meta-reward formulation simple
+        meta_reward = (0 * current_validation_metrics['validation_success_rate']) + current_validation_metrics['validation_avg_reward']
         logging.info(f"Meta-Reward: {meta_reward:.4f} (Success Rate: {current_validation_metrics['validation_success_rate']:.3f}, Avg Reward: {current_validation_metrics['validation_avg_reward']:.3f})")
 
         # 9. Compute the next meta-state
-        next_meta_state = get_teacher_state(student_model, args.task, INTERVENTIONS, device=device, seed=args.seed + meta_step + 1)
+        next_meta_state = get_teacher_state(student_model, args.task, INTERVENTIONS, device=args.device, seed=args.seed + meta_step + 1)
 
         # 10. Store experience and update the teacher
         teacher.replay_buffer.push(current_meta_state, selected_intervention_idx, meta_reward, next_meta_state)
@@ -625,6 +901,7 @@ if __name__ == '__main__':
     parser.add_argument('--test_episodes', type=int, default=10, help='Episodes for testing each intervention')
     parser.add_argument('--validation_episodes', type=int, default=10, help='Episodes per validation environment')
     parser.add_argument('--skip_frame', type=int, default=3, help='Frame skip for environment')
+    parser.add_argument('--device_id', type=int, default=6, choices=[6, 7], help='GPU device ID to use (6 or 7)')
     args = parser.parse_args()
 
     # Set default log directory if not specified
