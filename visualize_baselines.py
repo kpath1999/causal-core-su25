@@ -28,8 +28,244 @@ python visualize_baselines.py --log_dir logs --output_dir none_analysis --baseli
 
 # Analyze only the RND baseline
 python visualize_baselines.py --log_dir logs --output_dir rnd_analysis --baseline RND
+
+# Generate AutoCaLC-specific plots along with all other visualizations
+python visualize_baselines.py --log_dir logs --output_dir autocalc_analysis --autocalc_analysis
+
+# Focus only on AutoCaLC analysis
+python visualize_baselines.py --log_dir logs --output_dir autocalc_analysis --baseline autocalc
 """
 
+def load_autocalc_pretrained_data(log_base_dir='logs'):
+    """load validation data from autocalc runs with different pretrained teachers"""
+    pretrained_data = {}
+
+    # pattern to look for directories with pretrained teacher runs
+    pretrained_patterns = [
+        ('autocalc_teacher100k', '100k'),
+        ('autocalc_teacher175k', '175k'),
+        ('autocalc_teacher250k', '250k')
+    ]
+
+    for dir_pattern, label in pretrained_patterns:
+        # find matching directories
+        matching_dirs = glob.glob(os.path.join(log_base_dir, f"{dir_pattern}*"))
+
+        if not matching_dirs:
+            print(f"Warning: No logs found for {label} pretrained teacher")
+            continue
+
+        log_dir = matching_dirs[0]
+        
+        # load validation log
+        validation_log_path = os.path.join(log_dir, 'validation_log.csv')
+        if os.path.exists(validation_log_path):
+            df = pd.read_csv(validation_log_path)
+
+            # check for empty or all-null data
+            if df.empty or df.isnull().all().all():
+                print(f"Warning: Validation log for {label} pretrained teacher is empty or all nulls")
+                continue
+
+            # add pretrained steps identifier
+            df['pretrain_steps'] = label
+            pretrained_data[label] = df
+        else:
+            print(f"Warning: No validation_log.csv found for {label} pretrained teacher")
+    
+    return pretrained_data
+
+def load_teacher_pretraining_data(log_base_dir='logs'):
+    """Load teacher pretraining data to analyze learning progress"""
+    pretraining_data = {}
+
+    # pattern to look for teacher pretraining directories
+    pretraining_patterns = [
+        'teacher_pretrain_100k',
+        'teacher_pretrain_175k',
+        'teacher_pretrain_250k'
+    ]
+
+    for dir_pattern in pretraining_patterns:
+        # find matching directories
+        matching_dirs = glob.glob(os.path.join(log_base_dir, f"{dir_pattern}*"))
+
+        if not matching_dirs:
+            print(f"Warning: No logs found for {dir_pattern}")
+            continue
+            
+        log_dir = matching_dirs[0]
+
+        # load teacher pretraining log
+        pretraining_log_path = os.path.join(log_dir, 'teacher_pretraining.csv')
+        if os.path.exists(pretraining_log_path):
+            df = pd.read_csv(pretraining_log_path)
+
+            # extract steps from directory name
+            steps = dir_pattern.split('_')[-1]
+            pretraining_data[steps] = df
+        else:
+            # looking for alternate validation log
+            pretrain_validation_dir = os.path.join(log_dir, "pretrain_validation")
+            validation_log_path = os.path.join(pretrain_validation_dir, 'validation_log.csv')
+            if os.path.exists(validation_log_path):
+                df = pd.read_csv(validation_log_path)
+                steps = dir_pattern.split('_')[-1]
+                pretraining_data[steps] = df
+            else:
+                print(f"Warning: No validation data found for {dir_pattern}")
+    
+    return pretraining_data
+
+def plot_pretrained_teacher_comparison(pretrained_data, output_dir='visualizations'):
+    """Create plots comparing student performance with differently pretrained teachers"""
+    if not pretrained_data:
+        print("No pretrained teacher data found")
+        return
+    
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Set up the style
+    sns.set_style("whitegrid")
+    plt.rcParams.update({'font.size': 12})
+    
+    # Create figure for validation reward comparison
+    plt.figure(figsize=(12, 8))
+    
+    # Define colors for consistency - use distinct colors for the three teacher types
+    color_map = {
+        '100k': '#1f77b4',  # blue
+        '175k': '#ff7f0e',  # orange
+        '250k': '#2ca02c'   # green
+    }
+    
+    # Plot each pretrained teacher's student performance
+    for pretrain_steps, df in pretrained_data.items():
+        # Ensure we have the required columns
+        if 'stage' not in df.columns or 'validation_avg_reward' not in df.columns:
+            print(f"Warning: Required columns missing for {pretrain_steps}")
+            continue
+        
+        data = df.sort_values('stage')
+        plt.plot(data['stage'], data['validation_avg_reward'], 
+                 label=f'Teacher pretrained {pretrain_steps} steps', 
+                 color=color_map.get(pretrain_steps, '#888888'), 
+                 linewidth=2.5, marker='o', markersize=4)
+        
+        # Add confidence interval if std is available
+        if 'validation_reward_std' in df.columns:
+            plt.fill_between(data['stage'], 
+                            data['validation_avg_reward'] - data['validation_reward_std'], 
+                            data['validation_avg_reward'] + data['validation_reward_std'], 
+                            alpha=0.2, color=color_map.get(pretrain_steps, '#888888'))
+    
+    plt.xlabel('Meta-Episode', fontsize=14)
+    plt.ylabel('Validation Average Reward', fontsize=14)
+    plt.title('Student Performance vs Meta-Episode\nwith Different Teacher Pretraining Steps', fontsize=16)
+    plt.legend(loc='best', fontsize=12)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    
+    # Save the figure
+    plt.savefig(os.path.join(output_dir, 'pretrained_teacher_comparison.png'), dpi=300, bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, 'pretrained_teacher_comparison.pdf'), bbox_inches='tight')
+    plt.close()
+    
+    print(f"Pretrained teacher comparison plot saved to {output_dir}")
+
+def plot_teacher_learning_curve(pretraining_data, validation_data, output_dir='visualizations'):
+    """
+    Plot max validation reward achieved by students under different teacher pretraining paradigms
+    as a bar chart, with horizontal lines showing max rewards from other baselines
+    """
+    if not pretraining_data:
+        print("No teacher pretraining data found")
+        return
+    
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Set up the style
+    sns.set_style("whitegrid")
+    plt.rcParams.update({'font.size': 12})
+    
+    plt.figure(figsize=(12, 8))
+    
+    # Extract max validation rewards for each pretrained teacher paradigm
+    pretrained_max_rewards = {}
+    teacher_labels = []
+    max_rewards = []
+    
+    # Process pretrained teacher data
+    for pretrain_steps, df in pretraining_data.items():
+        if 'validation_avg_reward' in df.columns:
+            max_reward = df['validation_avg_reward'].max()
+            pretrained_max_rewards[pretrain_steps] = max_reward
+            teacher_labels.append(f'AutoCaLC {pretrain_steps}')
+            max_rewards.append(max_reward)
+            print(f"Max reward for {pretrain_steps} pretrained teacher: {max_reward:.3f}")
+    
+    if not max_rewards:
+        print("No valid pretrained teacher data found for bar plot")
+        return
+    
+    # Create bar plot for pretrained teachers
+    x_pos = np.arange(len(teacher_labels))
+    bars = plt.bar(x_pos, max_rewards, color=['#1f77b4', '#ff7f0e', '#2ca02c'], 
+                   alpha=0.8, width=0.6, edgecolor='black', linewidth=1.5)
+    
+    # Add value labels on bars
+    for i, (bar, reward) in enumerate(zip(bars, max_rewards)):
+        plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
+                f'{reward:.3f}', ha='center', va='bottom', fontweight='bold', fontsize=11)
+    
+    # Calculate and plot horizontal lines for baseline max rewards
+    baseline_max_rewards = {}
+    colors = ['#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+    color_idx = 0
+    
+    for baseline_name, df in validation_data.items():
+        if baseline_name.startswith('autocalc'):  # Skip autocalc baselines to avoid duplication
+            continue
+        
+        if 'validation_avg_reward' in df.columns:
+            max_reward = df['validation_avg_reward'].max()
+            baseline_max_rewards[baseline_name] = max_reward
+            
+            # Plot horizontal line
+            plt.axhline(y=max_reward, color=colors[color_idx % len(colors)], 
+                       linestyle='--', linewidth=2, alpha=0.8,
+                       label=f'{baseline_name}: {max_reward:.3f}')
+            color_idx += 1
+            print(f"Max reward for {baseline_name} baseline: {max_reward:.3f}")
+    
+    # Customize the plot
+    plt.xlabel('Teacher Training Paradigm', fontsize=14)
+    plt.ylabel('Maximum Validation Reward', fontsize=14)
+    plt.title('Maximum Student Validation Reward\nAcross Different Teacher Pretraining Steps', fontsize=16)
+    plt.xticks(x_pos, teacher_labels, fontsize=12)
+    
+    # Add legend for baseline horizontal lines
+    if baseline_max_rewards:
+        plt.legend(loc='upper left', bbox_to_anchor=(1.02, 1), fontsize=10)
+    
+    plt.grid(True, linestyle='--', alpha=0.7, axis='y')
+    plt.tight_layout()
+    
+    # Save the figure
+    plt.savefig(os.path.join(output_dir, 'teacher_max_reward_comparison.png'), dpi=300, bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, 'teacher_max_reward_comparison.pdf'), bbox_inches='tight')
+    plt.close()
+    
+    print(f"Teacher max reward comparison plot saved to {output_dir}")
+    
+    # Print summary
+    print("\nSummary of Max Validation Rewards:")
+    print("AutoCaLC Teacher Pretraining:")
+    for steps, reward in pretrained_max_rewards.items():
+        print(f"  {steps}: {reward:.3f}")
+    print("Other Baselines:")
+    for baseline, reward in baseline_max_rewards.items():
+        print(f"  {baseline}: {reward:.3f}")
 
 def load_baseline_data(log_base_dir='logs', target_baseline=None):
     """Load and process data from all baseline logs"""
@@ -787,6 +1023,7 @@ def main():
     parser.add_argument('--log_dir', type=str, default='logs', help='Base directory containing log folders')
     parser.add_argument('--output_dir', type=str, default='visualizations', help='Output directory for visualizations')
     parser.add_argument('--baseline', type=str, help='Analyze only a specific baseline (greedy, cm, "Random Intervention", "No Intervention", RND, count, lpm, info, autocalc)')
+    parser.add_argument('--autocalc_analysis', action='store_true', help='Generate AutoCaLC-specific analysis plots')
     
     args = parser.parse_args()
     
@@ -842,6 +1079,26 @@ def main():
         plot_radar_chart(benchmark_data, args.output_dir)
     else:
         print("   Warning: No benchmark results found")
+    
+    # additional AutoCaLC-specific analysis
+    if args.autocalc_analysis or args.baseline == 'autocalc':
+        print("5. Loading AutoCaLC pretrained teacher data...")
+        pretrained_data = load_autocalc_pretrained_data(args.log_dir)
+
+        if pretrained_data:
+            print("   Generating pretrained teacher comparison plot...")
+            plot_pretrained_teacher_comparison(pretrained_data, args.output_dir)
+        else:
+            print("   Warning: No AutoCaLC pretrained teacher data found")
+        
+        print("6. Loading teacher pretraining data...")
+        pretraining_data = load_teacher_pretraining_data(args.log_dir)
+        
+        if pretraining_data:
+            print("   Generating teacher learning curve plot...")
+            plot_teacher_learning_curve(pretraining_data, validation_data, args.output_dir)
+        else:
+            print("   Warning: No teacher pretraining data found")
     
     print("=== Visualization generation complete! ===")
     print(f"Results saved to {args.output_dir}")

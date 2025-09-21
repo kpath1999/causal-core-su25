@@ -1117,8 +1117,29 @@ def train_info_baseline(args):
     cumulative_timesteps = 0
     total_stages = args.meta_episodes
 
+    # initialize best model tracking
+    best_validation_info = {
+        'best_reward': float('-inf'),
+        'best_stage': 0,
+        'best_model_path': None,
+        'best_metrics': None
+    }
+
     # set up csv logger
     csv_logger = CSVLogger(args.log_dir)
+
+    # --- zero-shot validation (meta-episode 0) ---
+    logging.info("--- running zero-shot validation (meta-episode 0) ---")
+    initial_validation_metrics = run_post_episode_validation(
+        student_model=student_model,
+        task_name=args.task,
+        stage_num=0,
+        args=args,
+        csv_logger=csv_logger,
+        cumulative_timesteps=0,
+        baseline_type="info",
+        best_validation_info=best_validation_info
+    )
 
     # run 50 training segments
     for stage in range(1, total_stages + 1):
@@ -1206,7 +1227,8 @@ def train_info_baseline(args):
             args=args,
             csv_logger=csv_logger,
             cumulative_timesteps=cumulative_timesteps,
-            baseline_type="info"
+            baseline_type="info",
+            best_validation_info=best_validation_info
         )
         
         # clean up
@@ -1216,6 +1238,15 @@ def train_info_baseline(args):
     final_model_path = os.path.join(args.log_dir, "final_model_after_sequencing.zip")
     student_model.save(final_model_path)
     logging.info(f"[Info] Final model saved to {final_model_path}")
+
+    # log final best model info
+    if best_validation_info['best_model_path'] is not None:
+        logging.info(f"[Info] Best model was from stage {best_validation_info['best_stage']} with validation reward: {best_validation_info['best_reward']:.4f}")
+        logging.info(f"[Info] Best model saved to: {best_validation_info['best_model_path']}")
+
+        if args.use_wandb:
+            wandb.run.summary["info/best_validation_reward"] = best_validation_info['best_reward']
+            wandb.run.summary["info/best_model_stage"] = best_validation_info['best_stage']
 
     return student_model
 
@@ -1239,8 +1270,29 @@ def train_lpm_baseline(args):
     cumulative_timesteps = 0
     total_stages = args.meta_episodes
 
+    # initialize best model tracking
+    best_validation_info = {
+        'best_reward': float('-inf'),
+        'best_stage': 0,
+        'best_model_path': None,
+        'best_metrics': None
+    }
+
     # set up CSV logger
     csv_logger = CSVLogger(args.log_dir)
+
+    # --- zero-shot validation (meta-episode 0) ---
+    logging.info("--- running zero-shot validation (meta-episode 0) ---")
+    initial_validation_metrics = run_post_episode_validation(
+        student_model=student_model,
+        task_name=args.task,
+        stage_num=0,
+        args=args,
+        csv_logger=csv_logger,
+        cumulative_timesteps=0,
+        baseline_type="lpm",
+        best_validation_info=best_validation_info
+    )
 
     # run 50 training segments
     for stage in range(1, total_stages + 1):
@@ -1327,7 +1379,8 @@ def train_lpm_baseline(args):
             args=args,
             csv_logger=csv_logger,
             cumulative_timesteps=cumulative_timesteps,
-            baseline_type="lpm"
+            baseline_type="lpm",
+            best_validation_info=best_validation_info
         )
 
         # clean up
@@ -1337,6 +1390,15 @@ def train_lpm_baseline(args):
     final_model_path = os.path.join(args.log_dir, "final_model_after_sequencing.zip")
     student_model.save(final_model_path)
     logging.info(f"[LPM] Final model saved to {final_model_path}")
+
+    # log final best model info
+    if best_validation_info['best_model_path'] is not None:
+        logging.info(f"[LPM] Best model was from stage {best_validation_info['best_stage']} with validation reward: {best_validation_info['best_reward']:.4f}")
+        logging.info(f"[LPM] Best model saved to: {best_validation_info['best_model_path']}")
+
+        if args.use_wandb:
+            wandb.run.summary["lpm/best_validation_reward"] = best_validation_info['best_reward']
+            wandb.run.summary["lpm/best_model_stage"] = best_validation_info['best_stage']
 
     return student_model
 
@@ -1860,7 +1922,7 @@ def ensure_validation_envs(task_name, num_envs=10, base_seed=42):
     return True
 
 # another helper function for validation
-def run_post_episode_validation(student_model, task_name, stage_num, args, csv_logger, cumulative_timesteps, baseline_type):
+def run_post_episode_validation(student_model, task_name, stage_num, args, csv_logger, cumulative_timesteps, baseline_type, best_validation_info=None):
     """run validation after each meta-episode"""
     logging.info(f"[{baseline_type.upper()}] Running validation after meta-episode {stage_num}")
 
@@ -1877,7 +1939,30 @@ def run_post_episode_validation(student_model, task_name, stage_num, args, csv_l
     )
 
     # running validation and returning metrics
-    return validation_callback._execute_validation(student_model)
+    validation_metrics = validation_callback._execute_validation(student_model)
+
+    # check if this is the best model so far
+    if best_validation_info is not None:
+        current_reward = validation_metrics['validation_avg_reward']
+        if current_reward > best_validation_info['best_reward']:
+            # save as best model
+            best_model_path = os.path.join(args.log_dir, f"best_{baseline_type}_model.zip")
+            student_model.save(best_model_path)
+
+            # update best validation info
+            best_validation_info['best_reward'] = current_reward
+            best_validation_info['best_stage'] = stage_num
+            best_validation_info['best_model_path'] = best_model_path
+            best_validation_info['best_metrics'] = validation_metrics
+
+            logging.info(f"[{baseline_type.upper()}] New best model at stage {stage_num} with validation reward: {current_reward:.4f}")
+
+            # log to wandb if enabled
+            if args.use_wandb:
+                wandb.run.summary[f"{baseline_type}/best_validation_reward"] = current_reward
+                wandb.run.summary[f"{baseline_type}/best_model_stage"] = stage_num
+    
+    return validation_metrics
 
 def create_environment(task_name, intervention=None, seed=0, skip_frame=3, max_episode_length=500):
     """create a causalworld environment with optional intervention"""
@@ -2027,8 +2112,29 @@ def train_rnd_baseline(args):
     cumulative_timesteps = 0
     total_stages = args.meta_episodes
 
+    # initialize best model tracking
+    best_validation_info = {
+        'best_reward': float('-inf'),
+        'best_stage': 0,
+        'best_model_path': None,
+        'best_metrics': None
+    }
+
     # set up csv logger
     csv_logger = CSVLogger(args.log_dir)
+
+    # --- zero-shot validation (meta-episode 0) ---
+    logging.info("--- running zero-shot validation (meta-episode 0) ---")
+    initial_validation_metrics = run_post_episode_validation(
+        student_model=student_model,
+        task_name=args.task,
+        stage_num=0,
+        args=args,
+        csv_logger=csv_logger,
+        cumulative_timesteps=0,
+        baseline_type="rnd",
+        best_validation_info=best_validation_info
+    )
 
     # run 50 training segments
     for stage in range(1, total_stages + 1):
@@ -2115,7 +2221,8 @@ def train_rnd_baseline(args):
             args=args,
             csv_logger=csv_logger,
             cumulative_timesteps=cumulative_timesteps,
-            baseline_type="rnd"
+            baseline_type="rnd",
+            best_validation_info=best_validation_info
         )
         
         # clean up
@@ -2125,6 +2232,16 @@ def train_rnd_baseline(args):
     final_model_path = os.path.join(args.log_dir, "final_model_after_sequencing.zip")
     student_model.save(final_model_path)
     logging.info(f"[RND] Final model saved to {final_model_path}")
+
+    # log the final best model info
+    if best_validation_info['best_model_path'] is not None:
+        logging.info(f"[RND] Best model was from stage {best_validation_info['best_stage']} with validation reward: {best_validation_info['best_reward']:.4f}")
+        logging.info(f"[RND] Best model saved to: {best_validation_info['best_model_path']}")
+
+        if args.use_wandb:
+            wandb.run.summary["rnd/best_validation_reward"] = best_validation_info['best_reward']
+            wandb.run.summary["rnd/best_model_stage"] = best_validation_info['best_stage']
+            wandb.run.summary["rnd/best_model_path"] = best_validation_info['best_model_path']
 
     return student_model
 
@@ -2266,8 +2383,29 @@ def train_count_baseline(args):
     cumulative_timesteps = 0
     total_stages = args.meta_episodes
 
+    # initialize best model tracking
+    best_validation_info = {
+        'best_reward': float('-inf'),
+        'best_stage': 0,
+        'best_model_path': None,
+        'best_metrics': None
+    }
+
     # set up the csv logger
     csv_logger = CSVLogger(args.log_dir)
+
+    # --- zero-shot validation (meta-episode 0) ---
+    logging.info("--- running zero-shot validation (meta-episode 0) ---")
+    initial_validation_metrics = run_post_episode_validation(
+        student_model=student_model,
+        task_name=args.task,
+        stage_num=0,
+        args=args,
+        csv_logger=csv_logger,
+        cumulative_timesteps=0,
+        baseline_type="count",
+        best_validation_info=best_validation_info
+    )
 
     # run 50 training segments
     for stage in range(1, total_stages + 1):
@@ -2351,7 +2489,8 @@ def train_count_baseline(args):
             args=args,
             csv_logger=csv_logger,
             cumulative_timesteps=cumulative_timesteps,
-            baseline_type="count"
+            baseline_type="count",
+            best_validation_info=best_validation_info
         )
 
         # clean up
@@ -2366,9 +2505,18 @@ def train_count_baseline(args):
     unique_states = len(count_callback.visit_counts)
     logging.info(f"[Count-Based] Final unique states visited: {unique_states}")
 
+    # log final best model info
+    if best_validation_info['best_model_path'] is not None:
+        logging.info(f"[Count-Based] Best model was from stage {best_validation_info['best_stage']} with validation reward: {best_validation_info['best_reward']:.4f}")
+        logging.info(f"[Count-Based] Best model saved to: {best_validation_info['best_model_path']}")
+
+        if args.use_wandb:
+            wandb.run.summary["count/best_validation_reward"] = best_validation_info['best_reward']
+            wandb.run.summary["count/best_model_stage"] = best_validation_info['best_stage']
+
     return student_model, count_callback
 
-def train_on_intervention(student_model, intervention, task_name, timesteps, args, stage_num, total_stages, csv_logger, cumulative_timesteps):
+def train_on_intervention(student_model, intervention, task_name, timesteps, args, stage_num, total_stages, csv_logger, cumulative_timesteps, best_validation_info=None):
     """train the student model on a specific intervention"""
     type = intervention['type'] if intervention is not None else 'none'
     logging.info(f"=== stage {stage_num}/{total_stages}: training on {type} intervention ===")
@@ -2445,7 +2593,8 @@ def train_on_intervention(student_model, intervention, task_name, timesteps, arg
         args=args,
         csv_logger=csv_logger,
         cumulative_timesteps=cumulative_timesteps,
-        baseline_type=args.curriculum_mode
+        baseline_type=args.curriculum_mode,
+        best_validation_info=best_validation_info
     )
 
     # save model after training
@@ -2631,13 +2780,15 @@ def aggregate_sb3_progress(log_dir):
     print(f"Aggregated SB3 progress saved to {out_path}")
     return out_path
 
+# TODO Sep 16: first update the main logic to ensure the best-performing val rew model is saved for each baseline
+# And then bake that logic in for each of the baselines (use rnd as an example)
 # ==================
 # Sequential pacing signal loop
 # ==================
 def main():
     parser = argparse.ArgumentParser(description="Baselines for curriculum learning in CausalWorld")
     parser.add_argument('--curriculum_mode', type=str, default='greedy',
-                        choices=['greedy', 'random', 'none', 'cm', 'rnd', 'count', 'lpm', 'info', 'autocalc', 'pretrained'])
+                        choices=['greedy', 'random', 'none', 'cm', 'rnd', 'count', 'lpm', 'info', 'pretrained'])
     parser.add_argument('--train', action='store_true', help='Train the model')
     parser.add_argument('--eval', action='store_true', help='Evaluate the model')
     parser.add_argument('--task', type=str, default='pushing', choices=['reaching', 'pushing', 'picking', 'pick_and_place', 'stacking2'], help='Task name')
@@ -2894,6 +3045,14 @@ def main():
         student_model = PPO.load(args.pretrained_path)
         logging.info(f"[PRETRAINED] Using pretrained model path: {args.pretrained_path}")
 
+        # initialize best model tracking for curriculum baselines
+        best_validation_info = {
+            'best_reward': float('-inf'),
+            'best_stage': 0,
+            'best_model_path': None,
+            'best_metrics': None
+        }
+
         # our tracking variables
         remaining_interventions = INTERVENTIONS.copy()
         completed_sequence = []
@@ -2906,10 +3065,24 @@ def main():
         # evaluate initial performance
         initial_performance = evaluate_final_performance(student_model, args.task, num_episodes=10, seed=args.seed)
         logging.info(f"initial performance: {initial_performance}")
+
+        # --- zero-shot validation (meta-episode 0) ---
+        logging.info("--- running zero-shot validation (meta-episode 0) ---")
+        csv_logger = CSVLogger(args.log_dir)
+        initial_validation_metrics = run_post_episode_validation(
+            student_model=student_model,
+            task_name=args.task,
+            stage_num=0,
+            args=args,
+            csv_logger=csv_logger,
+            cumulative_timesteps=0,
+            baseline_type=args.curriculum_mode,
+            best_validation_info=best_validation_info
+        )
         
         # main sequencing loop
         stage = 1
-        total_stages = args.meta_episodes  # Changing from 7 to 50 to match AutoCaLC
+        total_stages = args.meta_episodes
 
         while stage <= total_stages:
             logging.info(f"CURRICULUM STAGE {stage}/{total_stages}")
@@ -2938,7 +3111,8 @@ def main():
                     stage,
                     total_stages,
                     csv_logger,
-                    cumulative_timesteps
+                    cumulative_timesteps,
+                    best_validation_info
                 )
 
                 test_all_interventions(
@@ -2971,7 +3145,7 @@ def main():
                     })
                 stage += 1
                 continue  # Skip the rest of the loop for 'none' mode
-            # TODO: Sep 7 -- fix the intervention log for random; nothing is getting recorded
+             
             elif args.curriculum_mode == 'random':
                 # random mode: pick one at random, no testing
                 set_seed(args.seed + stage * 100)
@@ -3106,7 +3280,8 @@ def main():
                 stage,
                 total_stages,
                 csv_logger,
-                cumulative_timesteps
+                cumulative_timesteps,
+                best_validation_info
             )
 
             # 4. remove the intervention from the remaining list (only if replacement=False)
@@ -3175,6 +3350,15 @@ def main():
         logging.info(f"final: {final_performance['avg_reward']:.3f} reward, {final_performance['success_rate']:.3f} success")
         logging.info(f"improvement: {final_performance['avg_reward'] - initial_performance['avg_reward']:.3f} reward")
         
+        # log final best model info
+        if best_validation_info['best_model_path'] is not None:
+            logging.info(f"[{args.curriculum_mode.upper()}] Best model was from stage {best_validation_info['best_stage']} with validation reward: {best_validation_info['best_reward']:.4f}")
+            logging.info(f"[{args.curriculum_mode.upper()}] Best model saved to: {best_validation_info['best_model_path']}")
+
+            if args.use_wandb:
+                wandb.run.summary[f"{args.curriculum_mode}/best_validation_reward"] = best_validation_info['best_reward']
+                wandb.run.summary[f"{args.curriculum_mode}/best_model_stage"] = best_validation_info['best_stage']
+
         # Save final model
         final_model_path = os.path.join(args.log_dir, "final_model_after_sequencing.zip")
         student_model.save(final_model_path)

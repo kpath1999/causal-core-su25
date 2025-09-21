@@ -1,116 +1,34 @@
 """
-PSEUDOCODE
-# 1. initialization
-student_agent = PPO(…)
-teacher_agent = DQN(state_dim=14, action_dim=7, …)
-validation_env = create_validation_env()
+AutoCaLC (meta-teacher/student) runner.
 
-# get initial generalization performance
-last_validation_performance = run_validation_protocol(student_agent, validation_env)
+Summary
+- Iterate over M meta-episodes:
+  1) compute meta-state from the student,
+  2) teacher picks an intervention,
+  3) student trains K steps on that intervention,
+  4) evaluate on a fixed validation env,
+  5) meta-reward = delta(validation), update teacher.
 
-# 2. main meta-learning loop (e.g., for M meta-episodes)
-for meta_step in range(M=50):
- 	# 3. compute the current meta-state
- 	current_meta_state = compute_meta_state(student_agent, INTERVENTIONS)
-	
-	# 4. teacher selects an intervention
-	selected_intervention_idx = teacher_agent.predict(current_meta_state)
-	selected_intervention = INTERVENTIONS[selected_intervention_idx]
+Quick start
+- Train + evaluate:
+  python meta_teacher_student.py --task pushing --student_train_steps 50000 --meta_episodes 50 --eval --log_dir logs/autocalc_logs
 
- 	# 5. student trains on that intervention
- 	student_agent.learn(total_timesteps=50000, env=create_intervened_env(selected_intervention))
+- Pretrain teacher (examples: 100k/175k/250k):
+  python meta_teacher_student.py --task pushing --teacher_pretrain_steps 100000 --teacher_pretrain_only --save_pretrained_teacher models/teacher_100k.pt --log_dir logs/teacher_pretrain_100k
 
-	        # 3. Compute the current meta-state
-        current_meta_state = get_teacher_state(student_model, args.task, INTERVENTIONS, device=args.device, seed=args.seed + meta_step)6. evaluate new generalization performance
-	current_validation_performance = run_validation_protocol(student_agent, validation_env)
+- Use a pretrained teacher (example: 100k):
+  python meta_teacher_student.py --task pushing --load_pretrained_teacher models/teacher_100k.pt --log_dir logs/autocalc_teacher100k
 
-	# 7. calculate the meta-reward
-	meta_reward = current_validation_performance - last_validation_performance
-	last_validation_performance = current_validation_performance
+Tips
+- Multi-seed: add --teacher_seed X --student_seed Y
+- Optional: --use_wandb, --device_id N
+- For full options: python meta_teacher_student.py --help
 
-	# 8. compute the next meta-state
-	next_meta_state = compute_meta_state(student_agent, INTERVENTIONS)
-	
-	# 9. store experience and update the teacher
- 	teacher_agent.replay_buffer.add(current_meta_state, selected_intervention_idx, meta_reward, next_meta_state, done)
-	teacher_agent.train(batch_size=…)
-
-    
-HELPER FUNCTIONS
-1. compute_meta_state (student, interventions)
-    - this function iterates through all available interventions
-    - for each intervention, we call the existing test_intervention_performance to probe the reward and evaluate_cm_score
-    to get the novelty score
-    - we then concatenate all these values into a 14-dimensional state vector and return that
-
-2. run_validation_protocol (student, validation_env)
-    - this function is responsible for measuring generalization
-    - it takes the current student and evaluates it for 50 episodes on the fixed validation env
-    - it should return a single, robust performance metric, such as the average performance metric, which will be used to
-    calculate the meta-reward
-
-NOTES (tuning the meta-learning process)
-- setting 50K timesteps for each student training block; this gives the student enough time to adapt to the intervention
-- the teacher's exploration (epsilon) may need to decay slowly since each data-point (meta-step) is expensive to collect
-and we have 50 meta-episodes for a full training run; must tune epsilon based on the meta-step we're on, not the timestep
-- we would use a large replay buffer for the teacher's DQN to help mitigate the non-stationary of the agent
-- we use a slow update frequency (low tau) for the DQN's target network to improve stability
-"""
-
-"""
-TERMINAL COMMANDS:
-
-Training + Evaluation --
-python meta_teacher_student.py --task pushing --student_train_steps 50000 --meta_episodes 50 --eval --seed 0 --log_dir logs/autocalc_logs --use_wandb --device_id 6
-
-Short Training (for testing) --
-python meta_teacher_student.py --task pushing --student_train_steps 5000 --meta_episodes 5 --eval --seed 0 --log_dir logs/autocalc_test --use_wandb --device_id 6
-
-Multi seed experimental setup:
-
-Teacher seed 1, student seed 1 --
-python meta_teacher_student.py --task pushing --teacher_seed 1 --student_seed 1 --log_dir logs/autocalc_t1_s1 --device_id 6
-
-Teacher seed 1, student seed 2 --
-python meta_teacher_student.py --task pushing --teacher_seed 1 --student_seed 2 --log_dir logs/autocalc_t1_s2 --device_id 6
-
-A) Pretraining teachers with different step counts:
-
-Train a teacher for 100K steps --
-python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
-    --teacher_pretrain_steps 100000 --teacher_pretrain_only \
-    --save_pretrained_teacher models/teacher_100k.pt \
-    --log_dir logs/teacher_pretrain_100k --use_wandb --device_id 6
-
-Train a teacher for 175K steps --
-python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
-    --teacher_pretrain_steps 175000 --teacher_pretrain_only \
-    --save_pretrained_teacher models/teacher_175k.pt \
-    --log_dir logs/teacher_pretrain_175k --use_wandb --device_id 6
-
-Train a teacher for 250K steps --
-python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
-    --teacher_pretrain_steps 250000 --teacher_pretrain_only \
-    --save_pretrained_teacher models/teacher_250k.pt \
-    --log_dir logs/teacher_pretrain_250k --use_wandb --device_id 6
-
-B) Using pretrained teachers for student training    
-
-Train a student using the 100K pretrained teacher --
-python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
-    --load_pretrained_teacher models/teacher_100k.pt \
-    --log_dir logs/autocalc_teacher100k --use_wandb --device_id 6
-
-Train a student using the 175K pretrained teacher --
-python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
-    --load_pretrained_teacher models/teacher_175k.pt \
-    --log_dir logs/autocalc_teacher175k --use_wandb --device_id 6
-
-Train a student using the 250K pretrained teacher --
-python meta_teacher_student.py --task pushing --teacher_seed 0 --student_seed 0 \
-    --load_pretrained_teacher models/teacher_250k.pt \
-    --log_dir logs/autocalc_teacher250k --use_wandb --device_id 6
-    
+Planned teacher upgrades (compact)
+- Recurrent teacher state: replace MLP with LSTM/GRU so the teacher has memory over meta-episodes; keep hidden state across steps and train on trajectory subsequences from replay.
+- Better meta-reward (DONE): use delta validation (r_t = val_t − val_{t-1}) to reward learning progress, not absolute level.
+- Auxiliary prediction head: add a decoder to predict next meta-state; train with total_loss = q_loss + β · mse(pred_next_state, next_state).
+- Double Dueling DQN: use Double-Q target (online argmax, target eval) and dueling heads (V(s) + A(s,a)) for stability and sample efficiency.
 """
 
 import numpy as np
@@ -157,6 +75,99 @@ from baselines import (
 from validation_actor import ValidationInterventionActorPolicy
 import wandb
 from wandb.integration.sb3 import WandbCallback
+
+
+class AutoCaLC:
+    def __init__(self, args):
+        self.args = args
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        # 1. initialize student and teacher
+        self.student = self._initialize_student()
+        self.teacher = TeacherDQNAgent(
+            statedim=len(INTERVENTIONS) * 2,
+            actiondim=len(INTERVENTIONS),
+            device=self.device
+        )
+
+        # 2. initialize environments and logging
+        self.validation_envs = self._create_validation_envs()
+        self.csv_logger = CSVLogger(log_dir=args.logdir)
+    
+    def _initialize_student(self):
+        # logic to create the initial PPO student model
+        pass
+
+    def pretrain_teacher(self):
+        """
+        cleaner pretraining loop. student model is passed but remains frozen.
+        NOTE: is that the right approach? shouldn't the student model respond to the interventions provided by the teacher?
+        it is this adaptive loop that will help the teacher learn.
+        """
+        logging.info("Starting teacher pretraining...")
+        # all pretraining logic is self-contained here.
+        # computes states, selects actions, calculates rewards.
+        # updates the teacher network against a static student.
+        pass
+
+    def train(self):
+        """
+        main meta-learning loop.
+        """
+        logging.info("Starting AutoCaLC meta-training...")
+
+        last_validation_perf = self.run_validation_protocol(self.student)
+
+        for meta_step in range(self.args.meta_episodes):
+            # the entire meta-episode logic is now a clean method call
+            last_validation_perf = self.run_meta_episode(meta_step, last_validation_perf)
+    
+    def run_meta_episode(self, meta_step, last_validation_perf):
+        """
+        executes a single, complete teacher-student interaction.
+        """
+        # 1. get current state
+        meta_state = self.get_teacher_state(self.student)
+
+        # 2. teacher selects intervention
+        epsilon = get_exploration_rate(meta_step, self.args.meta_episodes)
+        action_idx = self.teacher.select_action(meta_state, epsilon)
+
+        # 3. student trains on the intervention
+        self.train_student_on_intervention(self.student, action_idx, meta_step)
+
+        # 4. evaluate student and get meta-reward
+        current_validation_perf = self.run_validation_protocol(self.student)
+        meta_reward = current_validation_perf - last_validation_perf    # learning progress
+
+        # 5. get next state and update teacher
+        next_meta_state = self.get_teacher_state(self.student)
+        self.teacher.replay_buffer.push(meta_state, action_idx, meta_reward, next_meta_state)
+        self.teacher.train_step()
+        
+        return current_validation_perf
+    
+    # include other helper functions like get_teacher_state, train_student, etc.
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    set_seed(args.seed)
+
+    autocalc_framework = AutoCaLC(args)
+
+    if args.teacher_pretrain_steps > 0:
+        autocalc_framework.pretrain_teacher()
+        if args.save_pretrained_teacher():
+            autocalc_framework.teacher.save(args.save_pretrained_teacher)
+    
+    if not args.teacher_pretrain_only:
+        if args.load_pretrained_teacher:
+            autocalc_framework.teacher.load(args.load_pretrained_teacher)
+        autocalc_framework.train()
+
+
+# ----------------------------------------------------------------------------------------------
 
 # obtaining the exploration rate
 def get_exploration_rate(meta_step, meta_episodes):
@@ -473,7 +484,9 @@ def pretrain_teacher(teacher, student_model, args, device='cpu'):
     num_pretrain_steps = args.teacher_pretrain_steps
 
     # use fixed validation env for consistent meta-reward evaluation
-    validation_csv_logger = CSVLogger(os.path.join(args.log_dir, "pretrain_validation"))
+    pretrain_validation_dir = os.path.join(args.log_dir, "pretrain_validation")
+    os.makedirs(pretrain_validation_dir, exist_ok=True)
+    validation_csv_logger = CSVLogger(pretrain_validation_dir)
 
     # pre-training loop
     for step in range(1, num_pretrain_steps + 1):
@@ -742,7 +755,7 @@ def main():
             if param.requires_grad:
                 # re-initialize parameters with the fixed seed
                 if len(param.shape) > 1:
-                    torch.nn.init.xavier_uniform_(param, generator=torch.Generator().manual_seed(args.student_seed))
+                    torch.nn.init.xavier_uniform_(param)
                 else:
                     torch.nn.init.zeros_(param)
     
@@ -777,7 +790,7 @@ def main():
     # reset to student seed for subsequent operations
     set_seed(args.student_seed)
 
-    # Track cumulative timesteps
+    # track cumulative timesteps
     cumulative_timesteps = 0
     
     # --- Zero-shot validation (meta-episode 0) ---
@@ -788,6 +801,15 @@ def main():
     last_validation_metrics = initial_validation_metrics
     logging.info(f"Zero-shot validation complete: success rate = {initial_validation_metrics['validation_success_rate']:.3f}, avg reward = {initial_validation_metrics['validation_avg_reward']:.3f}")
 
+    # track the best model based on validation reward
+    best_validation_reward = initial_validation_metrics['validation_avg_reward']
+    best_model_meta_step = 0
+    best_model_path = os.path.join(args.log_dir, "best_student_model.zip")
+
+    # save initial model as the best so far
+    student_model.save(best_model_path)
+    logging.info(f"Saved initial model as best (reward: {best_validation_reward}:.4f)")
+    
     # --- 2. Main meta-learning loop ---
     for meta_step in range(args.meta_episodes):
         logging.info(f"\n{'='*20} Meta-Episode {meta_step + 1}/{args.meta_episodes} {'='*20}")
@@ -846,6 +868,21 @@ def main():
             student_model, args.task, meta_step+1, args, csv_logger, cumulative_timesteps
         )
 
+        # ... checking if this is the best model so far
+        current_validation_reward = current_validation_metrics['validation_avg_reward']
+        if current_validation_reward > best_validation_reward:
+            best_validation_reward = current_validation_reward
+            best_model_meta_step = meta_step + 1
+
+            # save as best model
+            student_model.save(best_model_path)
+            logging.info(f"New best model at meta-step {meta_step+1} with validation reward: {best_validation_reward:.4f}")
+
+            # also log to wandb if enabled
+            if args.use_wandb:
+                wandb.run.summary["best_validation_reward"] = best_validation_reward
+                wandb.run.summary["best_model_meta_step"] = best_model_meta_step
+
         # 8. Calculate the meta-reward using the new formula
         # NOTE: i removed the weighting from success rate, keeping the meta-reward formulation simple
         meta_reward = (0 * current_validation_metrics['validation_success_rate']) + current_validation_metrics['validation_avg_reward']
@@ -884,7 +921,15 @@ def main():
     final_model_path = os.path.join(args.log_dir, "final_student_model.zip")
     student_model.save(final_model_path)
     logging.info(f"Meta-RL training complete! Final student model saved to {final_model_path}")
+
+    # log final best model info
+    logging.info(f"Best student model was from meta-step {best_model_meta_step} with validation reward: {best_validation_reward:.4f}")
+    logging.info(f"Best model saved to: {best_model_path}")
+
     if args.use_wandb:
+        wandb.run.summary["best_validation_reward"] = best_validation_reward
+        wandb.run.summary["best_model_meta_step"] = best_model_meta_step
+        wandb.run.summary["best_model_path"] = best_model_path
         wandb.finish()
 
 if __name__ == '__main__':
@@ -901,6 +946,12 @@ if __name__ == '__main__':
     parser.add_argument('--test_episodes', type=int, default=10, help='Episodes for testing each intervention')
     parser.add_argument('--validation_episodes', type=int, default=10, help='Episodes per validation environment')
     parser.add_argument('--skip_frame', type=int, default=3, help='Frame skip for environment')
+    parser.add_argument('--teacher_seed', type=int, default=0, help='Seed for the teacher agent')
+    parser.add_argument('--student_seed', type=int, default=0, help='Seed for the student agent initial policy')
+    parser.add_argument('--teacher_pretrain_steps', type=int, default=0, help='Number of steps to pre-train the teacher')
+    parser.add_argument('--save_pretrained_teacher', type=str, default=None, help='Path to save the pretrained teacher model')
+    parser.add_argument('--load_pretrained_teacher', type=str, default=None, help='Path to load a pretrained teacher model')
+    parser.add_argument('--teacher_pretrain_only', action='store_true', help='Only pretrain the teacher, then exit (no student training)')
     parser.add_argument('--device_id', type=int, default=6, choices=[6, 7], help='GPU device ID to use (6 or 7)')
     args = parser.parse_args()
 
