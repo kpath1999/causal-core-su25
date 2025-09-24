@@ -9,28 +9,45 @@ Summary
   4) evaluate on a fixed validation env,
   5) meta-reward = delta(validation), update teacher.
 
-Quick start
-- Basic training
+TRAINING COMMANDS:
+
+Basic training (recommended start):
 python meta_teacher_student.py --task pushing --meta_episodes 50 --student_train_steps 5000 --eval --use_wandb --device_id 7
 
-- Advanced configuration with wandb
-python meta_teacher_student.py --task pushing --meta_episodes 100 \
-    --teacher_lr 1e-4 --teacher_epsilon 0.2 --sequence_length 10 \
-    --use_wandb --device_id 0 --log_dir logs/experiment_1
+Full training with custom parameters:
+python meta_teacher_student.py --task pushing --meta_episodes 100 --student_train_steps 10000 \
+    --teacher_lr 1e-4 --teacher_epsilon 0.3 --teacher_min_epsilon 0.05 --teacher_epsilon_decay 0.90 \
+    --sequence_length 10 --count_beta 0.01 --teacher_state_cm_weight 0.5 \
+    --validation_episodes 10 --intervention_test_episodes 5 \
+    --use_wandb --device_id 0 --log_dir logs/autocalc_pushing_exp1 --eval
 
-- Quick test run
-python meta_teacher_student.py --task pushing --meta_episodes 5 --student_train_steps 1000 --eval
+Quick test run (fast debugging):
+python meta_teacher_student.py --task pushing --meta_episodes 5 --student_train_steps 1000 --validation_episodes 3
 
-Tips
-- Multi-seed: add --teacher_seed X --student_seed Y
-- Optional: --use_wandb, --device_id N
-- For full options: python meta_teacher_student.py --help
+Multi-task training examples:
+python meta_teacher_student.py --task reaching --meta_episodes 30 --student_train_steps 3000 --eval --device_id 1
+python meta_teacher_student.py --task picking --meta_episodes 75 --student_train_steps 7500 --eval --device_id 2
+python meta_teacher_student.py --task stacking2 --meta_episodes 100 --student_train_steps 10000 --eval --device_id 3
 
-Planned teacher upgrades (compact)
-- Recurrent teacher state: replace MLP with LSTM/GRU so the teacher has memory over meta-episodes; keep hidden state across steps and train on trajectory subsequences from replay.
-- Better meta-reward (DONE): use delta validation (r_t = val_t − val_{t-1}) to reward learning progress, not absolute level.
-- Auxiliary prediction head: add a decoder to predict next meta-state; train with total_loss = q_loss + β · mse(pred_next_state, next_state).
-- Double Dueling DQN: use Double-Q target (online argmax, target eval) and dueling heads (V(s) + A(s,a)) for stability and sample efficiency.
+EVALUATION COMMANDS:
+
+Evaluate trained model:
+python meta_teacher_student.py --eval_only --log_dir logs/autocalc_logs --task pushing --eval_episodes 20
+
+Evaluate with custom model path:
+python meta_teacher_student.py --eval_only --eval_model_path logs/my_experiment/best_student_model.zip \
+    --task pushing --eval_episodes 20 --max_episode_length 300
+
+PARAMETER TUNING GUIDE:
+- Teacher exploration: --teacher_epsilon 0.1-0.5, --teacher_min_epsilon 0.01-0.1, --teacher_epsilon_decay 0.8-0.95
+- Count-based exploration: --count_beta 0.001-0.1, --count_encoding_dim 16-64
+- Teacher state: --teacher_state_cm_weight 0.0-1.0 (0.0=reward only, 1.0=CM only)
+- Memory: --sequence_length 3-15 (LSTM history length)
+- Testing: --intervention_test_episodes 3-10, --validation_episodes 5-15
+
+SUPPORTED TASKS: pushing, reaching, picking, pick_and_place, stacking2
+
+For all options: python meta_teacher_student.py --help
 """
 
 import numpy as np
@@ -70,6 +87,7 @@ from baselines import (
     create_environment,
     evaluate_cm_score,
     test_intervention_performance,
+    test_all_interventions,
     run_post_episode_validation,
     RewardMonitorCallback,
     IntervenedCausalWorld,
@@ -99,9 +117,10 @@ class RecurrentDQN(nn.Module):
         )
 
         # LSTM for sequential learning
+        # KAUSAR: understand how LSTMs work
         self.lstm = nn.LSTM(hidden_dim, hidden_dim, lstm_layers, batch_first=True, dropout=0.1)
 
-        # Q-value heads with dueling architecture
+        # Q-value head (removed dueling architecture)
         self.q_head = nn.Sequential(
             nn.Linear(hidden_dim, hidden_dim // 2),
             nn.ReLU(),
@@ -420,6 +439,10 @@ class AutoCaLC:
         """Setup comprehensive logging system"""
         os.makedirs(self.args.log_dir, exist_ok=True)
         
+        # Clear existing handlers to prevent conflicts with imported modules
+        for handler in logging.root.handlers[:]:
+            logging.root.removeHandler(handler)
+        
         # Configure logging
         logging.basicConfig(
             level=logging.INFO,
@@ -487,6 +510,23 @@ class AutoCaLC:
             return True
         return False
 
+    def save_periodic_models(self, meta_step):
+        """Save models periodically every 10 meta-episodes"""
+        if meta_step % 10 == 0:
+            # Save student model
+            student_path = os.path.join(self.args.log_dir, f"student_model_step_{meta_step}.zip")
+            self.student.save(student_path)
+            
+            # Save teacher model
+            teacher_path = os.path.join(self.args.log_dir, f"teacher_model_step_{meta_step}.pt")
+            self.teacher.save(teacher_path)
+            
+            logging.info(f"\n[MODEL CHECKPOINT] Saved models at meta-step {meta_step}")
+            logging.info(f"  Student: {student_path}")
+            logging.info(f"  Teacher: {teacher_path}")
+            logging.info(f"  Current validation reward: {self.training_stats['validation_rewards'][-1]:.4f}")
+            logging.info(f"  Best validation reward so far: {self.best_validation_reward:.4f}")
+
     def log_training_progress(self, meta_step, meta_reward, validation_metrics, teacher_stats, 
                              selected_intervention, cumulative_timesteps, count_callback=None):
         """Comprehensive logging of training progress"""
@@ -500,15 +540,39 @@ class AutoCaLC:
             self.training_stats['teacher_losses'].append(teacher_stats['avg_loss'])
 
         # Log to console
-        logging.info(f"Meta-step {meta_step}/{self.args.meta_episodes}:")
-        logging.info(f"  Selected intervention: {selected_intervention['type']}")
-        logging.info(f"  Meta-reward: {meta_reward:.4f}")
-        logging.info(f"  Validation reward: {validation_metrics['validation_avg_reward']:.4f}")
-        logging.info(f"  Validation success rate: {validation_metrics['validation_success_rate']:.3f}")
-        logging.info(f"  Teacher stats: {teacher_stats}")
+        logging.info(f"\n[TRAINING SUMMARY] Meta-step {meta_step}/{self.args.meta_episodes}")
+        logging.info(f"  Intervention: {selected_intervention['type']} | Meta-reward: {meta_reward:.4f}")
+        logging.info(f"  Validation: {validation_metrics['validation_avg_reward']:.4f} (±{validation_metrics['validation_reward_std']:.3f})")
+        logging.info(f"  Success rate: {validation_metrics['validation_success_rate']:.3f}")
+        
+        # Handle teacher stats which might be empty or None
+        current_epsilon = teacher_stats.get('current_epsilon', 0)
+        avg_q_value = teacher_stats.get('avg_q_value', 0)
+        if current_epsilon is not None and avg_q_value is not None:
+            logging.info(f"  Teacher ε: {current_epsilon:.4f} | Q-avg: {avg_q_value:.3f}")
+        else:
+            logging.info(f"  Teacher ε: {current_epsilon or 'N/A'} | Q-avg: {avg_q_value or 'N/A'}")
+        
+        # Show intervention preference trend (last 5 interventions)
+        if len(self.training_stats['selected_interventions']) >= 5:
+            recent_interventions = self.training_stats['selected_interventions'][-5:]
+        else:
+            recent_interventions = self.training_stats['selected_interventions']
+        logging.info(f"  Recent choices: {' -> '.join(recent_interventions)}")
+        
+        # Best model status
+        if validation_metrics['validation_avg_reward'] > self.best_validation_reward:
+            logging.info(f"  🌟 NEW BEST MODEL! Previous best: {self.best_validation_reward:.4f}")
 
         # Log to wandb
         if self.args.use_wandb:
+            # Safely get teacher stats
+            teacher_epsilon = 0
+            if (hasattr(self.teacher, 'training_stats') and 
+                'epsilon_values' in self.teacher.training_stats and 
+                self.teacher.training_stats['epsilon_values']):
+                teacher_epsilon = self.teacher.training_stats['epsilon_values'][-1]
+            
             wandb_log = {
                 'meta_step': meta_step,
                 'meta_reward': meta_reward,
@@ -516,18 +580,26 @@ class AutoCaLC:
                 'validation/success_rate': validation_metrics['validation_success_rate'],
                 'validation/reward_std': validation_metrics['validation_reward_std'],
                 'selected_intervention': selected_intervention['type'],
-                'teacher/epsilon': self.teacher.training_stats['epsilon_values'][-1],
-                'teacher/avg_q_value': teacher_stats.get('avg_q_value', 0),
-                'teacher/loss': teacher_stats.get('avg_loss', 0),
+                'teacher/epsilon': teacher_epsilon,
+                'teacher/avg_q_value': teacher_stats.get('avg_q_value', 0) or 0,
+                'teacher/loss': teacher_stats.get('avg_loss', 0) or 0,
                 'cumulative_timesteps': cumulative_timesteps,
                 'unique_states': len(count_callback.visit_counts) if count_callback else 0,
-                **{f"teacher_{k}": v for k, v in teacher_stats.items()}
             }
+            
+            # Add teacher stats safely
+            for k, v in teacher_stats.items():
+                if v is not None and isinstance(v, (int, float)):
+                    wandb_log[f"teacher_{k}"] = v
+                    
             wandb.log(wandb_log)
 
     def train(self):
         """Main training loop with enhanced logging and adaptive teacher"""
         logging.info("Starting AutoCaLC training with recurrent teacher...")
+        
+        # add test episodes attribute for initial validation
+        self.args.test_episodes = self.args.validation_episodes
         
         # Initial validation
         initial_validation = run_validation_protocol(
@@ -563,7 +635,32 @@ class AutoCaLC:
             )
             selected_intervention = INTERVENTIONS[selected_intervention_idx]
 
-            logging.info(f"Teacher selected intervention: {selected_intervention['type']}")
+            # Log teacher's decision criteria
+            logging.info(f"\n[TEACHER DECISION] Meta-step {meta_step}")
+            logging.info(f"  State representation: {current_meta_state}")
+            
+            # Handle Q-values which might be empty
+            if self.teacher.training_stats['q_values']:
+                q_vals = self.teacher.training_stats['q_values'][-1]
+                logging.info(f"  Q-values for interventions: {q_vals}")
+            else:
+                logging.info(f"  Q-values for interventions: N/A (no Q-values computed yet)")
+                
+            logging.info(f"  Selected: {selected_intervention['type']} (idx: {selected_intervention_idx})")
+            
+            # Handle epsilon values which might be empty
+            if self.teacher.training_stats['epsilon_values']:
+                current_epsilon = self.teacher.training_stats['epsilon_values'][-1]
+                logging.info(f"  Exploration rate: {current_epsilon:.4f}")
+            else:
+                logging.info(f"  Exploration rate: N/A")
+                
+            # Handle action types which might be empty
+            if self.teacher.training_stats['actions_taken']:
+                decision_type = self.teacher.training_stats['actions_taken'][-1]
+                logging.info(f"  Decision type: {decision_type}")
+            else:
+                logging.info(f"  Decision type: N/A")
 
             # 3. Train student on selected intervention
             train_env = create_environment(self.args.task, selected_intervention, seed=self.args.seed + meta_step)
@@ -589,6 +686,12 @@ class AutoCaLC:
 
             # Train student with count-based exploration
             self.student.set_env(vec_env)
+            
+            # Log pre-training performance
+            pre_training_reward = current_validation['validation_avg_reward'] if 'current_validation' in locals() else last_validation_reward
+            logging.info(f"\n[STUDENT TRAINING] Starting on {selected_intervention['type']} intervention...")
+            logging.info(f"  Pre-training validation reward: {pre_training_reward:.4f}")
+            
             self.student.learn(
                 total_timesteps=self.args.student_train_steps,
                 callback=CallbackList(callbacks),
@@ -598,7 +701,14 @@ class AutoCaLC:
             cumulative_timesteps += self.args.student_train_steps
             train_env.close()
 
+            # Log post-training metrics
+            logging.info(f"[STUDENT TRAINING] Completed {self.args.student_train_steps} steps")
+            logging.info(f"  Unique states explored: {len(count_callback.visit_counts)}")
+            logging.info(f"  Total cumulative timesteps: {cumulative_timesteps}")
+
             # x. run_post_episode_validation handles best model tracking
+            # adding temporary test episodes attribute to match baselines.py expectation
+            self.args.test_episodes = self.args.validation_episodes
             current_validation = run_post_episode_validation(
                 student_model=self.student,
                 task_name=self.args.task,
@@ -639,10 +749,25 @@ class AutoCaLC:
             )
             teacher_loss = self.teacher.train_step(meta_step)
 
+            # Log teacher learning progress
+            logging.info(f"\n[TEACHER LEARNING] Meta-reward: {meta_reward:.4f}")
+            logging.info(f"  Validation improvement: {last_validation_reward:.4f} -> {current_validation['validation_avg_reward']:.4f}")
+            
+            # Handle teacher_loss which can be None
+            if teacher_loss is not None:
+                logging.info(f"  Teacher loss: {teacher_loss:.6f}")
+            else:
+                logging.info(f"  Teacher loss: N/A (insufficient replay buffer samples)")
+                
+            logging.info(f"  Replay buffer size: {len(self.teacher.replay_buffer)}")
+            logging.info(f"  Target network updates: {self.teacher.update_count // self.teacher.target_update_freq}")
+
             # 8. Get teacher statistics, log progress, and leverage CSVLogger
             teacher_stats = self.teacher.get_training_stats()
             self.log_training_progress(meta_step, meta_reward, current_validation, teacher_stats, 
                                      selected_intervention, cumulative_timesteps, count_callback)
+            
+            # Log validation episode
             self.csv_logger.log_validation_episode(
                 meta_step, cumulative_timesteps, current_validation['validation_avg_reward'],
                 current_validation['validation_reward_std'], current_validation['validation_success_rate'],
@@ -650,26 +775,19 @@ class AutoCaLC:
                 current_validation['validation_length_std'], baseline_type="autocalc"
             )
 
-            # getting performance metrics for the selected intervention
-            intervention_metrics = test_intervention_performance(
-                self.student,
-                selected_intervention,
-                self.args.task,
-                num_episodes=self.args.intervention_test_episodes,
-                seed=self.args.seed + meta_step
-            )
-
-            self.csv_logger.log_intervention_test(
-                meta_step, 
-                selected_intervention['type'],
-                current_validation['validation_avg_reward'], 
-                current_validation['validation_success_rate'],
-                current_validation['validation_avg_length'], 
-                True, 
-                cumulative_timesteps,
-                None, 
+            # Test ALL interventions for comprehensive logging (like baselines)
+            test_all_interventions(
+                student_model=self.student,
+                task_name=self.args.task,
+                stage_num=meta_step,
+                args=self.args,
+                csv_logger=self.csv_logger,
+                cumulative_timesteps=cumulative_timesteps,
                 baseline_type="autocalc"
             )
+
+            # Save models periodically
+            self.save_periodic_models(meta_step)
 
             # Update for next iteration
             last_validation_reward = current_validation['validation_avg_reward']
@@ -680,6 +798,30 @@ class AutoCaLC:
         
         teacher_model_path = os.path.join(self.args.log_dir, "final_teacher_model.pt")
         self.teacher.save(teacher_model_path)
+
+        # Training completion summary
+        intervention_counts = {}
+        for intervention in self.training_stats['selected_interventions']:
+            intervention_counts[intervention] = intervention_counts.get(intervention, 0) + 1
+        
+        logging.info(f"\n{'='*80}")
+        logging.info(f"TRAINING COMPLETED - AutoCaLC Summary")
+        logging.info(f"{'='*80}")
+        logging.info(f"Total meta-episodes: {self.args.meta_episodes}")
+        logging.info(f"Total timesteps: {cumulative_timesteps:,}")
+        logging.info(f"Final validation reward: {current_validation['validation_avg_reward']:.4f}")
+        logging.info(f"Best validation reward: {self.best_validation_reward:.4f} (step {self.best_model_meta_step})")
+        logging.info(f"Improvement: {self.best_validation_reward - initial_validation['validation_avg_reward']:.4f}")
+        logging.info(f"\nIntervention Selection Frequency:")
+        for intervention, count in sorted(intervention_counts.items(), key=lambda x: x[1], reverse=True):
+            percentage = (count / len(self.training_stats['selected_interventions'])) * 100
+            logging.info(f"  {intervention}: {count} times ({percentage:.1f}%)")
+        
+        logging.info(f"\nModel Files:")
+        logging.info(f"  Final student: {final_model_path}")
+        logging.info(f"  Best student: {self.best_model_path}")
+        logging.info(f"  Final teacher: {teacher_model_path}")
+        logging.info(f"{'='*80}")
 
         logging.info(f"Training completed!")
         logging.info(f"Best validation reward: {self.best_validation_reward:.4f} at meta-step {self.best_model_meta_step}")

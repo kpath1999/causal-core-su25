@@ -119,7 +119,7 @@ def set_seed(seed):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
-    logging.info(f"Random seed set to {seed}")
+    # logging.info(f"Random seed set to {seed}")  # Commented out for cleaner output
 
 # =====================
 # Interventions List
@@ -408,7 +408,7 @@ class BetaVAE(nn.Module):
 # =====================
 def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=500, device='cpu', intervention_type="unknown", seed=0):
     set_seed(seed)
-    print(f"evaluating CM score for {intervention_type} intervention...")
+    # print(f"evaluating CM score for {intervention_type} intervention...")  # Commented out for cleaner output
     # collect data using student policy
     data = []
     total_steps = 0
@@ -454,10 +454,17 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
             # print("no data collected! returning cm score of 0")
             pass
 
-    states = torch.tensor([d[0] for d in data], dtype=torch.float32).to(device)
-    actions = torch.tensor([d[1] for d in data], dtype=torch.float32).to(device)    
-    next_states = torch.tensor([d[2] for d in data], dtype=torch.float32).to(device)
-    rewards = torch.tensor([d[3] for d in data], dtype=torch.float32).to(device).unsqueeze(-1)
+    # Convert to numpy arrays first
+    states_np = np.array([d[0] for d in data], dtype=np.float32)
+    actions_np = np.array([d[1] for d in data], dtype=np.float32)
+    next_states_np = np.array([d[2] for d in data], dtype=np.float32)
+    rewards_np = np.array([d[3] for d in data], dtype=np.float32)
+
+    # Use torch.from_numpy for fastest conversion
+    states = torch.from_numpy(states_np).to(device)
+    actions = torch.from_numpy(actions_np).to(device)
+    next_states = torch.from_numpy(next_states_np).to(device)
+    rewards = torch.from_numpy(rewards_np).to(device).unsqueeze(-1)
 
     # print(f"tensor shapes - states: {states.shape}, actions: {actions.shape}")
 
