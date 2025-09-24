@@ -39,6 +39,7 @@ import torch.nn as nn
 import torch.optim as optim
 import random
 import os
+import json
 import argparse
 import logging
 from collections import deque
@@ -69,10 +70,12 @@ from baselines import (
     create_environment,
     evaluate_cm_score,
     test_intervention_performance,
+    run_post_episode_validation,
     RewardMonitorCallback,
     IntervenedCausalWorld,
     CSVLogger,
-    ValidationCallback
+    ValidationCallback,
+    CountBasedRewardCallback
 )
 from validation_actor import ValidationInterventionActorPolicy
 import wandb
@@ -99,13 +102,7 @@ class RecurrentDQN(nn.Module):
         self.lstm = nn.LSTM(hidden_dim, hidden_dim, lstm_layers, batch_first=True, dropout=0.1)
 
         # Q-value heads with dueling architecture
-        self.value_head = nn.Sequential(
-            nn.Linear(hidden_dim, hidden_dim // 2),
-            nn.ReLU(),
-            nn.Linear(hidden_dim // 2, 1)
-        )
-        
-        self.advantage_head = nn.Sequential(
+        self.q_head = nn.Sequential(
             nn.Linear(hidden_dim, hidden_dim // 2),
             nn.ReLU(),
             nn.Linear(hidden_dim // 2, action_dim)
@@ -131,55 +128,25 @@ class RecurrentDQN(nn.Module):
         # Use last timestep output for Q-value computation
         last_output = lstm_out[:, -1, :]
         
-        # Dueling DQN: V(s) + A(s,a) - mean(A(s,a))
-        value = self.value_head(last_output)
-        advantage = self.advantage_head(last_output)
-        
-        q_values = value + advantage - advantage.mean(dim=1, keepdim=True)
+        q_values = self.q_head(last_output)
         
         return q_values, new_hidden
-
-class ReplayBuffer:
-    """replay buffer for storing sequences and experiences"""
-    def __init__(self, capacity, state_dim, device, sequence_length=5):
-        self.capacity = capacity
-        self.device = device
-        self.sequence_length = sequence_length
-        self.buffer = deque(maxlen=capacity)
-        self.state_sequences = deque(maxlen=capacity)
-    
-    def push(self, state_sequence, action, reward, next_state_sequence):
-        """store a complete experience with state sequences"""
-        self.buffer.append((state_sequence, action, reward, next_state_sequence))
-        self.state_sequences.append(state_sequence)
-
-    def sample(self, batch_size):
-        """sample batch of experiences"""
-        batch = random.sample(self.buffer, batch_size)
-        state_seqs, actions, rewards, next_state_seqs = zip(*batch)
-
-        return (
-            torch.tensor(np.stack(state_seqs), dtype=torch.float32).to(self.device),
-            torch.tensor(actions, dtype=torch.long).to(self.device),
-            torch.tensor(rewards, dtype=torch.float32).to(self.device),
-            torch.tensor(np.stack(next_state_seqs), dtype=torch.float32).to(self.device)
-        )
-    
-    def __len__(self):
-        return len(self.buffer)
 
 class RecurrentTeacherAgent:
     """Teacher DQN agent with LSTM memory and logging"""
     def __init__(self, state_dim, action_dim, lr=1e-4, gamma=0.99, device='cpu',
-                 buffer_size=10000, batch_size=32, sequence_length=5, target_update_freq=100):
+                 buffer_size=10000, batch_size=32, sequence_length=5, target_update_freq=100,
+                 min_epsilon=0.05, epsilon_decay=0.90):
         self.device = device
         self.sequence_length = sequence_length
         self.batch_size = batch_size
         self.gamma = gamma
         self.target_update_freq = target_update_freq
         self.update_count = 0
+        self.min_epsilon = min_epsilon
+        self.epsilon_decay = epsilon_decay
 
-        # Networks with Double DQN architecture
+        # Networks with simple DQN architecture
         self.q_net = RecurrentDQN(state_dim, action_dim).to(device)
         self.target_net = deepcopy(self.q_net)
         self.optimizer = optim.Adam(self.q_net.parameters(), lr=lr)
@@ -204,7 +171,7 @@ class RecurrentTeacherAgent:
         self.state_history.append(state)
         
         # Adaptive epsilon decay based on meta_step
-        adaptive_epsilon = max(0.05, epsilon * (0.995 ** meta_step))
+        adaptive_epsilon = max(self.min_epsilon, epsilon * (self.epsilon_decay ** meta_step))
         self.training_stats['epsilon_values'].append(adaptive_epsilon)
         
         if random.random() < adaptive_epsilon:
@@ -244,17 +211,11 @@ class RecurrentTeacherAgent:
         current_q, _ = self.q_net(state_seqs)
         current_q = current_q.gather(1, actions.unsqueeze(1)).squeeze(1)
 
-        # Double DQN target calculation
+        # DQN target calculation
         with torch.no_grad():
-            # Use online network to select actions
-            next_q_online, _ = self.q_net(next_state_seqs)
-            next_actions = next_q_online.argmax(1)
-            
-            # Use target network to evaluate actions
-            next_q_target, _ = self.target_net(next_state_seqs)
-            next_q_values = next_q_target.gather(1, next_actions.unsqueeze(1)).squeeze(1)
-            
-            target_q = rewards + self.gamma * next_q_values
+            next_q_values, _ = self.target_net(next_state_seqs)
+            max_next_q_values = next_q_values.max(dim=1)[0]
+            target_q = rewards + self.gamma * max_next_q_values
         
         # Compute loss
         loss = nn.MSELoss()(current_q, target_q)
@@ -275,6 +236,12 @@ class RecurrentTeacherAgent:
         self.training_stats['rewards_received'].extend(rewards.cpu().numpy().tolist())
 
         return loss.item()
+
+    def update_state_history(self, state):
+        """update state history for recurrent processing"""
+        self.state_history.append(state)
+        if len(self.state_history) > self.sequence_length:
+            self.state_history.popleft()
 
     def get_training_stats(self):
         """Return comprehensive training statistics"""
@@ -320,11 +287,43 @@ class RecurrentTeacherAgent:
         
         logging.info(f"Teacher model loaded from {path}")
 
+
+class ReplayBuffer:
+    """replay buffer for storing sequences and experiences"""
+    def __init__(self, capacity, state_dim, device, sequence_length=5):
+        self.capacity = capacity
+        self.device = device
+        self.sequence_length = sequence_length
+        self.buffer = deque(maxlen=capacity)
+        self.state_sequences = deque(maxlen=capacity)
+    
+    def push(self, state_sequence, action, reward, next_state_sequence):
+        """store a complete experience with state sequences"""
+        self.buffer.append((state_sequence, action, reward, next_state_sequence))
+        self.state_sequences.append(state_sequence)
+
+    def sample(self, batch_size):
+        """sample batch of experiences"""
+        batch = random.sample(self.buffer, batch_size)
+        state_seqs, actions, rewards, next_state_seqs = zip(*batch)
+
+        return (
+            torch.tensor(np.stack(state_seqs), dtype=torch.float32).to(self.device),
+            torch.tensor(actions, dtype=torch.long).to(self.device),
+            torch.tensor(rewards, dtype=torch.float32).to(self.device),
+            torch.tensor(np.stack(next_state_seqs), dtype=torch.float32).to(self.device)
+        )
+    
+    def __len__(self):
+        return len(self.buffer)
+
+
 # get the teacher state
-def get_teacher_state(student_model, task_name, interventions, device='cpu', seed=0):
+def get_teacher_state(student_model, task_name, interventions, device='cpu', seed=0, 
+                     test_episodes=5, cm_weight=0.5):
     """
     Compute the meta-state for the teacher by evaluating reward and CM score for each intervention
-    Returns interleaved array: [reward1, cm1, reward2, cm2, ..., reward7, cm7]
+    Returns a combined score array: [cm_weight*cm + (1-cm_weight)*reward for each intervention]
     """
     logging.info("Computing teacher state (rewards and CM scores for all interventions)")
     cm_scores = []
@@ -336,7 +335,7 @@ def get_teacher_state(student_model, task_name, interventions, device='cpu', see
             student_model,
             intervention,
             task_name,
-            num_episodes=5,
+            num_episodes=test_episodes,
             seed=seed + i
         )
         rewards.append(reward_metrics['avg_reward'])
@@ -346,7 +345,7 @@ def get_teacher_state(student_model, task_name, interventions, device='cpu', see
         cm_score = evaluate_cm_score(
             env, 
             student_model, 
-            max_episodes=5, 
+            max_episodes=test_episodes, 
             device=device,
             intervention_type=intervention['type'], 
             seed=seed + i + 100
@@ -363,10 +362,8 @@ def get_teacher_state(student_model, task_name, interventions, device='cpu', see
     normalized_rewards = (reward_array - np.mean(reward_array)) / (np.std(reward_array) + 1e-8)
     normalized_cm = (cm_array - np.mean(cm_array)) / (np.std(cm_array) + 1e-8)
 
-    # interleave rewards and CM scores
-    state = np.zeros(len(INTERVENTIONS) * 2, dtype=np.float32)
-    state[0::2] = normalized_rewards    # even indices for rewards
-    state[1::2] = normalized_cm         # odd indices for cm scores
+    # combine rewards and CM scores with configurable weight
+    state = cm_weight * normalized_cm + (1 - cm_weight) * normalized_rewards
 
     return state
 
@@ -382,7 +379,7 @@ def run_validation_protocol(student_model, task_name, stage_num, args, csv_logge
         csv_logger=csv_logger,
         stage=stage_num,
         cumulative_timesteps=cumulative_timesteps,
-        validation_episodes=10,
+        validation_episodes=args.validation_episodes,
         seed=args.seed + stage_num * 10000,
         baseline_type="autocalc"
     )
@@ -453,7 +450,7 @@ class AutoCaLC:
         env.close()
 
         # Initialize teacher (recurrent DQN)
-        state_dim = len(INTERVENTIONS) * 2  # rewards + CM scores
+        state_dim = len(INTERVENTIONS)  # rewards + CM scores
         action_dim = len(INTERVENTIONS)
         self.teacher = RecurrentTeacherAgent(
             state_dim, 
@@ -463,7 +460,9 @@ class AutoCaLC:
             gamma=self.args.teacher_gamma,
             buffer_size=self.args.teacher_buffer_size,
             batch_size=self.args.teacher_batch_size,
-            sequence_length=self.args.sequence_length
+            sequence_length=self.args.sequence_length,
+            min_epsilon=self.args.teacher_min_epsilon,
+            epsilon_decay=self.args.teacher_epsilon_decay
         )
         
         logging.info(f"Models initialized on device: {self.device}")
@@ -488,7 +487,8 @@ class AutoCaLC:
             return True
         return False
 
-    def log_training_progress(self, meta_step, meta_reward, validation_metrics, teacher_stats, selected_intervention):
+    def log_training_progress(self, meta_step, meta_reward, validation_metrics, teacher_stats, 
+                             selected_intervention, cumulative_timesteps, count_callback=None):
         """Comprehensive logging of training progress"""
         # Update training statistics
         self.training_stats['meta_rewards'].append(meta_reward)
@@ -512,9 +512,15 @@ class AutoCaLC:
             wandb_log = {
                 'meta_step': meta_step,
                 'meta_reward': meta_reward,
-                'validation_reward': validation_metrics['validation_avg_reward'],
-                'validation_success_rate': validation_metrics['validation_success_rate'],
+                'validation/reward': validation_metrics['validation_avg_reward'],
+                'validation/success_rate': validation_metrics['validation_success_rate'],
+                'validation/reward_std': validation_metrics['validation_reward_std'],
                 'selected_intervention': selected_intervention['type'],
+                'teacher/epsilon': self.teacher.training_stats['epsilon_values'][-1],
+                'teacher/avg_q_value': teacher_stats.get('avg_q_value', 0),
+                'teacher/loss': teacher_stats.get('avg_loss', 0),
+                'cumulative_timesteps': cumulative_timesteps,
+                'unique_states': len(count_callback.visit_counts) if count_callback else 0,
                 **{f"teacher_{k}": v for k, v in teacher_stats.items()}
             }
             wandb.log(wandb_log)
@@ -542,8 +548,12 @@ class AutoCaLC:
             # 1. Get current meta-state
             current_meta_state = get_teacher_state(
                 self.student, self.args.task, INTERVENTIONS,
-                device=self.device, seed=self.args.seed + meta_step
+                device=self.device, seed=self.args.seed + meta_step,
+                test_episodes=self.args.intervention_test_episodes,
+                cm_weight=self.args.teacher_state_cm_weight
             )
+
+            self.teacher.update_state_history(current_meta_state)
 
             # 2. Teacher selects intervention (with adaptive exploration)
             selected_intervention_idx = self.teacher.select_action(
@@ -560,17 +570,24 @@ class AutoCaLC:
             vec_env = DummyVecEnv([lambda: train_env])
             vec_env = VecMonitor(vec_env, filename=os.path.join(self.args.log_dir, f'monitor_stage{meta_step}.csv'))
 
-            # Set up callbacks
+            # Add count-based exploration callback
+            count_callback = CountBasedRewardCallback(
+                beta=self.args.count_beta,
+                encoding_dim=self.args.count_encoding_dim,
+                verbose=1
+            )
+            
+            # Set up other callbacks
             reward_monitor = RewardMonitorCallback(
                 selected_intervention['type'], self.csv_logger, meta_step, 
                 cumulative_timesteps, baseline_type="autocalc"
             )
             
-            callbacks = [reward_monitor]
+            callbacks = [count_callback, reward_monitor]
             if self.args.use_wandb:
                 callbacks.append(WandbCallback(gradient_save_freq=1000, verbose=0))
 
-            # Train student
+            # Train student with count-based exploration
             self.student.set_env(vec_env)
             self.student.learn(
                 total_timesteps=self.args.student_train_steps,
@@ -581,21 +598,35 @@ class AutoCaLC:
             cumulative_timesteps += self.args.student_train_steps
             train_env.close()
 
-            # 4. Evaluate student performance
-            current_validation = run_validation_protocol(
-                self.student, self.args.task, meta_step, self.args, self.csv_logger, cumulative_timesteps
+            # x. run_post_episode_validation handles best model tracking
+            current_validation = run_post_episode_validation(
+                student_model=self.student,
+                task_name=self.args.task,
+                stage_num=meta_step,
+                args=self.args,
+                csv_logger=self.csv_logger,
+                cumulative_timesteps=cumulative_timesteps,
+                baseline_type="autocalc",
+                best_validation_info={
+                    'best_reward': self.best_validation_reward,
+                    'best_stage': self.best_model_meta_step,
+                    'best_model_path': self.best_model_path,
+                    'best_metrics': None
+                }
             )
-
-            # 5. Calculate meta-reward (improvement-based)
             meta_reward = current_validation['validation_avg_reward'] - last_validation_reward
-            
-            # 6. Update best model if needed
-            self.update_best_model(current_validation['validation_avg_reward'], meta_step)
+
+            # update best info from return value
+            if current_validation['validation_avg_reward'] > self.best_validation_reward:
+                self.best_validation_reward = current_validation['validation_avg_reward']
+                self.best_model_meta_step = meta_step
 
             # 7. Get next meta-state and train teacher
             next_meta_state = get_teacher_state(
                 self.student, self.args.task, INTERVENTIONS,
-                device=self.device, seed=self.args.seed + meta_step + 1
+                device=self.device, seed=self.args.seed + meta_step + 1,
+                test_episodes=self.args.intervention_test_episodes,
+                cm_weight=self.args.teacher_state_cm_weight
             )
 
             # Create state sequences for recurrent learning
@@ -608,10 +639,36 @@ class AutoCaLC:
             )
             teacher_loss = self.teacher.train_step(meta_step)
 
-            # 8. Get teacher statistics and log progress
+            # 8. Get teacher statistics, log progress, and leverage CSVLogger
             teacher_stats = self.teacher.get_training_stats()
-            self.log_training_progress(
-                meta_step, meta_reward, current_validation, teacher_stats, selected_intervention
+            self.log_training_progress(meta_step, meta_reward, current_validation, teacher_stats, 
+                                     selected_intervention, cumulative_timesteps, count_callback)
+            self.csv_logger.log_validation_episode(
+                meta_step, cumulative_timesteps, current_validation['validation_avg_reward'],
+                current_validation['validation_reward_std'], current_validation['validation_success_rate'],
+                current_validation['validation_success_rate_std'], current_validation['validation_avg_length'],
+                current_validation['validation_length_std'], baseline_type="autocalc"
+            )
+
+            # getting performance metrics for the selected intervention
+            intervention_metrics = test_intervention_performance(
+                self.student,
+                selected_intervention,
+                self.args.task,
+                num_episodes=self.args.intervention_test_episodes,
+                seed=self.args.seed + meta_step
+            )
+
+            self.csv_logger.log_intervention_test(
+                meta_step, 
+                selected_intervention['type'],
+                current_validation['validation_avg_reward'], 
+                current_validation['validation_success_rate'],
+                current_validation['validation_avg_length'], 
+                True, 
+                cumulative_timesteps,
+                None, 
+                baseline_type="autocalc"
             )
 
             # Update for next iteration
@@ -629,7 +686,25 @@ class AutoCaLC:
         logging.info(f"Final model saved to: {final_model_path}")
         logging.info(f"Best model saved to: {self.best_model_path}")
 
+
+        # aggregating results for final reporting
+        final_results = {
+            'best_validation_reward': self.best_validation_reward,
+            'best_model_meta_step': self.best_model_meta_step,
+            'final_validation_reward': current_validation['validation_avg_reward'],
+            'total_timesteps': cumulative_timesteps,
+            'meta_episodes': self.args.meta_episodes,
+            'task': self.args.task
+        }
+
+        # save the results as a JSON
+        results_path = os.path.join(self.args.log_dir, "autocalc_results.json")
+        with open(results_path, 'w') as f:
+            json.dump(final_results, f, indent=2)
+        logging.info(f"Final results saved to {results_path}")
+
         if self.args.use_wandb:
+            wandb.run.summary.update(final_results)
             wandb.finish()
 
         return self.student, self.teacher
@@ -665,6 +740,16 @@ def parse_args():
     parser.add_argument('--teacher_buffer_size', type=int, default=10000, help='Teacher replay buffer size')
     parser.add_argument('--teacher_batch_size', type=int, default=32, help='Teacher batch size')
     parser.add_argument('--sequence_length', type=int, default=5, help='LSTM sequence length')
+
+    # Count-based exploration parameters for student
+    parser.add_argument('--count_beta', type=float, default=0.01, help='Scaling factor for count-based intrinsic rewards')
+    parser.add_argument('--count_encoding_dim', type=int, default=32, help='Encoding dimension for state hashing')
+    
+    # Teacher state and exploration parameters
+    parser.add_argument('--intervention_test_episodes', type=int, default=5, help='Episodes for testing interventions')
+    parser.add_argument('--teacher_state_cm_weight', type=float, default=0.5, help='Weight for CM score in teacher state')
+    parser.add_argument('--teacher_min_epsilon', type=float, default=0.05, help='Minimum exploration rate for teacher')
+    parser.add_argument('--teacher_epsilon_decay', type=float, default=0.90, help='Epsilon decay rate for teacher')
     
     # Environment and logging
     parser.add_argument('--device_id', type=int, default=6, help='GPU device ID')
@@ -674,6 +759,7 @@ def parse_args():
     
     # Evaluation
     parser.add_argument('--eval', action='store_true', help='Run evaluation after training')
+    parser.add_argument('--eval_only', action='store_true', help='Run evaluation only, skipping training')
     parser.add_argument('--eval_episodes', type=int, default=10, help='Number of episodes for evaluation')
     parser.add_argument('--eval_model_path', type=str, default=None, 
                        help='Path to model for evaluation. If not provided, uses best_student_model.zip if available, otherwise final_student_model.zip')
@@ -818,6 +904,30 @@ def main():
     """Main training function"""
     args = parse_args()
     set_seed(args.seed)
+
+    if args.eval_only:
+        logging.info("Running in evaluation-only mode.")
+        if not os.path.exists(args.log_dir):
+            logging.error(f"Log directory not found for evaluation: {args.log_dir}")
+            return
+        
+        # Ensure we use the best model for eval_only
+        model_path = os.path.join(args.log_dir, "best_student_model.zip")
+        if not os.path.exists(model_path):
+            logging.error(f"Best student model not found in {args.log_dir}")
+            return
+
+        evaluate_student_model(
+            args=args,
+            log_dir=args.log_dir,
+            model_path=model_path,
+            task_name=args.task,
+            seed=args.seed,
+            max_episode_length=args.max_episode_length,
+            num_episodes=args.eval_episodes
+        )
+        logging.info("Evaluation complete.")
+        return
     
     # Initialize AutoCaLC framework
     autocalc = AutoCaLC(args)
