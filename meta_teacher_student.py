@@ -10,14 +10,16 @@ Summary
   5) meta-reward = delta(validation), update teacher.
 
 Quick start
-- Train + evaluate:
-  python meta_teacher_student.py --task pushing --student_train_steps 50000 --meta_episodes 50 --eval --log_dir logs/autocalc_logs
+- Basic training
+python meta_teacher_student.py --task pushing --meta_episodes 50 --student_train_steps 5000 --eval --use_wandb --device_id 7
 
-- Pretrain teacher (examples: 100k/175k/250k):
-  python meta_teacher_student.py --task pushing --teacher_pretrain_steps 100000 --teacher_pretrain_only --save_pretrained_teacher models/teacher_100k.pt --log_dir logs/teacher_pretrain_100k
+- Advanced configuration with wandb
+python meta_teacher_student.py --task pushing --meta_episodes 100 \
+    --teacher_lr 1e-4 --teacher_epsilon 0.2 --sequence_length 10 \
+    --use_wandb --device_id 0 --log_dir logs/experiment_1
 
-- Use a pretrained teacher (example: 100k):
-  python meta_teacher_student.py --task pushing --load_pretrained_teacher models/teacher_100k.pt --log_dir logs/autocalc_teacher100k
+- Quick test run
+python meta_teacher_student.py --task pushing --meta_episodes 5 --student_train_steps 1000 --eval
 
 Tips
 - Multi-seed: add --teacher_seed X --student_seed Y
@@ -77,134 +79,246 @@ import wandb
 from wandb.integration.sb3 import WandbCallback
 
 
-class AutoCaLC:
-    def __init__(self, args):
-        self.args = args
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+class RecurrentDQN(nn.Module):
+    """DQN with LSTM for tracking past trajectories and adapting to student performance"""
+    def __init__(self, state_dim, action_dim, hidden_dim=128, lstm_layers=2):
+        super().__init__()
+        self.state_dim = state_dim
+        self.action_dim = action_dim
+        self.hidden_dim = hidden_dim
+        self.lstm_layers = lstm_layers
 
-        # 1. initialize student and teacher
-        self.student = self._initialize_student()
-        self.teacher = TeacherDQNAgent(
-            statedim=len(INTERVENTIONS) * 2,
-            actiondim=len(INTERVENTIONS),
-            device=self.device
+        # Input processing layer
+        self.input_net = nn.Sequential(
+            nn.Linear(state_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Dropout(0.1)
         )
 
-        # 2. initialize environments and logging
-        self.validation_envs = self._create_validation_envs()
-        self.csv_logger = CSVLogger(log_dir=args.logdir)
-    
-    def _initialize_student(self):
-        # logic to create the initial PPO student model
-        pass
+        # LSTM for sequential learning
+        self.lstm = nn.LSTM(hidden_dim, hidden_dim, lstm_layers, batch_first=True, dropout=0.1)
 
-    def pretrain_teacher(self):
-        """
-        cleaner pretraining loop. student model is passed but remains frozen.
-        NOTE: is that the right approach? shouldn't the student model respond to the interventions provided by the teacher?
-        it is this adaptive loop that will help the teacher learn.
-        """
-        logging.info("Starting teacher pretraining...")
-        # all pretraining logic is self-contained here.
-        # computes states, selects actions, calculates rewards.
-        # updates the teacher network against a static student.
-        pass
-
-    def train(self):
-        """
-        main meta-learning loop.
-        """
-        logging.info("Starting AutoCaLC meta-training...")
-
-        last_validation_perf = self.run_validation_protocol(self.student)
-
-        for meta_step in range(self.args.meta_episodes):
-            # the entire meta-episode logic is now a clean method call
-            last_validation_perf = self.run_meta_episode(meta_step, last_validation_perf)
-    
-    def run_meta_episode(self, meta_step, last_validation_perf):
-        """
-        executes a single, complete teacher-student interaction.
-        """
-        # 1. get current state
-        meta_state = self.get_teacher_state(self.student)
-
-        # 2. teacher selects intervention
-        epsilon = get_exploration_rate(meta_step, self.args.meta_episodes)
-        action_idx = self.teacher.select_action(meta_state, epsilon)
-
-        # 3. student trains on the intervention
-        self.train_student_on_intervention(self.student, action_idx, meta_step)
-
-        # 4. evaluate student and get meta-reward
-        current_validation_perf = self.run_validation_protocol(self.student)
-        meta_reward = current_validation_perf - last_validation_perf    # learning progress
-
-        # 5. get next state and update teacher
-        next_meta_state = self.get_teacher_state(self.student)
-        self.teacher.replay_buffer.push(meta_state, action_idx, meta_reward, next_meta_state)
-        self.teacher.train_step()
+        # Q-value heads with dueling architecture
+        self.value_head = nn.Sequential(
+            nn.Linear(hidden_dim, hidden_dim // 2),
+            nn.ReLU(),
+            nn.Linear(hidden_dim // 2, 1)
+        )
         
-        return current_validation_perf
+        self.advantage_head = nn.Sequential(
+            nn.Linear(hidden_dim, hidden_dim // 2),
+            nn.ReLU(),
+            nn.Linear(hidden_dim // 2, action_dim)
+        )
     
-    # include other helper functions like get_teacher_state, train_student, etc.
+    def forward(self, states, hidden=None):
+        """
+        states: (batch_size, seq_length, state_dim) or (batch_size, state_dim)
+        hidden: LSTM hidden state tuple (h_0, c_0)
+        """
+        if len(states.shape) == 2:  # Single timestep
+            states = states.unsqueeze(1)
+        
+        batch_size, seq_len, _ = states.shape
+        
+        # Process input through initial network
+        processed = self.input_net(states.view(-1, self.state_dim))
+        processed = processed.view(batch_size, seq_len, self.hidden_dim)
+        
+        # LSTM forward pass
+        lstm_out, new_hidden = self.lstm(processed, hidden)
+        
+        # Use last timestep output for Q-value computation
+        last_output = lstm_out[:, -1, :]
+        
+        # Dueling DQN: V(s) + A(s,a) - mean(A(s,a))
+        value = self.value_head(last_output)
+        advantage = self.advantage_head(last_output)
+        
+        q_values = value + advantage - advantage.mean(dim=1, keepdim=True)
+        
+        return q_values, new_hidden
 
-
-if __name__ == "__main__":
-    args = parse_args()
-    set_seed(args.seed)
-
-    autocalc_framework = AutoCaLC(args)
-
-    if args.teacher_pretrain_steps > 0:
-        autocalc_framework.pretrain_teacher()
-        if args.save_pretrained_teacher():
-            autocalc_framework.teacher.save(args.save_pretrained_teacher)
+class ReplayBuffer:
+    """replay buffer for storing sequences and experiences"""
+    def __init__(self, capacity, state_dim, device, sequence_length=5):
+        self.capacity = capacity
+        self.device = device
+        self.sequence_length = sequence_length
+        self.buffer = deque(maxlen=capacity)
+        self.state_sequences = deque(maxlen=capacity)
     
-    if not args.teacher_pretrain_only:
-        if args.load_pretrained_teacher:
-            autocalc_framework.teacher.load(args.load_pretrained_teacher)
-        autocalc_framework.train()
+    def push(self, state_sequence, action, reward, next_state_sequence):
+        """store a complete experience with state sequences"""
+        self.buffer.append((state_sequence, action, reward, next_state_sequence))
+        self.state_sequences.append(state_sequence)
 
+    def sample(self, batch_size):
+        """sample batch of experiences"""
+        batch = random.sample(self.buffer, batch_size)
+        state_seqs, actions, rewards, next_state_seqs = zip(*batch)
 
-# ----------------------------------------------------------------------------------------------
-
-# obtaining the exploration rate
-def get_exploration_rate(meta_step, meta_episodes):
-    """
-    advanced exploration strategy with three phases:
-    1. initial pure exploration phase
-    2. guided exploration phase with faster decay
-    3. fine-tuning phase with minimal exploration
-    """
-    # phase 1: initial pure exploration (first 10% of episodes)
-    if meta_step < meta_episodes * 0.1:
-        return 1.0
-
-    # phase 2: guided exploration (next 60% of episodes)
-    elif meta_step < meta_episodes * 0.7:
-        # start at 0.8 and decay to 0.2 over this phase
-        phase_progress = (meta_step - meta_episodes * 0.1) / (meta_episodes * 0.6)
-        return 0.8 - 0.6 * phase_progress
+        return (
+            torch.tensor(np.stack(state_seqs), dtype=torch.float32).to(self.device),
+            torch.tensor(actions, dtype=torch.long).to(self.device),
+            torch.tensor(rewards, dtype=torch.float32).to(self.device),
+            torch.tensor(np.stack(next_state_seqs), dtype=torch.float32).to(self.device)
+        )
     
-    # phase 3: fine-tuning (last 30% of episodes)
-    else:
-        # low exploration rate for fine-tuning
-        return 0.2 - 0.15 * ((meta_step - meta_episodes * 0.7) / (meta_episodes * 0.3))
+    def __len__(self):
+        return len(self.buffer)
 
-# setting random seed
-def set_seed(seed):
-    """set random seeds for reproducibility"""
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed(seed)
-        torch.cuda.manual_seed_all(seed)
-    # ensuring deterministic behavior
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    logging.info(f"random seed set to {seed}")
+class RecurrentTeacherAgent:
+    """Teacher DQN agent with LSTM memory and logging"""
+    def __init__(self, state_dim, action_dim, lr=1e-4, gamma=0.99, device='cpu',
+                 buffer_size=10000, batch_size=32, sequence_length=5, target_update_freq=100):
+        self.device = device
+        self.sequence_length = sequence_length
+        self.batch_size = batch_size
+        self.gamma = gamma
+        self.target_update_freq = target_update_freq
+        self.update_count = 0
+
+        # Networks with Double DQN architecture
+        self.q_net = RecurrentDQN(state_dim, action_dim).to(device)
+        self.target_net = deepcopy(self.q_net)
+        self.optimizer = optim.Adam(self.q_net.parameters(), lr=lr)
+
+        # Memory and state tracking
+        self.replay_buffer = ReplayBuffer(buffer_size, state_dim, device, sequence_length)
+        self.state_history = deque(maxlen=sequence_length)
+        self.hidden_state = None
+        
+        # Training statistics
+        self.training_stats = {
+            'losses': [],
+            'q_values': [],
+            'actions_taken': [],
+            'rewards_received': [],
+            'epsilon_values': []
+        }
+    
+    def select_action(self, state, epsilon=0.1, meta_step=0):
+        """Select action using epsilon-greedy with LSTM context and adaptive exploration"""
+        # Add current state to history
+        self.state_history.append(state)
+        
+        # Adaptive epsilon decay based on meta_step
+        adaptive_epsilon = max(0.05, epsilon * (0.995 ** meta_step))
+        self.training_stats['epsilon_values'].append(adaptive_epsilon)
+        
+        if random.random() < adaptive_epsilon:
+            action = random.randint(0, self.q_net.action_dim - 1)
+            self.training_stats['actions_taken'].append(f"random_{action}")
+            return action
+
+        # Prepare sequence for LSTM
+        if len(self.state_history) < self.sequence_length:
+            # Pad with zeros if not enough history
+            padded_states = [np.zeros_like(state) for _ in range(self.sequence_length - len(self.state_history))]
+            padded_states.extend(list(self.state_history))
+            sequence = np.stack(padded_states)
+        else:
+            sequence = np.stack(list(self.state_history))
+        
+        sequence_tensor = torch.tensor(sequence, dtype=torch.float32).unsqueeze(0).to(self.device)
+
+        with torch.no_grad():
+            q_values, self.hidden_state = self.q_net(sequence_tensor, self.hidden_state)
+            action = int(q_values.argmax().item())
+            
+            # Log Q-values for analysis
+            self.training_stats['q_values'].append(q_values.cpu().numpy().flatten())
+            self.training_stats['actions_taken'].append(f"greedy_{action}")
+        
+        return action
+
+    def train_step(self, meta_step=0):
+        """Enhanced training step with Double DQN and comprehensive logging"""
+        if len(self.replay_buffer) < self.batch_size:
+            return None
+        
+        state_seqs, actions, rewards, next_state_seqs = self.replay_buffer.sample(self.batch_size)
+        
+        # Current Q-values
+        current_q, _ = self.q_net(state_seqs)
+        current_q = current_q.gather(1, actions.unsqueeze(1)).squeeze(1)
+
+        # Double DQN target calculation
+        with torch.no_grad():
+            # Use online network to select actions
+            next_q_online, _ = self.q_net(next_state_seqs)
+            next_actions = next_q_online.argmax(1)
+            
+            # Use target network to evaluate actions
+            next_q_target, _ = self.target_net(next_state_seqs)
+            next_q_values = next_q_target.gather(1, next_actions.unsqueeze(1)).squeeze(1)
+            
+            target_q = rewards + self.gamma * next_q_values
+        
+        # Compute loss
+        loss = nn.MSELoss()(current_q, target_q)
+        
+        # Optimize
+        self.optimizer.zero_grad()
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.q_net.parameters(), 1.0)
+        self.optimizer.step()
+
+        # Update target network periodically
+        self.update_count += 1
+        if self.update_count % self.target_update_freq == 0:
+            self.target_net.load_state_dict(self.q_net.state_dict())
+
+        # Log training statistics
+        self.training_stats['losses'].append(loss.item())
+        self.training_stats['rewards_received'].extend(rewards.cpu().numpy().tolist())
+
+        return loss.item()
+
+    def get_training_stats(self):
+        """Return comprehensive training statistics"""
+        if not self.training_stats['losses']:
+            return {}
+        
+        return {
+            'avg_loss': np.mean(self.training_stats['losses'][-100:]),  # Last 100 steps
+            'avg_reward': np.mean(self.training_stats['rewards_received'][-100:]),
+            'avg_q_value': np.mean([np.mean(q) for q in self.training_stats['q_values'][-100:]]),
+            'current_epsilon': self.training_stats['epsilon_values'][-1] if self.training_stats['epsilon_values'] else 0,
+            'total_updates': self.update_count
+        }
+
+    def save(self, path):
+        """Save teacher model and training statistics"""
+        torch.save({
+            'q_net_state_dict': self.q_net.state_dict(),
+            'target_net_state_dict': self.target_net.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'training_stats': self.training_stats,
+            'update_count': self.update_count,
+            'state_history': list(self.state_history)
+        }, path)
+        logging.info(f"Teacher model and stats saved to {path}")
+    
+    def load(self, path):
+        """Load teacher model and training statistics"""
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"No teacher model found at {path}")
+        
+        checkpoint = torch.load(path, map_location=self.device)
+        self.q_net.load_state_dict(checkpoint['q_net_state_dict'])
+        self.target_net.load_state_dict(checkpoint['target_net_state_dict'])
+        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        
+        if 'training_stats' in checkpoint:
+            self.training_stats = checkpoint['training_stats']
+        if 'update_count' in checkpoint:
+            self.update_count = checkpoint['update_count']
+        if 'state_history' in checkpoint:
+            self.state_history = deque(checkpoint['state_history'], maxlen=self.sequence_length)
+        
+        logging.info(f"Teacher model loaded from {path}")
 
 # get the teacher state
 def get_teacher_state(student_model, task_name, interventions, device='cpu', seed=0):
@@ -217,8 +331,6 @@ def get_teacher_state(student_model, task_name, interventions, device='cpu', see
     rewards = []
 
     for i, intervention in enumerate(interventions):
-        logging.info(f"     Processing intervention {i+1}/{len(interventions)}: {intervention['type']}")
-
         # 1. Test the reward performance
         reward_metrics = test_intervention_performance(
             student_model,
@@ -228,7 +340,6 @@ def get_teacher_state(student_model, task_name, interventions, device='cpu', see
             seed=seed + i
         )
         rewards.append(reward_metrics['avg_reward'])
-        logging.info(f"     {intervention['type']} reward: {reward_metrics['avg_reward']:.4f}")
 
         # 2. Compute CM score
         env = create_environment(task_name, intervention, seed=seed + i + 100)
@@ -243,38 +354,21 @@ def get_teacher_state(student_model, task_name, interventions, device='cpu', see
         
         cm_scores.append(cm_score)
         env.close()
-        logging.info(f"     {intervention['type']} CM score: {cm_score:.4f}")
     
-    # normalize reward scores
+    # normalize scores
     reward_array = np.array(rewards, dtype=np.float32)
-    reward_mean = np.mean(reward_array)
-    reward_std = np.std(reward_array)
-    if reward_std > 1e-8:
-        normalized_rewards = (reward_array - reward_mean) / reward_std
-    else:
-        normalized_rewards = reward_array - reward_mean
-    
-    # normalize CM scores
-    cm_array = np.array(cm_scores, dtype=np.float32)  # Fixed: was using rewards instead of cm_scores
-    cm_mean = np.mean(cm_array)
-    cm_std = np.std(cm_array)
-    if cm_std > 1e-8:
-        normalized_cm = (cm_array - cm_mean) / cm_std
-    else:
-        normalized_cm = cm_array - cm_mean
-    
+    cm_array = np.array(cm_scores, dtype=np.float32)
+
+    # simple normalization
+    normalized_rewards = (reward_array - np.mean(reward_array)) / (np.std(reward_array) + 1e-8)
+    normalized_cm = (cm_array - np.mean(cm_array)) / (np.std(cm_array) + 1e-8)
+
     # interleave rewards and CM scores
-    interleaved_state = np.zeros(len(interventions) * 2, dtype=np.float32)
-    interleaved_state[0::2] = normalized_rewards    # even indices for rewards
-    interleaved_state[1::2] = normalized_cm         # odd indices for CM scores
-    
-    logging.info(f"Raw rewards: {reward_array}")
-    logging.info(f"Raw CM scores: {cm_array}")
-    logging.info(f"Normalized rewards: {normalized_rewards}")
-    logging.info(f"Normalized CM scores: {normalized_cm}")
-    logging.info(f"Interleaved state shape: {interleaved_state.shape}")
-    
-    return interleaved_state
+    state = np.zeros(len(INTERVENTIONS) * 2, dtype=np.float32)
+    state[0::2] = normalized_rewards    # even indices for rewards
+    state[1::2] = normalized_cm         # odd indices for cm scores
+
+    return state
 
 # evaluate student generalization
 def run_validation_protocol(student_model, task_name, stage_num, args, csv_logger, cumulative_timesteps):
@@ -298,303 +392,307 @@ def run_validation_protocol(student_model, task_name, stage_num, args, csv_logge
 
     return validation_metrics
 
-def test_all_interventions_for_teacher(student_model, task_name, stage_num, args, csv_logger, cumulative_timesteps, selected_intervention_type):
-    """Test student model on all interventions to gather data for teacher state and logging"""
-    logging.info(f"[AUTOCALC] Testing all interventions at meta-episode {stage_num}")
-    
-    # Test each intervention type including none
-    for intervention in INTERVENTIONS + [None]:
-        int_type = intervention['type'] if intervention is not None else 'none'
+class AutoCaLC:
+    """Enhanced AutoCaLC with adaptive RNN-based teacher and comprehensive logging"""
+    def __init__(self, args):
+        self.args = args
+        self.device = torch.device(f"cuda:{args.device_id}" if torch.cuda.is_available() else "cpu")
         
-        # Test performance on this intervention
-        metrics = test_intervention_performance(
-            student_model=student_model,
-            intervention=intervention,
-            task_name=task_name,
-            num_episodes=getattr(args, 'test_episodes', 10),
-            seed=args.seed + stage_num * 100 + (INTERVENTIONS.index(intervention) if intervention in INTERVENTIONS else 0)
+        # Initialize logging
+        self.setup_logging()
+        
+        # Initialize models
+        self.setup_models()
+        
+        # Best model tracking
+        self.best_validation_reward = float('-inf')
+        self.best_model_meta_step = 0
+        self.best_model_path = os.path.join(args.log_dir, "best_student_model.zip")
+        
+        # Training statistics
+        self.training_stats = {
+            'meta_rewards': [],
+            'validation_rewards': [],
+            'validation_success_rates': [],
+            'teacher_losses': [],
+            'selected_interventions': [],
+            'cumulative_timesteps': []
+        }
+
+    def setup_logging(self):
+        """Setup comprehensive logging system"""
+        os.makedirs(self.args.log_dir, exist_ok=True)
+        
+        # Configure logging
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler(os.path.join(self.args.log_dir, 'autocalc_training.log')),
+                logging.StreamHandler()
+            ]
         )
         
-        # Calculate CM score if needed for teacher state
-        env = create_environment(task_name, intervention, seed=args.seed + stage_num * 100)
-        cm_score = evaluate_cm_score(
-            env, 
-            student_model, 
-            max_episodes=5, 
-            device='cuda' if torch.cuda.is_available() else 'cpu',
-            intervention_type=int_type, 
-            seed=args.seed + stage_num * 100
-        )
-        env.close()
+        # Initialize CSV logger
+        self.csv_logger = CSVLogger(self.args.log_dir)
         
-        # Log results to CSV
-        if csv_logger:
-            csv_logger.log_intervention_test(
-                stage=stage_num,
-                intervention_type=int_type,
-                test_avg_reward=metrics['avg_reward'],
-                test_success_rate=metrics['success_rate'],
-                test_avg_length=metrics['avg_length'],
-                selected=(int_type == selected_intervention_type),  # Mark which intervention was selected
-                cumulative_timesteps=cumulative_timesteps,
-                cm_score=cm_score,
-                baseline_type="autocalc"
+        # Initialize wandb if enabled
+        if self.args.use_wandb:
+            wandb.init(
+                project=f'autocalc-{self.args.task}',
+                name=f'autocalc_{self.args.task}_seed{self.args.seed}',
+                config=vars(self.args),
+                tags=[self.args.task, 'autocalc', 'recurrent-teacher']
             )
 
-# the teacher dqn agent
-class ReplayBuffer:
-    def __init__(self, capacity, state_dim, device):
-        self.capacity = capacity
-        self.device = device
-        self.buffer = deque(maxlen=capacity)
-    
-    def push(self, s, a, r, s_):
-        self.buffer.append((s, a, r, s_))
-    
-    def sample(self, batch_size):
-        batch = random.sample(self.buffer, batch_size)
-        s, a, r, s_ = zip(*batch)
-        return (
-            torch.tensor(np.stack(s), dtype=torch.float32).to(self.device),
-            torch.tensor(a, dtype=torch.long).to(self.device),
-            torch.tensor(r, dtype=torch.float32).to(self.device),
-            torch.tensor(np.stack(s_), dtype=torch.float32).to(self.device)
+    def setup_models(self):
+        """Initialize student and teacher models"""
+        # Initialize student (PPO)
+        env = create_environment(self.args.task, None, seed=self.args.seed)
+        self.student = PPO("MlpPolicy", env, verbose=0, device=self.device)
+        env.close()
+
+        # Initialize teacher (recurrent DQN)
+        state_dim = len(INTERVENTIONS) * 2  # rewards + CM scores
+        action_dim = len(INTERVENTIONS)
+        self.teacher = RecurrentTeacherAgent(
+            state_dim, 
+            action_dim, 
+            device=self.device,
+            lr=self.args.teacher_lr,
+            gamma=self.args.teacher_gamma,
+            buffer_size=self.args.teacher_buffer_size,
+            batch_size=self.args.teacher_batch_size,
+            sequence_length=self.args.sequence_length
         )
+        
+        logging.info(f"Models initialized on device: {self.device}")
 
-    def __len__(self):
-        return len(self.buffer)
+    def update_best_model(self, validation_reward, meta_step):
+        """Update best model if current performance is better"""
+        if validation_reward > self.best_validation_reward:
+            self.best_validation_reward = validation_reward
+            self.best_model_meta_step = meta_step
+            
+            # Save as best model
+            self.student.save(self.best_model_path)
+            logging.info(f"New best model at meta-step {meta_step} with validation reward: {validation_reward:.4f}")
+            
+            # Log to wandb if enabled
+            if self.args.use_wandb:
+                wandb.log({
+                    'best_validation_reward': validation_reward,
+                    'best_model_meta_step': meta_step
+                })
+            
+            return True
+        return False
 
-# TODO: modify this to leakyrelu if you get a vanishing gradient issue
-class DQN(nn.Module):
-    def __init__(self, state_dim, action_dim):
-        super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(state_dim, 128),
-            nn.ReLU(),
-            nn.Linear(128, 128),
-            nn.ReLU(),
-            nn.Linear(128, action_dim)
+    def log_training_progress(self, meta_step, meta_reward, validation_metrics, teacher_stats, selected_intervention):
+        """Comprehensive logging of training progress"""
+        # Update training statistics
+        self.training_stats['meta_rewards'].append(meta_reward)
+        self.training_stats['validation_rewards'].append(validation_metrics['validation_avg_reward'])
+        self.training_stats['validation_success_rates'].append(validation_metrics['validation_success_rate'])
+        self.training_stats['selected_interventions'].append(selected_intervention['type'])
+        
+        if teacher_stats.get('avg_loss'):
+            self.training_stats['teacher_losses'].append(teacher_stats['avg_loss'])
+
+        # Log to console
+        logging.info(f"Meta-step {meta_step}/{self.args.meta_episodes}:")
+        logging.info(f"  Selected intervention: {selected_intervention['type']}")
+        logging.info(f"  Meta-reward: {meta_reward:.4f}")
+        logging.info(f"  Validation reward: {validation_metrics['validation_avg_reward']:.4f}")
+        logging.info(f"  Validation success rate: {validation_metrics['validation_success_rate']:.3f}")
+        logging.info(f"  Teacher stats: {teacher_stats}")
+
+        # Log to wandb
+        if self.args.use_wandb:
+            wandb_log = {
+                'meta_step': meta_step,
+                'meta_reward': meta_reward,
+                'validation_reward': validation_metrics['validation_avg_reward'],
+                'validation_success_rate': validation_metrics['validation_success_rate'],
+                'selected_intervention': selected_intervention['type'],
+                **{f"teacher_{k}": v for k, v in teacher_stats.items()}
+            }
+            wandb.log(wandb_log)
+
+    def train(self):
+        """Main training loop with enhanced logging and adaptive teacher"""
+        logging.info("Starting AutoCaLC training with recurrent teacher...")
+        
+        # Initial validation
+        initial_validation = run_validation_protocol(
+            self.student, self.args.task, 0, self.args, self.csv_logger, 0
         )
+        last_validation_reward = initial_validation['validation_avg_reward']
+        
+        # Update best model with initial performance
+        self.update_best_model(last_validation_reward, 0)
+        
+        cumulative_timesteps = 0
+
+        for meta_step in range(1, self.args.meta_episodes + 1):
+            logging.info(f"\n{'='*60}")
+            logging.info(f"Meta-Episode {meta_step}/{self.args.meta_episodes}")
+            logging.info(f"{'='*60}")
+
+            # 1. Get current meta-state
+            current_meta_state = get_teacher_state(
+                self.student, self.args.task, INTERVENTIONS,
+                device=self.device, seed=self.args.seed + meta_step
+            )
+
+            # 2. Teacher selects intervention (with adaptive exploration)
+            selected_intervention_idx = self.teacher.select_action(
+                current_meta_state, 
+                epsilon=self.args.teacher_epsilon,
+                meta_step=meta_step
+            )
+            selected_intervention = INTERVENTIONS[selected_intervention_idx]
+
+            logging.info(f"Teacher selected intervention: {selected_intervention['type']}")
+
+            # 3. Train student on selected intervention
+            train_env = create_environment(self.args.task, selected_intervention, seed=self.args.seed + meta_step)
+            vec_env = DummyVecEnv([lambda: train_env])
+            vec_env = VecMonitor(vec_env, filename=os.path.join(self.args.log_dir, f'monitor_stage{meta_step}.csv'))
+
+            # Set up callbacks
+            reward_monitor = RewardMonitorCallback(
+                selected_intervention['type'], self.csv_logger, meta_step, 
+                cumulative_timesteps, baseline_type="autocalc"
+            )
+            
+            callbacks = [reward_monitor]
+            if self.args.use_wandb:
+                callbacks.append(WandbCallback(gradient_save_freq=1000, verbose=0))
+
+            # Train student
+            self.student.set_env(vec_env)
+            self.student.learn(
+                total_timesteps=self.args.student_train_steps,
+                callback=CallbackList(callbacks),
+                reset_num_timesteps=False
+            )
+            
+            cumulative_timesteps += self.args.student_train_steps
+            train_env.close()
+
+            # 4. Evaluate student performance
+            current_validation = run_validation_protocol(
+                self.student, self.args.task, meta_step, self.args, self.csv_logger, cumulative_timesteps
+            )
+
+            # 5. Calculate meta-reward (improvement-based)
+            meta_reward = current_validation['validation_avg_reward'] - last_validation_reward
+            
+            # 6. Update best model if needed
+            self.update_best_model(current_validation['validation_avg_reward'], meta_step)
+
+            # 7. Get next meta-state and train teacher
+            next_meta_state = get_teacher_state(
+                self.student, self.args.task, INTERVENTIONS,
+                device=self.device, seed=self.args.seed + meta_step + 1
+            )
+
+            # Create state sequences for recurrent learning
+            current_seq = list(self.teacher.state_history) if len(self.teacher.state_history) > 0 else [current_meta_state] * self.teacher.sequence_length
+            next_seq = current_seq[1:] + [next_meta_state]  # Shift and add new state
+            
+            # Store experience and train teacher
+            self.teacher.replay_buffer.push(
+                np.array(current_seq), selected_intervention_idx, meta_reward, np.array(next_seq)
+            )
+            teacher_loss = self.teacher.train_step(meta_step)
+
+            # 8. Get teacher statistics and log progress
+            teacher_stats = self.teacher.get_training_stats()
+            self.log_training_progress(
+                meta_step, meta_reward, current_validation, teacher_stats, selected_intervention
+            )
+
+            # Update for next iteration
+            last_validation_reward = current_validation['validation_avg_reward']
+
+        # Save final model and statistics
+        final_model_path = os.path.join(self.args.log_dir, "final_student_model.zip")
+        self.student.save(final_model_path)
+        
+        teacher_model_path = os.path.join(self.args.log_dir, "final_teacher_model.pt")
+        self.teacher.save(teacher_model_path)
+
+        logging.info(f"Training completed!")
+        logging.info(f"Best validation reward: {self.best_validation_reward:.4f} at meta-step {self.best_model_meta_step}")
+        logging.info(f"Final model saved to: {final_model_path}")
+        logging.info(f"Best model saved to: {self.best_model_path}")
+
+        if self.args.use_wandb:
+            wandb.finish()
+
+        return self.student, self.teacher
+
+
+# Utility functions
+def set_seed(seed):
+    """Set random seeds for reproducibility"""
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    logging.info(f"Random seed set to {seed}")
+
+def parse_args():
+    """Parse command line arguments"""
+    parser = argparse.ArgumentParser(description="AutoCaLC: Meta-learning with Recurrent Teacher")
     
-    def forward(self, x):
-        return self.net(x)
-
-class TeacherDQNAgent:
-    def __init__(self, state_dim, action_dim, lr=1e-4, gamma=0.99, device='cpu', buffer_size=50000, batch_size=64, target_update=5):
-        self.device = device
-        self.q_net = DQN(state_dim, action_dim).to(device)
-        self.target_net = deepcopy(self.q_net)
-        self.optimizer = optim.Adam(self.q_net.parameters(), lr=lr)
-        self.gamma = gamma
-        self.batch_size = batch_size
-        self.target_update = target_update
-        self.replay_buffer = ReplayBuffer(buffer_size, state_dim, device)
-        self.update_count = 0
+    # Basic training parameters
+    parser.add_argument('--task', type=str, default='pushing', help='CausalWorld task to train on')
+    parser.add_argument('--meta_episodes', type=int, default=50, help='Number of meta-episodes')
+    parser.add_argument('--student_train_steps', type=int, default=5000, help='Timesteps for each student training block')
+    parser.add_argument('--seed', type=int, default=0, help='Random seed')
     
-    def select_action(self, state, epsilon):
-        if random.random() < epsilon:
-            return random.randint(0, self.q_net.net[-1].out_features - 1)
-        state_tensor = torch.tensor(state, dtype=torch.float32).unsqueeze(0).to(self.device)
-        with torch.no_grad():
-            q_values = self.q_net(state_tensor)
-        return int(q_values.argmax().item())
+    # Teacher parameters
+    parser.add_argument('--teacher_lr', type=float, default=1e-4, help='Teacher learning rate')
+    parser.add_argument('--teacher_gamma', type=float, default=0.99, help='Teacher discount factor')
+    parser.add_argument('--teacher_epsilon', type=float, default=0.3, help='Teacher exploration rate')
+    parser.add_argument('--teacher_buffer_size', type=int, default=10000, help='Teacher replay buffer size')
+    parser.add_argument('--teacher_batch_size', type=int, default=32, help='Teacher batch size')
+    parser.add_argument('--sequence_length', type=int, default=5, help='LSTM sequence length')
     
-    def train_step(self):
-        if len(self.replay_buffer) < self.batch_size:
-            return None
-
-        s, a, r, s_ = self.replay_buffer.sample(self.batch_size)
-        q_values = self.q_net(s).gather(1, a.unsqueeze(1)).squeeze(1)
-
-        with torch.no_grad():
-            max_next_q = self.target_net(s_).max(1)[0]
-            target = r + self.gamma * max_next_q
-        
-        loss = nn.MSELoss()(q_values, target)
-        self.optimizer.zero_grad()
-        loss.backward()
-        torch.nn.utils.clip_grad_norm_(self.q_net.parameters(), 1.0)
-        self.optimizer.step()
-
-        # self.update_count += 1
-        # if self.update_count % self.target_update == 0:
-        #     self.target_net.load_state_dict(self.q_net.state_dict())
-        
-        # replacing hard update with:
-        tau = 0.005
-        for target_param, param in zip(self.target_net.parameters(), self.q_net.parameters()):
-            target_param.data.copy_(tau * param.data + (1 - tau) * target_param.data)
-
-        return loss.item()
-
-    def save(self, path):
-        """save the teacher model and optimizer state"""
-        torch.save({
-            'q_net_state_dict': self.q_net.state_dict(),
-            'target_net_state_dict': self.target_net.state_dict(),
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            'buffer': self.replay_buffer.buffer,
-            'update_count': self.update_count
-        }, path)
-        logging.info(f"teacher model saved to {path}")
+    # Environment and logging
+    parser.add_argument('--device_id', type=int, default=6, help='GPU device ID')
+    parser.add_argument('--log_dir', type=str, default='logs/autocalc_logs', help='Log directory')
+    parser.add_argument('--use_wandb', action='store_true', help='Enable wandb logging')
+    parser.add_argument('--validation_episodes', type=int, default=10, help='Episodes per validation environment')
     
-    def load(self, path):
-        """load the teacher model and optimizer state"""
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"No teacher model found at {path}")
-        
-        checkpoint = torch.load(path, map_location=self.device)
-        self.q_net.load_state_dict(checkpoint['q_net_state_dict'])
-        self.target_net.load_state_dict(checkpoint['target_net_state_dict'])
-        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-
-        # restore the replay buffer if it exists in the checkpoint
-        if 'buffer' in checkpoint:
-            self.replay_buffer.buffer = checkpoint['buffer']
-        if 'update_count' in checkpoint:
-            self.update_count = checkpoint['update_count']
-        
-        logging.info(f"Teacher model loaded from {path}")
-
-# our pretraining logic
-def pretrain_teacher(teacher, student_model, args, device='cpu'):
-    """
-    Pretrain the teacher agent using a frozen student model
-
-    Args:
-        teacher: TeacherDQNAgent instance
-        student_model: Frozen PPO student model
-        args: command line arguments
-        device: the device to use (cpu or cuda)
-    """
-
-    logging.info(f"=== Starting teacher pretraining for {args.teacher_pretrain_steps} steps ===")
-
-    # initialize metrics tracking
-    pretraining_losses = []
-    pretraining_rewards = []
-    pretraining_interventions = []
-
-    # set up csv logger for pretraining data
-    pretrain_log_path = os.path.join(args.log_dir, "teacher_pretraining.csv")
-    with open(pretrain_log_path, 'w') as f:
-        f.write("step,intervention,meta_reward,loss\n")
+    # Evaluation
+    parser.add_argument('--eval', action='store_true', help='Run evaluation after training')
+    parser.add_argument('--eval_episodes', type=int, default=10, help='Number of episodes for evaluation')
+    parser.add_argument('--eval_model_path', type=str, default=None, 
+                       help='Path to model for evaluation. If not provided, uses best_student_model.zip if available, otherwise final_student_model.zip')
+    parser.add_argument('--max_episode_length', type=int, default=250, help='Maximum episode length for evaluation')
     
-    # number of teacher training steps
-    num_pretrain_steps = args.teacher_pretrain_steps
+    return parser.parse_args()
 
-    # use fixed validation env for consistent meta-reward evaluation
-    pretrain_validation_dir = os.path.join(args.log_dir, "pretrain_validation")
-    os.makedirs(pretrain_validation_dir, exist_ok=True)
-    validation_csv_logger = CSVLogger(pretrain_validation_dir)
-
-    # pre-training loop
-    for step in range(1, num_pretrain_steps + 1):
-        # 1. compute current meta-state (with fixed student)
-        current_meta_state = get_teacher_state(
-            student_model,
-            args.task,
-            INTERVENTIONS,
-            device=device,
-            seed=args.seed + step
-        )
-
-        # 2. teacher selects an intervention
-        # we would use an exploratory epsilon during pretraining
-        epsilon = max(0.1, 1.0 - (step / num_pretrain_steps) * 0.9)
-        selected_intervention_idx = teacher.select_action(current_meta_state, epsilon)
-        selected_intervention = INTERVENTIONS[selected_intervention_idx]
-        selected_intervention_type = selected_intervention['type']
-
-        # 3. no student training happens here! we simply evaluate the student on this intervention
-
-        # 4. run validation to measure generalization
-        validation_metrics = run_validation_protocol(
-            student_model,
-            args.task,
-            step,
-            args,
-            validation_csv_logger,
-            0   # no cumulative timesteps since the student is not training
-        )
-
-        # 5. calculate meta-reward (same formula as the main loop)
-        # NOTE: i removed the weighting for success rate, keeping it simple by only considering val reward
-        meta_reward = (0 * validation_metrics['validation_success_rate']) + validation_metrics['validation_avg_reward']
-
-        # 6. compute next meta-state (with fixed student)
-        next_meta_state = get_teacher_state(
-            student_model,
-            args.task,
-            INTERVENTIONS,
-            device=device,
-            seed=args.seed + step + 1
-        )
-
-        # 7. store experience and update the teacher
-        teacher.replay_buffer.push(current_meta_state, selected_intervention_idx, meta_reward, next_meta_state)
-        loss = teacher.train_step()
-
-        # 8. track metrics
-        pretraining_interventions.append(selected_intervention_type)
-        pretraining_rewards.append(meta_reward)
-        pretraining_losses.append(loss if loss is not None else 0)
-
-        # 9. log progress
-        if step % 10 == 0 or step == 1 or step == num_pretrain_steps:
-            avg_loss = np.mean([l for l in pretraining_losses[-10:] if l is not None])
-            avg_reward = np.mean(pretraining_rewards[-10:])
-            logging.info(f"Pretraining step {step}/{num_pretrain_steps}: " +
-                         f"epsilon={epsilon:.2f}, " +
-                         f"intervention={selected_intervention_type}, " +
-                         f"meta-reward={meta_reward:.2f}, " +
-                         f"avg_loss={avg_loss:.4f}")
-        
-        # 10. log to csv
-        with open(pretrain_log_path, 'a') as f:
-            f.write(f"{step},{selected_intervention_type},{meta_reward:.4f},{loss if loss is not None else 'None'}\n")
-        
-        # 11. log to wandb if enabled
-        if args.use_wandb:
-            wandb.log({
-                'pretrain_step': step,
-                'pretrain_teacher_action': selected_intervention_type,
-                'pretrain_meta_reward': meta_reward,
-                'pretrain_teacher_loss': loss,
-                'pretrain_epsilon': epsilon
-            })
-        
-        # 12. save intermediate models
-        if step % 1000 == 0 or step == num_pretrain_steps:
-            intermediate_path = os.path.join(args.log_dir, f"teacher_pretrained_{step}_steps.pt")
-            teacher.save(intermediate_path)
-
-    # save final pretrained teacher model
-    if args.save_pretrained_teacher:
-        teacher.save(args.save_pretrained_teacher)
-    else:
-        default_save_path = os.path.join(args.log_dir, f"teacher_pretrained_{num_pretrain_steps}_steps.pt")
-        teacher.save(default_save_path)
+def evaluate_student_model(args, log_dir, model_path=None, task_name=None, seed=None, 
+                       max_episode_length=250, skip_frame=3, num_episodes=10):
+    """Evaluate the student model using the causal world benchmark"""
+    import json
     
-    logging.info(f"=== Teacher pretraining completed for {num_pretrain_steps} steps ===")
-
-    # return statistics about pretraining
-    return {
-        'avg_reward': np.mean(pretraining_rewards),
-        'avg_loss': np.mean([l for l in pretraining_losses if l is not None]),
-        'intervention_counts': {
-            int_type: pretraining_interventions.count(int_type)
-            for int_type in set(pretraining_interventions)
-        }
-    }
-
-# the eval function
-def evaluate_autocalc_performance(log_dir, task_name, eval_model, seed=0, max_episode_length=250, skip_frame=3, num_episodes=10):
-    """made similar to baselines evaluation"""
+    task_name = task_name or args.task
+    seed = seed or args.seed
+    
     set_seed(seed)
-    logging.info("Running AutoCaLC evaluation...")
-
-    # create env
+    logging.info(f"Running comprehensive evaluation on task: {task_name}")
+    
+    # Create the environment
     dense_weights = DENSE_REWARD_WEIGHTS.get(task_name, [0])
     task = generate_task(
         task_generator_id=task_name,
@@ -611,358 +709,136 @@ def evaluate_autocalc_performance(log_dir, task_name, eval_model, seed=0, max_ep
         max_episode_length=max_episode_length
     )
 
-    # load the final model
-    model_path = os.path.join(log_dir, eval_model)
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(f"Trained model not found at {model_path}")
+    # Determine which model to evaluate
+    if model_path is None:
+        # Default to the final model
+        model_path = os.path.join(log_dir, "final_student_model.zip")
+        # Check if we should use the best model instead
+        best_model_path = os.path.join(log_dir, "best_student_model.zip")
+        if os.path.exists(best_model_path):
+            model_path = best_model_path
+            logging.info("Using best model for evaluation based on validation performance")
     
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Student model not found at {model_path}")
+    
+    # Load the model
     model = PPO.load(model_path)
+    logging.info(f"Loaded model from {model_path}")
 
-    # basic episode evaluation
-    logging.info("\nFirst phase of evaluation:")
-    all_rewards, all_successes = [], []
+    # Basic episode evaluation
+    logging.info("\nRunning episode-based evaluation:")
+    all_rewards, all_successes, episode_lengths = [], [], []
+    
     for ep in range(num_episodes):
         obs = env.reset()
         if hasattr(env, 'seed'):
             env.seed(seed + ep)
+        
         done = False
-        total_reward, successes = 0.0, 0
+        total_reward, successes, steps = 0.0, 0, 0
+        
         while not done:
             action, _ = model.predict(obs, deterministic=True)
             obs, reward, done, info = env.step(action)
             total_reward += reward
+            steps += 1
             if isinstance(info, dict) and 'success' in info:
                 successes += int(info['success'])
-        logging.info(f"Episode {ep + 1}: reward = {total_reward:.2f}, success = {successes}")
+        
+        logging.info(f"Episode {ep + 1}: reward = {total_reward:.2f}, success = {successes}, steps = {steps}")
         all_rewards.append(total_reward)
-        all_successes.append(successes)
+        all_successes.append(successes > 0)  # Count episodes with at least one success
+        episode_lengths.append(steps)
     
-    logging.info(f"\nMean reward: {np.mean(all_rewards):.2f}")
-    logging.info(f"Mean success rate: {np.mean(all_successes):.2f}")
+    # Aggregate metrics
+    mean_reward = np.mean(all_rewards)
+    success_rate = np.mean(all_successes)
+    mean_episode_length = np.mean(episode_lengths)
+    
+    logging.info(f"\nEvaluation Results:")
+    logging.info(f"Mean reward: {mean_reward:.4f}")
+    logging.info(f"Success rate: {success_rate:.4f}")
+    logging.info(f"Mean episode length: {mean_episode_length:.2f}")
 
-    # benchmark eval (same as baselines)
-    logging.info("\nGenerating benchmark evaluation and viz...")
+    # Run benchmark evaluation
+    logging.info("\nRunning benchmark evaluation...")
     if task_name not in TASK_BENCHMARKS:
         logging.error(f"No benchmark available for task: '{task_name}'. Supported: {SUPPORTED_TASKS}")
-        return
+        return {
+            'mean_reward': mean_reward,
+            'success_rate': success_rate,
+            'mean_episode_length': mean_episode_length
+        }
+    
     benchmark = TASK_BENCHMARKS[task_name]
-
-    # use the causalworld benchmark evaluation
+    
+    # Use the causalworld benchmark evaluation
     evaluation = EvaluationPipeline(
         evaluation_protocols=benchmark['evaluation_protocols'],
         task_params={'task_generator_id': task_name},
-        world_params={'skip_frame': 3, 'action_mode': 'joint_torques'},
+        world_params={'skip_frame': skip_frame, 'action_mode': 'joint_torques'},
         visualize_evaluation=False
     )
 
+    # Create policy function
     def policy_fn(obs):
         action, _ = model.predict(obs, deterministic=True)
         return action
     
-    scores_model = evaluation.evaluate_policy(policy_fn, fraction=0.005)
-
-    logging.info("\nEvaluation results:")
-    logging.info(scores_model)
-
-    # save the benchmark results
-    import json
-    benchmark_path = os.path.join(log_dir, "benchmark_results.json")
+    # Run benchmark evaluation
+    scores = evaluation.evaluate_policy(policy_fn, fraction=0.05)
+    
+    # Save benchmark results
+    benchmark_results = {
+        'mean_reward': float(mean_reward),
+        'success_rate': float(success_rate),
+        'mean_episode_length': float(mean_episode_length),
+        'benchmark_scores': scores
+    }
+    
+    benchmark_path = os.path.join(log_dir, "evaluation_results.json")
     with open(benchmark_path, 'w') as f:
-        json.dump({
-            'final_evals': scores_model
-        }, f, indent=2)
-    logging.info(f"Final evals saved to: {benchmark_path}")
+        json.dump(benchmark_results, f, indent=2)
+    logging.info(f"Evaluation results saved to: {benchmark_path}")
+    
+    # Generate visualizations
+    plots_dir = os.path.join(log_dir, "evaluation_plots")
+    os.makedirs(plots_dir, exist_ok=True)
+    try:
+        vis.generate_visual_analysis(plots_dir, experiments={task_name: scores})
+        logging.info(f"Visualization saved to: {plots_dir}")
+    except Exception as e:
+        logging.error(f"Error generating visualizations: {e}")
+    
+    env.close()
+    return benchmark_results
 
-    # generate the visualizations
-    plots_dir = os.path.join(log_dir, "plots")
-    vis.generate_visual_analysis(plots_dir, experiments={task_name: scores_model})
-    logging.info(f"Visualization saved to: {plots_dir}")
-
-# ========================
-# main meta-learning loop
-# ========================
 def main():
-    # Get arguments from the global parser (already parsed in __main__)
-    import sys
-    # Re-parse arguments in main for clarity
-    parser = argparse.ArgumentParser(description="Meta-learning teacher-student framework for CausalWorld")
-    parser.add_argument('--task', type=str, default='pushing', help='CausalWorld task to train on')
-    parser.add_argument('--student_train_steps', type=int, default=50000, help='Timesteps for each student training block')
-    parser.add_argument('--meta_episodes', type=int, default=50, help='Number of meta-episodes')
-    parser.add_argument('--student_pretrained_path', type=str, default=None, help='Path to pretrained PPO model (optional)')
-    parser.add_argument('--seed', type=int, default=0, help='Random seed')
-    parser.add_argument('--use_wandb', action='store_true', help='Enable wandb logging')
-    parser.add_argument('--log_dir', type=str, default='logs/autocalc', help='Log directory')
-    parser.add_argument('--test_episodes', type=int, default=10, help='Episodes for testing each intervention')
-    parser.add_argument('--validation_episodes', type=int, default=10, help='Episodes per validation environment')
-    parser.add_argument('--skip_frame', type=int, default=3, help='Frame skip for environment')
-    parser.add_argument('--eval', action='store_true', help='Evaluate the model')
-    parser.add_argument('--teacher_seed', type=int, default=0, help='Seed for the teacher agent')
-    parser.add_argument('--student_seed', type=int, default=0, help='Seed for the student agent initial policy')
-    parser.add_argument('--teacher_pretrain_steps', type=int, default=0, help='Number of steps to pre-train the teacher')
-    parser.add_argument('--save_pretrained_teacher', type=str, default=None, help='Path to save the pretrained teacher model')
-    parser.add_argument('--load_pretrained_teacher', type=str, default=None, help='Path to load a pretrained teacher model')
-    parser.add_argument('--teacher_pretrain_only', action='store_true', help='Only pretrain the teacher, then exit (no student training)')
-    parser.add_argument('--device_id', type=int, default=6, choices=[6, 7], help='GPU device ID to use (6 or 7)')
-
-    args = parser.parse_args()
-
-    # Set up GPU device
-    device = torch.device(f"cuda:{args.device_id}")
-    torch.cuda.set_device(args.device_id)
-    logging.info(f"Using GPU device: {device}")
+    """Main training function"""
+    args = parse_args()
+    set_seed(args.seed)
     
-    # Store device in args for access throughout the script
-    args.device = device
-
-    # the initial setup phase
-    os.makedirs(args.log_dir, exist_ok=True)
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',
-                        handlers=[logging.FileHandler(os.path.join(args.log_dir, 'autocalc.log')), logging.StreamHandler()])
-
-    # Initialize csv logger
-    csv_logger = CSVLogger(args.log_dir)
-
-    if args.student_pretrained_path is None:
-        args.student_pretrained_path = f'models/ppo_{args.task}_sb3/final_model.zip'
-        logging.info(f"Auto-determined pretrained path: {args.student_pretrained_path}")
+    # Initialize AutoCaLC framework
+    autocalc = AutoCaLC(args)
     
-    if args.use_wandb:
-        wandb.init(
-            project=f'autocalc-{args.task}',
-            name=f'autocalc_{args.task}_seed{args.seed}',
-            config=vars(args),
-            tags=[args.task, 'autocalc', 'meta-learning']
-        )
+    # Train the models
+    student, teacher = autocalc.train()
     
-    logging.info(f"Starting AutoCaLC training for task '{args.task}' on device '{args.device}'")
-
-    # --- 1. Initialization ---
-    logging.info("=== Initializing student and teacher agents ===")
-
-    # loading the base pretrained model
-    student_model = PPO.load(args.student_pretrained_path, device=args.device)
-    logging.info(f"Loaded base pretrained model from {args.student_pretrained_path}")
-
-    # setting the student's random seed for reproducible weight initialization
-    set_seed(args.student_seed)                         # set the global seeds first
-    student_model.set_random_seed(args.student_seed)    # set the model-specific seed
-    
-    # additional seed setting for the policy and value networks
-    if hasattr(student_model.policy, 'action_net'):
-        torch.manual_seed(args.student_seed)
-        for param in student_model.policy.parameters():
-            if param.requires_grad:
-                # re-initialize parameters with the fixed seed
-                if len(param.shape) > 1:
-                    torch.nn.init.xavier_uniform_(param)
-                else:
-                    torch.nn.init.zeros_(param)
-    
-    logging.info(f"Loaded student PPO from {args.student_pretrained_path} with seed {args.student_seed} for reproducible weights")
-
-    # initialize teacher with its own seed
-    set_seed(args.teacher_seed)
-    teacher = TeacherDQNAgent(
-        state_dim=len(INTERVENTIONS) * 2,
-        action_dim=len(INTERVENTIONS),
-        device=args.device
-    )
-    logging.info(f"Teacher DQN initialized with seed {args.teacher_seed}")
-
-    # load the pretrained teacher if specified
-    if args.load_pretrained_teacher:
-        teacher.load(args.load_pretrained_teacher)
-        logging.info(f"Loaded pretrained teaher from {args.load_pretrained_teacher}")
-    
-    # run teacher pretraining if requested
-    if args.teacher_pretrain_steps > 0:
-        pretrain_stats = pretrain_teacher(teacher, student_model, args, args.device)
-        logging.info(f"Teacher pretraining completed with stats: {pretrain_stats}")
-
-        # if only pretraining was requested, then you would exit here
-        if args.teacher_pretrain_only:
-            logging.info("Teacher pretraining only mode - exiting without student training")
-            if args.use_wandb:
-                wandb.finish()
-            return
-
-    # reset to student seed for subsequent operations
-    set_seed(args.student_seed)
-
-    # track cumulative timesteps
-    cumulative_timesteps = 0
-    
-    # --- Zero-shot validation (meta-episode 0) ---
-    logging.info("--- Running zero-shot validation (meta-episode 0) ---")
-    initial_validation_metrics = run_validation_protocol(
-        student_model, args.task, 0, args, csv_logger, cumulative_timesteps
-    )
-    last_validation_metrics = initial_validation_metrics
-    logging.info(f"Zero-shot validation complete: success rate = {initial_validation_metrics['validation_success_rate']:.3f}, avg reward = {initial_validation_metrics['validation_avg_reward']:.3f}")
-
-    # track the best model based on validation reward
-    best_validation_reward = initial_validation_metrics['validation_avg_reward']
-    best_model_meta_step = 0
-    best_model_path = os.path.join(args.log_dir, "best_student_model.zip")
-
-    # save initial model as the best so far
-    student_model.save(best_model_path)
-    logging.info(f"Saved initial model as best (reward: {best_validation_reward}:.4f)")
-    
-    # --- 2. Main meta-learning loop ---
-    for meta_step in range(args.meta_episodes):
-        logging.info(f"\n{'='*20} Meta-Episode {meta_step + 1}/{args.meta_episodes} {'='*20}")
-
-        # 3. Compute current meta-state
-        current_meta_state = get_teacher_state(student_model, args.task, INTERVENTIONS, device=device, seed=args.seed + meta_step)
-
-        # 4. Teacher selects an intervention
-        # NOTE: here I am skipping teacher exploration since it is already pretrained
-        # epsilon = get_exploration_rate(meta_step, args.meta_episodes)
-        epsilon = 0.1
-        selected_intervention_idx = teacher.select_action(current_meta_state, epsilon)
-        selected_intervention = INTERVENTIONS[selected_intervention_idx]
-        selected_intervention_type = selected_intervention['type']
-        logging.info(f"Teacher chose intervention: '{selected_intervention_type}' (Epsilon: {epsilon:.2f})")
-
-        # 5. Student trains on that intervention
-        train_env = create_environment(args.task, selected_intervention, seed=args.seed + meta_step * 100)
-        vec_env = DummyVecEnv([lambda: train_env])
-        vec_env = VecMonitor(vec_env, filename=os.path.join(args.log_dir, f'autocalc_monitor_stage{meta_step+1}.csv'))
-        
-        # Set up training monitoring
-        reward_monitor = RewardMonitorCallback(
-            selected_intervention_type, csv_logger, meta_step+1, cumulative_timesteps, baseline_type="autocalc"
-        )
-        
-        # Create callback list
-        callback_list = CallbackList([
-            reward_monitor,
-            WandbCallback(
-                gradient_save_freq=100,
-                model_save_path=args.log_dir if args.use_wandb else None,
-                verbose=2
-            ) if args.use_wandb else None
-        ])
-        callback_list.callbacks = [cb for cb in callback_list.callbacks if cb is not None]
-        
-        # Train the student
-        student_model.set_env(vec_env)
-        student_model.learn(
-            total_timesteps=args.student_train_steps,
-            callback=callback_list,
-            reset_num_timesteps=False
-        )
-        
-        # Update cumulative timesteps
-        cumulative_timesteps += args.student_train_steps
-        
-        # 6. Test on all interventions for logging
-        test_all_interventions_for_teacher(
-            student_model, args.task, meta_step+1, args, csv_logger, cumulative_timesteps, selected_intervention_type
-        )
-        
-        # 7. Evaluate new generalization performance
-        current_validation_metrics = run_validation_protocol(
-            student_model, args.task, meta_step+1, args, csv_logger, cumulative_timesteps
-        )
-
-        # ... checking if this is the best model so far
-        current_validation_reward = current_validation_metrics['validation_avg_reward']
-        if current_validation_reward > best_validation_reward:
-            best_validation_reward = current_validation_reward
-            best_model_meta_step = meta_step + 1
-
-            # save as best model
-            student_model.save(best_model_path)
-            logging.info(f"New best model at meta-step {meta_step+1} with validation reward: {best_validation_reward:.4f}")
-
-            # also log to wandb if enabled
-            if args.use_wandb:
-                wandb.run.summary["best_validation_reward"] = best_validation_reward
-                wandb.run.summary["best_model_meta_step"] = best_model_meta_step
-
-        # 8. Calculate the meta-reward using the new formula
-        # NOTE: i removed the weighting from success rate, keeping the meta-reward formulation simple
-        meta_reward = (0 * current_validation_metrics['validation_success_rate']) + current_validation_metrics['validation_avg_reward']
-        logging.info(f"Meta-Reward: {meta_reward:.4f} (Success Rate: {current_validation_metrics['validation_success_rate']:.3f}, Avg Reward: {current_validation_metrics['validation_avg_reward']:.3f})")
-
-        # 9. Compute the next meta-state
-        next_meta_state = get_teacher_state(student_model, args.task, INTERVENTIONS, device=args.device, seed=args.seed + meta_step + 1)
-
-        # 10. Store experience and update the teacher
-        teacher.replay_buffer.push(current_meta_state, selected_intervention_idx, meta_reward, next_meta_state)
-        teacher_loss = teacher.train_step()
-        logging.info(f"Teacher training step complete. Loss: {teacher_loss if teacher_loss is not None else 'N/A'}")
-
-        # 11. Log to wandb
-        if args.use_wandb:
-            wandb.log({
-                'meta_episode': meta_step + 1,
-                'teacher_action': selected_intervention_type,
-                'teacher_reward': meta_reward,
-                'student_validation_success_rate': current_validation_metrics['validation_success_rate'],
-                'student_validation_reward': current_validation_metrics['validation_avg_reward'],
-                'teacher_epsilon': epsilon,
-                'teacher_loss': teacher_loss,
-                'cumulative_timesteps': cumulative_timesteps,
-                **{f"cm_score_{inter['type']}": score for inter, score in zip(INTERVENTIONS, current_meta_state[1::2])}
-            })
-        
-        stage_model_path = os.path.join(args.log_dir, f"student_model_stage_{meta_step+1}.zip")
-        student_model.save(stage_model_path)
-        logging.info(f"Saved intermediate model for stage {meta_step+1} to {stage_model_path}")
-        
-        # Clean up
-        train_env.close()
-    
-    # --- And now the final step ---
-    final_model_path = os.path.join(args.log_dir, "final_student_model.zip")
-    student_model.save(final_model_path)
-    logging.info(f"Meta-RL training complete! Final student model saved to {final_model_path}")
-
-    # log final best model info
-    logging.info(f"Best student model was from meta-step {best_model_meta_step} with validation reward: {best_validation_reward:.4f}")
-    logging.info(f"Best model saved to: {best_model_path}")
-
-    if args.use_wandb:
-        wandb.run.summary["best_validation_reward"] = best_validation_reward
-        wandb.run.summary["best_model_meta_step"] = best_model_meta_step
-        wandb.run.summary["best_model_path"] = best_model_path
-        wandb.finish()
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Meta-RL Teacher-Student Curriculum (AutoCaLC)")
-    parser.add_argument('--eval', action='store_true', help='Evaluate the model')
-    parser.add_argument('--task', type=str, default='pushing', help='CausalWorld task name')
-    parser.add_argument('--student_train_steps', type=int, default=50000, help='Timesteps per student training block')
-    parser.add_argument('--meta_episodes', type=int, default=50, help='Number of meta-episodes (teacher steps)')
-    parser.add_argument('--student_pretrained_path', type=str, default=None, help='Path to pretrained PPO model (optional)')
-    parser.add_argument('--pretrained_eval', type=str, help='Path to eval model')
-    parser.add_argument('--seed', type=int, default=0, help='Random seed')
-    parser.add_argument('--use_wandb', action='store_true', help='Enable wandb logging')
-    parser.add_argument('--log_dir', type=str, default=None, help='Log directory (will be auto-generated if not specified)')
-    parser.add_argument('--test_episodes', type=int, default=10, help='Episodes for testing each intervention')
-    parser.add_argument('--validation_episodes', type=int, default=10, help='Episodes per validation environment')
-    parser.add_argument('--skip_frame', type=int, default=3, help='Frame skip for environment')
-    parser.add_argument('--teacher_seed', type=int, default=0, help='Seed for the teacher agent')
-    parser.add_argument('--student_seed', type=int, default=0, help='Seed for the student agent initial policy')
-    parser.add_argument('--teacher_pretrain_steps', type=int, default=0, help='Number of steps to pre-train the teacher')
-    parser.add_argument('--save_pretrained_teacher', type=str, default=None, help='Path to save the pretrained teacher model')
-    parser.add_argument('--load_pretrained_teacher', type=str, default=None, help='Path to load a pretrained teacher model')
-    parser.add_argument('--teacher_pretrain_only', action='store_true', help='Only pretrain the teacher, then exit (no student training)')
-    parser.add_argument('--device_id', type=int, default=6, choices=[6, 7], help='GPU device ID to use (6 or 7)')
-    args = parser.parse_args()
-
-    # Set default log directory if not specified
-    if args.log_dir is None:
-        if args.eval:
-            raise ValueError("--log_dir must be specified for evaluation")
-        else:
-            args.log_dir = f'logs/autocalc_{args.task}_seed{args.seed}'
-
+    # Optionally run evaluation
     if args.eval:
-        evaluate_autocalc_performance(args.log_dir, task_name=args.task, eval_model=args.pretrained_eval, seed=args.seed)
-    else:
-        main()
+        logging.info("Running final evaluation...")
+        evaluate_student_model(
+            args=args,
+            log_dir=args.log_dir,
+            model_path=args.eval_model_path,
+            task_name=args.task,
+            seed=args.seed,
+            max_episode_length=args.max_episode_length,
+            num_episodes=args.eval_episodes
+        )
+    
+    logging.info("AutoCaLC training completed successfully!")
+
+if __name__ == "__main__":
+    main()

@@ -443,28 +443,30 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
             total_steps += 1
         total_reward += episode_reward
         if episode < 3:
-            print(f"episode {episode+1}: {episode_steps} steps, reward: {episode_reward:.3f}")
-        print(f"total data points collected: {len(data)}")
-        print(f"average episode length: {total_steps/max_episodes:.1f}")
-        print(f"average episode reward: {total_reward/max_episodes:.3f}")
-        print(f"termination reasons: {termination_reasons}")
-        print(f"success rate: {success_count}/{max_episodes}")
+            # print(f"episode {episode+1}: {episode_steps} steps, reward: {episode_reward:.3f}")
+            pass
+        # print(f"total data points collected: {len(data)}")
+        # print(f"average episode length: {total_steps/max_episodes:.1f}")
+        # print(f"average episode reward: {total_reward/max_episodes:.3f}")
+        # print(f"termination reasons: {termination_reasons}")
+        # print(f"success rate: {success_count}/{max_episodes}")
         if len(data) == 0:
-            print("no data collected! returning cm score of 0")
+            # print("no data collected! returning cm score of 0")
+            pass
 
     states = torch.tensor([d[0] for d in data], dtype=torch.float32).to(device)
     actions = torch.tensor([d[1] for d in data], dtype=torch.float32).to(device)    
     next_states = torch.tensor([d[2] for d in data], dtype=torch.float32).to(device)
     rewards = torch.tensor([d[3] for d in data], dtype=torch.float32).to(device).unsqueeze(-1)
 
-    print(f"tensor shapes - states: {states.shape}, actions: {actions.shape}")
+    # print(f"tensor shapes - states: {states.shape}, actions: {actions.shape}")
 
     obs_dim = env.observation_space.shape[0]
     act_dim = env.action_space.shape[0]
     hidden_dim = 64
 
     # create ensembles
-    print(f"Creating ensembles (obs_dim={obs_dim}, act_dim={act_dim}, hidden_dim={hidden_dim})")
+    # print(f"Creating ensembles (obs_dim={obs_dim}, act_dim={act_dim}, hidden_dim={hidden_dim})")
     transition_models = [TransitionPrediction(obs_dim, act_dim, hidden_dim).to(device) for _ in range(5)]
     reward_models = [RewardPrediction(obs_dim, act_dim, hidden_dim).to(device) for _ in range(5)]
     state_models = [BetaVAE(obs_dim).to(device) for _ in range(5)]
@@ -478,7 +480,7 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
     action_opts = [optim.Adam(m.parameters(), lr=1e-4) for m in action_models]
 
     # train transition models
-    print("Training transition models...")
+    # print("Training transition models...")
     transition_losses = []
     for model, opt in zip(transition_models, transition_opts):
         model_losses = []
@@ -490,10 +492,10 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
             opt.step()
             model_losses.append(loss.item())
         transition_losses.append(np.mean(model_losses))
-    print(f"Transition model losses: {[f'{l:.4f}' for l in transition_losses]}")
+    # print(f"Transition model losses: {[f'{l:.4f}' for l in transition_losses]}")
     
     # train reward models
-    print(f"Training reward models...")
+    # print(f"Training reward models...")
     reward_losses = []
     for model, opt in zip(reward_models, reward_opts):
         model_losses = []
@@ -505,11 +507,11 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
             opt.step()
             model_losses.append(loss.item())
         reward_losses.append(np.mean(model_losses))
-    print(f"Reward model losses: {[f'{l:.4f}' for l in reward_losses]}")
+    # print(f"Reward model losses: {[f'{l:.4f}' for l in reward_losses]}")
 
     # NOTE: i bumped up the training iterations for the vae models
     # train state VAE models
-    print(f"Training state VAE models...")
+    # print(f"Training state VAE models...")
 
     def preprocess_states(states):
         """normalize states to prevent vae training issues"""
@@ -529,7 +531,7 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
     states_processed = preprocess_states(states)
 
     # train state VAE models
-    print(f"Training state VAE models...")
+    # print(f"Training state VAE models...")
     state_losses = []
 
     for model, opt in zip(state_models, state_opts):
@@ -546,7 +548,7 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
                 if torch.isnan(recon_loss) or torch.isnan(kl_div):
                     consecutive_nans += 1
                     if consecutive_nans > 5:    # too many consecutive nans
-                        print(f"too many nan values - reinitializing model")
+                        # print(f"too many nan values - reinitializing model")
                         model._init_weights()
                         consecutive_nans = 0
                     continue
@@ -571,22 +573,22 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
                 model_losses.append(loss.item())
             
             except Exception as e:
-                print(f"error in state vae training: {e}")
+                # print(f"error in state vae training: {e}")
                 continue
                 
         # handle case where no valid losses were computed
         if model_losses:
             avg_loss = np.mean(model_losses)
         else:
-            print(f"no valid losses computed - using fallback value")
+            # print(f"no valid losses computed - using fallback value")
             avg_loss = 1.0  # fallback value
         
         state_losses.append(avg_loss)
     
-    print(f"State VAE losses: {[f'{l:.4f}' for l in state_losses]}")
+    # print(f"State VAE losses: {[f'{l:.4f}' for l in state_losses]}")
 
     # train action VAE models
-    print(f"Training action VAE models...")
+    # print(f"Training action VAE models...")
     action_losses = []
 
     # preprocess actions to ensure stability
@@ -622,7 +624,7 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
                 if torch.isnan(recon_loss) or torch.isnan(kl_div):
                     consecutive_nans += 1
                     if consecutive_nans > 5:    # too many consecutive nans
-                        print(f"too many nan values - reinitializing model")
+                        # print(f"too many nan values - reinitializing model")
                         model._init_weights()
                         consecutive_nans = 0
                     continue
@@ -647,19 +649,19 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
                 model_losses.append(loss.item())
             
             except Exception as e:
-                print(f"error in action vae training: {e}")
+                # print(f"error in action vae training: {e}")
                 continue
         
         # handle case where no valid losses were computed
         if model_losses:
             avg_loss = np.mean(model_losses)
         else:
-            print(f"no valid losses computed - using fallback value")
+            # print(f"no valid losses computed - using fallback value")
             avg_loss = 1.0  # fallback value
         
         action_losses.append(avg_loss)
     
-    print(f"Action VAE losses: {[f'{l:.4f}' for l in action_losses]}")
+    # print(f"Action VAE losses: {[f'{l:.4f}' for l in action_losses]}")
     
     # calculate disagreement scores
     t_score = torch.stack([m(states, actions) for m in transition_models]).std(dim=0).mean().item()
@@ -668,12 +670,12 @@ def evaluate_cm_score(env, student_model, max_episodes=10, max_episode_length=50
     a_score = torch.stack([m(actions_processed)[0] for m in action_models]).std(dim=0).mean().item()
     cm_score = t_score + r_score + s_score + a_score
 
-    print(f"CM score components:")
-    print(f"transition disagreement: {t_score:.4f}")
-    print(f"reward disagreement: {r_score:.4f}")
-    print(f"state disagreement: {s_score:.4f}")
-    print(f"action disagreement: {a_score:.4f}")
-    print(f"total CM score: {cm_score:.4f}")
+    # print(f"CM score components:")
+    # print(f"transition disagreement: {t_score:.4f}")
+    # print(f"reward disagreement: {r_score:.4f}")
+    # print(f"state disagreement: {s_score:.4f}")
+    # print(f"action disagreement: {a_score:.4f}")
+    # print(f"total CM score: {cm_score:.4f}")
 
     return cm_score
 
@@ -1566,7 +1568,7 @@ class IntervenedCausalWorld:
         self.observation_space = self.base_env.observation_space
         self.action_space = self.base_env.action_space
 
-        print(f"IntervenedCausalWorld created with {(intervention['type'] if intervention is not None else 'none')} intervention")
+        # print(f"IntervenedCausalWorld created with {(intervention['type'] if intervention is not None else 'none')} intervention")
 
     def reset(self, seed=None):
         """
@@ -1592,9 +1594,10 @@ class IntervenedCausalWorld:
                 self.last_intervention_check = intervention_dict.copy()
                 # log the first three resets
                 if self.reset_count <= 3:
-                    print(f"Reset #{self.reset_count}: {(self.intervention['type'] if self.intervention is not None else 'none')} intervention applied (success: {success_signal})")
+                    # print(f"Reset #{self.reset_count}: {(self.intervention['type'] if self.intervention is not None else 'none')} intervention applied (success: {success_signal})")
+                    pass
             else:
-                print(f"Reset #{self.reset_count}: No intervention dict for {(self.intervention['type'] if self.intervention is not None else 'none')}")
+                # print(f"Reset #{self.reset_count}: No intervention dict for {(self.intervention['type'] if self.intervention is not None else 'none')}")
                 self.last_intervention_check = None
         except Exception as e:
             logging.warning(f"Failed to apply intervention during reset: {e}")
@@ -1679,7 +1682,8 @@ class RewardMonitorCallback(BaseCallback):
                     
                     # log recent episode completion
                     if len(self.episode_rewards) <= 5:  # log first 5 episodes
-                        logging.info(f"[{self.intervention_type}] episode completed: reward={episode_info['r']:.3f}, length={episode_info['l']}")
+                        # logging.info(f"[{self.intervention_type}] episode completed: reward={episode_info['r']:.3f}, length={episode_info['l']}")
+                        pass
 
                     # log to wandb if enabled
                     if wandb.run is not None:
@@ -1998,7 +2002,7 @@ def create_environment(task_name, intervention=None, seed=0, skip_frame=3, max_e
 def test_intervention_performance(student_model, intervention, task_name, num_episodes=10, seed=0):
     """test an intervention and return its average performance metrics"""
     set_seed(seed)
-    logging.info(f"testing intervention: {(intervention['type'] if intervention is not None else 'none')}")
+    # logging.info(f"testing intervention: {(intervention['type'] if intervention is not None else 'none')}")
     
     # create environment with intervention
     # make sure test_intervention is applied to the same env config
@@ -2039,7 +2043,8 @@ def test_intervention_performance(student_model, intervention, task_name, num_ep
             successes += 1
 
         if episode < 3:     # log first 3 episodes
-            logging.info(f"Episode {episode+1}: reward={episode_reward:.3f}, length={episode_length}, success={episode_success}")
+            # logging.info(f"Episode {episode+1}: reward={episode_reward:.3f}, length={episode_length}, success={episode_success}")
+            pass
         
     env.close()
 
@@ -2056,12 +2061,12 @@ def test_intervention_performance(student_model, intervention, task_name, num_ep
         'total_episodes': num_episodes
     }
 
-    logging.info(f"Results: avg_reward={avg_reward:.3f}, success_rate={success_rate:.3f}, avg_length={avg_length:.1f}")
+    # logging.info(f"Results: avg_reward={avg_reward:.3f}, success_rate={success_rate:.3f}, avg_length={avg_length:.1f}")
     return metrics
 
 def test_all_interventions(student_model, task_name, stage_num, args, csv_logger, cumulative_timesteps, baseline_type):
     """test model on all interventions and log results regardless of baseline type"""
-    logging.info(f"[{baseline_type.upper()}] Testing all interventions at end of meta-episode {stage_num}")
+    # logging.info(f"[{baseline_type.upper()}] Testing all interventions at end of meta-episode {stage_num}")
 
     # test each intervention type
     for intervention in INTERVENTIONS + [None]:     # including None for no intervention
@@ -2089,7 +2094,7 @@ def test_all_interventions(student_model, task_name, stage_num, args, csv_logger
                 baseline_type=baseline_type
             )
     
-    logging.info(f"[{baseline_type.upper()}] Completed testing all interventions")
+    # logging.info(f"[{baseline_type.upper()}] Completed testing all interventions")
     return
 
 
