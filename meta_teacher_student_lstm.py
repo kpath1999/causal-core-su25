@@ -50,6 +50,14 @@ SUPPORTED TASKS: pushing, reaching, picking, pick_and_place, stacking2
 For all options: python meta_teacher_student.py --help
 """
 
+# TODO: teacher model will likely need work.
+"""
+* the current implementation of autocalc may not be providing enough samples
+* the teacher is thus unable to converge on a good policy
+* learning effective meta-policies typically requires many meta-episodes
+* key issues/opps: dual learning problem and sparse teachers 
+"""
+
 import numpy as np
 import torch
 import torch.nn as nn
