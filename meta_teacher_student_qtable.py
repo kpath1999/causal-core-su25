@@ -14,7 +14,7 @@ Steps
 TRAINING COMMANDS:
 
 Basic training with evaluation:
-python meta_teacher_student_qtable.py --task pushing --meta_episodes 50 --student_train_steps 5000 --alpha 0.1 --beta 1.0 --gamma 0.9 --eval
+python meta_teacher_student_qtable.py --task pushing --meta_episodes 50 --student_train_steps 50000 --alpha 0.1 --beta 1.0 --gamma 0.9 --eval --use_wandb
 
 Quick test run (fast debugging):
 python meta_teacher_student_qtable.py --task pushing --meta_episodes 5 --student_train_steps 1000 --validation_episodes 3
@@ -318,8 +318,8 @@ class AutoCaLC:
             name=f"qtable_{self.args.task}_{self.args.meta_episodes}ep"
         )
     
-    def _train_student_on_intervention(self, intervention, meta_step):
-        """train student on selected intervention (unchanged logic from before)"""
+    def _train_student_on_intervention(self, intervention, meta_step, cumulative_timesteps):
+        """train student on selected intervention with proper logging"""
         # create env with intervention
         env = create_environment(self.args.task, intervention, seed=self.args.student_seed + meta_step)
         vec_env = DummyVecEnv([lambda: env])
@@ -328,37 +328,58 @@ class AutoCaLC:
         # set env for student
         self.student.set_env(vec_env)
 
+        # Set up callbacks for logging
+        reward_monitor = RewardMonitorCallback(
+            intervention_type=intervention['type'] if intervention else 'base',
+            csv_logger=self.csvlogger,
+            stage=meta_step,
+            cumulative_timesteps=cumulative_timesteps,
+            baseline_type="autocalc_qtable"
+        )
+        
+        callbacks = [reward_monitor]
+        
+        # Add wandb callback if enabled
+        if self.args.use_wandb and WANDB_AVAILABLE:
+            wandb_callback = WandbCallback(
+                gradient_save_freq=100,
+                model_save_path=self.args.log_dir,
+                verbose=0
+            )
+            callbacks.append(wandb_callback)
+        
+        callback_list = CallbackList(callbacks)
+
         # train student
         logging.info(f"Training student on {intervention['type'] if intervention else 'base'} for {self.args.student_train_steps} steps")
-        self.student.learn(total_timesteps=self.args.student_train_steps)
+        self.student.learn(
+            total_timesteps=self.args.student_train_steps,
+            callback=callback_list,
+            reset_num_timesteps=False
+        )
 
         env.close()
     
-    def _run_validation(self, meta_step):
-        """run validation protocol (unchanged from original)"""
-        validation_rewards = []
-
-        for episode in range(self.args.validation_episodes):
-            # create the validation environment
-            env = create_environment(
-                self.args.task,
-                None,
-                seed=1000 + episode     # fixed val seeds
-            )
-
-            obs = env.reset()
-            episode_reward = 0
-            done = False
-
-            while not done:
-                action, _ = self.student.predict(obs, deterministic=True)
-                obs, reward, done, _ = env.step(action)
-                episode_reward += reward
-            
-            validation_rewards.append(episode_reward)
-            env.close()
-
-        return np.mean(validation_rewards)
+    def _run_validation(self, meta_step, cumulative_timesteps):
+        """run validation protocol with proper logging"""
+        logging.info(f"Running validation after meta-episode {meta_step}")
+        
+        # Create validation callback
+        validation_callback = ValidationCallback(
+            validation_frequency=float('inf'),  # only run when explicitly called
+            task_name=self.args.task,
+            csv_logger=self.csvlogger,
+            stage=meta_step,
+            cumulative_timesteps=cumulative_timesteps,
+            validation_episodes=self.args.validation_episodes,
+            seed=1000,  # fixed validation seed
+            baseline_type="autocalc_qtable"
+        )
+        
+        # Run validation and get metrics
+        validation_metrics = validation_callback._execute_validation(self.student)
+        
+        return validation_metrics['validation_avg_reward']
     
     def _log_qtable_progress(self, meta_step, state_idx, action_idx, meta_reward):
         """Enhanced Q-table logging (replaces neural network logging)"""
@@ -430,10 +451,13 @@ class AutoCaLC:
         self.meta_step_records = []
         self.q_table_history = [self.teacher.q_table.copy()]
         self.state_history = [int(last_intervention_idx)]
+        
+        # track cumulative timesteps for logging
+        cumulative_timesteps = 0
 
         # get initial validation performance
         logging.info("Computing initial validation performance...")
-        last_validation_reward = self._run_validation(0)
+        last_validation_reward = self._run_validation(0, cumulative_timesteps)
         logging.info(f"Initial validation reward: {last_validation_reward:.4f}")
         self.initial_validation_reward = float(last_validation_reward)
         self.validation_history = [float(last_validation_reward)]
@@ -455,10 +479,11 @@ class AutoCaLC:
             logging.info(f"STATE: {INTERVENTION_NAMES[current_state_idx]} -> ACTION: {INTERVENTION_NAMES[selected_intervention_idx]}")
 
             # 3. train student on selected intervention
-            self._train_student_on_intervention(selected_intervention, meta_step)
+            self._train_student_on_intervention(selected_intervention, meta_step, cumulative_timesteps)
+            cumulative_timesteps += self.args.student_train_steps
 
             # 4. validate and compute meta-reward
-            current_validation_reward = self._run_validation(meta_step)
+            current_validation_reward = self._run_validation(meta_step, cumulative_timesteps)
             meta_reward = current_validation_reward - last_validation_reward    # this is the learning progress
             self.meta_rewards_history.append(float(meta_reward))
             self.validation_history.append(float(current_validation_reward))
