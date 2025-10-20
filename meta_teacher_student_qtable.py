@@ -297,7 +297,18 @@ class AutoCaLC:
         
         # load pretrained model
         set_random_seed(self.args.student_seed)
-        student = PPO.load(pretrained_path)
+        # kausar (oct 20): adding clipping and entropy to prevent NaNs; max_grad_norm is the best strategy
+        student = PPO.load(
+            pretrained_path,
+            learning_rate=3e-5,      # slightly lower than default 3e-4
+            ent_coef=0.01,           # regularizes entropy; helps avoid log(0) NaNs
+            max_grad_norm=0.5,       # prevents gradient explosion
+            clip_range=0.2,          # ensures stable policy updates
+            clip_range_vf=0.2,       # prevents critic over-updates (major NaN source)
+            vf_coef=0.5,             # keep balanced critic loss
+            normalize_advantage=True # ensures stable advantage magnitudes
+        )
+
         logging.info(f"Loaded pretrained student model from: {pretrained_path}")
         
         return student
