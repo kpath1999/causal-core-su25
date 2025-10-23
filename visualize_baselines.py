@@ -20,11 +20,11 @@ python visualize_baselines.py --log_dir logs --output_dir greedy_analysis --base
 # Analyze only the cm baseline
 python visualize_baselines.py --log_dir logs --output_dir cm_analysis --baseline cm
 
-# Analyze only the Random Intervention baseline
-python visualize_baselines.py --log_dir logs --output_dir random_analysis --baseline "Random Intervention"
+# Analyze only the random intervention baseline
+python visualize_baselines.py --log_dir logs --output_dir random_analysis --baseline "random intervention"
 
-# Analyze only the No Intervention baseline
-python visualize_baselines.py --log_dir logs --output_dir none_analysis --baseline "No Intervention"
+# Analyze only the no intervention baseline
+python visualize_baselines.py --log_dir logs --output_dir none_analysis --baseline "no intervention"
 
 # Analyze only the RND baseline
 python visualize_baselines.py --log_dir logs --output_dir rnd_analysis --baseline RND
@@ -34,6 +34,11 @@ python visualize_baselines.py --log_dir logs --output_dir autocalc_analysis --au
 
 # Focus only on AutoCaLC analysis
 python visualize_baselines.py --log_dir logs --output_dir autocalc_analysis --baseline autocalc
+
+NEW VISUALIZATIONS GENERATED:
+- focused_radar_plot.png/pdf: Radar chart focused on key curriculum strategies (autocalc, cm, random, greedy, none, pretrained)
+- benchmark_summary_table.png/pdf: Tabular summary of benchmark performance across evaluation protocols  
+- benchmark_summary_table.csv: CSV export of the benchmark summary for easy analysis
 """
 
 def load_autocalc_pretrained_data(log_base_dir='logs'):
@@ -275,13 +280,13 @@ def load_baseline_data(log_base_dir='logs', target_baseline=None):
     baseline_dirs = {
         'greedy_replacement_sequencing_logs': 'greedy',
         'cm_replacement_sequencing_logs': 'cm',
-        'random_replacement_sequencing_logs': 'Random Intervention',
-        'none_sequencing_logs': 'No Intervention',
+        'random_replacement_sequencing_logs': 'random intervention',
+        'none_sequencing_logs': 'no intervention',
         'rnd_sequencing_logs': 'RND',
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
         'info_sequencing_logs': 'info',
-        'autocalc_logs': 'autocalc'  # Added AutoCaLC
+        'autocalc_qtable': 'autocalc'  # Added AutoCaLC
     }
 
     # Filter to specific baseline if requested
@@ -343,13 +348,13 @@ def load_validation_data(log_base_dir='logs', target_baseline=None):
     baseline_dirs = {
         'greedy_replacement_sequencing_logs': 'greedy',
         'cm_replacement_sequencing_logs': 'cm',
-        'random_replacement_sequencing_logs': 'Random Intervention',
-        'none_sequencing_logs': 'No Intervention',
+        'random_replacement_sequencing_logs': 'random intervention',
+        'none_sequencing_logs': 'no intervention',
         'rnd_sequencing_logs': 'RND',
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
         'info_sequencing_logs': 'info',
-        'autocalc_logs': 'autocalc'  # Added AutoCaLC
+        'autocalc_qtable': 'autocalc'  # Added AutoCaLC
     }
 
     # Filter to specific baseline if requested
@@ -470,13 +475,13 @@ def load_intervention_test_data(log_base_dir='logs', target_baseline=None):
     baseline_dirs = {
         'greedy_replacement_sequencing_logs': 'greedy',
         'cm_replacement_sequencing_logs': 'cm',
-        'random_replacement_sequencing_logs': 'Random Intervention',
-        'none_sequencing_logs': 'No Intervention',
+        'random_replacement_sequencing_logs': 'random intervention',
+        'none_sequencing_logs': 'no intervention',
         'rnd_sequencing_logs': 'RND',
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
         'info_sequencing_logs': 'info',
-        'autocalc_logs': 'autocalc'  # Added AutoCaLC
+        'autocalc_qtable': 'autocalc'  # Added AutoCaLC
     }
 
     # Filter to specific baseline if requested
@@ -518,14 +523,14 @@ def load_benchmark_results(log_base_dir='logs', target_baseline=None):
     baseline_dirs = {
         'greedy_replacement_sequencing_logs': 'greedy',
         'cm_replacement_sequencing_logs': 'cm',
-        'random_replacement_sequencing_logs': 'Random Intervention',
-        'none_sequencing_logs': 'No Intervention',
+        'random_replacement_sequencing_logs': 'random intervention',
+        'none_sequencing_logs': 'no intervention',
         'rnd_sequencing_logs': 'RND',
         'count_sequencing_logs': 'count',
         'lpm_sequencing_logs': 'lpm',
         'info_sequencing_logs': 'info',
         'pretrained_baseline_logs': 'pretrained',
-        'autocalc_logs': 'autocalc'  # Added AutoCaLC
+        'autocalc_qtable': 'autocalc'  # Added AutoCaLC
     }
 
     # Filter to specific baseline if requested
@@ -570,10 +575,17 @@ def plot_radar_chart(benchmark_data, output_dir='visualizations'):
     success_values = []
     
     for baseline_name, data in benchmark_data.items():
+        # Check for both 'final_evals' (baselines) and 'benchmark_scores' (AutoCaLC)
+        evals_key = None
         if 'final_evals' in data:
+            evals_key = 'final_evals'
+        elif 'benchmark_scores' in data:
+            evals_key = 'benchmark_scores'
+        
+        if evals_key:
             # Get all protocol success rates
             protocol_values = []
-            for protocol, metrics in data['final_evals'].items():
+            for protocol, metrics in data[evals_key].items():
                 if 'mean_full_integrated_fractional_success' in metrics:
                     protocol_values.append(metrics['mean_full_integrated_fractional_success'])
             
@@ -623,6 +635,205 @@ def plot_radar_chart(benchmark_data, output_dir='visualizations'):
     
     print(f"Radar plot saved to {output_dir}")
 
+def plot_focused_radar_chart(benchmark_data, output_dir='visualizations'):
+    """Create focused radar plot with only key curriculum strategies"""
+    if not benchmark_data:
+        print("No benchmark data found for focused radar chart")
+        return
+    
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Define the key baselines we want to focus on
+    key_baselines = ['autocalc', 'cm', 'random intervention', 'greedy', 'no intervention', 'pretrained']
+    
+    # Extract mean_full_integrated_fractional_success for key baselines only
+    baselines = []
+    success_values = []
+    
+    for baseline_name, data in benchmark_data.items():
+        # Only include key baselines
+        if baseline_name not in key_baselines:
+            continue
+            
+        # Check for both 'final_evals' (baselines) and 'benchmark_scores' (AutoCaLC)
+        evals_key = None
+        if 'final_evals' in data:
+            evals_key = 'final_evals'
+        elif 'benchmark_scores' in data:
+            evals_key = 'benchmark_scores'
+        
+        if evals_key:
+            # Get all protocol success rates
+            protocol_values = []
+            for protocol, metrics in data[evals_key].items():
+                if 'mean_full_integrated_fractional_success' in metrics:
+                    protocol_values.append(metrics['mean_full_integrated_fractional_success'])
+            
+            if protocol_values:
+                baselines.append(baseline_name)
+                success_values.append(protocol_values)
+    
+    if not baselines:
+        print("No valid benchmark data found for focused radar chart")
+        return
+    
+    # Create radar chart
+    fig, ax = plt.subplots(figsize=(12, 12), subplot_kw=dict(projection='polar'))
+    
+    # Number of protocols
+    num_protocols = len(success_values[0]) if success_values else 0
+    protocol_names = [f'Protocol {i}' for i in range(num_protocols)]
+    
+    # Angles for each protocol
+    angles = np.linspace(0, 2 * np.pi, num_protocols, endpoint=False)
+    angles = np.concatenate((angles, [angles[0]]))  # Close the plot
+    
+    # Define specific colors for key baselines for better readability
+    color_map = {
+        'autocalc': '#1f77b4',      # blue
+        'cm': '#ff7f0e',            # orange  
+        'random intervention': '#2ca02c',  # green
+        'greedy': '#d62728',        # red
+        'no intervention': '#9467bd',   # purple
+        'pretrained': '#8c564b'     # brown
+    }
+    
+    # Plot each baseline with specific colors
+    for i, (baseline, values) in enumerate(zip(baselines, success_values)):
+        values_closed = values + [values[0]]  # Close the plot
+        color = color_map.get(baseline, plt.cm.tab10(i))
+        ax.plot(angles, values_closed, 'o-', linewidth=3, label=baseline, color=color, markersize=6)
+        ax.fill(angles, values_closed, alpha=0.15, color=color)
+    
+    # Customize the plot
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(protocol_names, fontsize=12)
+    ax.set_ylim(0, 1)
+    ax.set_ylabel('Mean Full Integrated Fractional Success', labelpad=30, fontsize=12)
+    ax.set_title('Key Curriculum Strategies: Benchmark Performance Comparison', size=16, pad=30, fontweight='bold')
+    ax.grid(True, alpha=0.3)
+    
+    # Add legend with better positioning
+    plt.legend(loc='upper right', bbox_to_anchor=(1.4, 1.0), fontsize=11)
+    
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, 'focused_radar_plot.png'), dpi=300, bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, 'focused_radar_plot.pdf'), bbox_inches='tight')
+    plt.close()
+    
+    print(f"Focused radar plot saved to {output_dir}")
+
+def create_benchmark_summary_table(benchmark_data, output_dir='visualizations'):
+    """Create tabular summary of benchmark performance for all curriculum strategies"""
+    if not benchmark_data:
+        print("No benchmark data found for summary table")
+        return
+    
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Name mapping for display purposes
+    display_name_map = {
+        'random intervention': 'random',
+        'no intervention': 'none'
+    }
+    
+    # Collect data for table
+    table_data = []
+    
+    for baseline_name, data in benchmark_data.items():
+            
+        # Check for both 'final_evals' (baselines) and 'benchmark_scores' (AutoCaLC)
+        evals_key = None
+        if 'final_evals' in data:
+            evals_key = 'final_evals'
+        elif 'benchmark_scores' in data:
+            evals_key = 'benchmark_scores'
+        
+        if evals_key:
+            # Use display name mapping for better readability
+            display_name = display_name_map.get(baseline_name, baseline_name)
+            row_data = {'Strategy': display_name}
+            protocol_values = []
+            
+            # Extract protocol-specific scores
+            for i, (protocol, metrics) in enumerate(data[evals_key].items()):
+                if 'mean_full_integrated_fractional_success' in metrics:
+                    score = metrics['mean_full_integrated_fractional_success']
+                    row_data[f'Protocol {i}'] = f"{score:.3f}"
+                    protocol_values.append(score)
+            
+            # Calculate average across all protocols
+            if protocol_values:
+                avg_score = np.mean(protocol_values)
+                row_data['Average'] = f"{avg_score:.3f}"
+                table_data.append(row_data)
+    
+    if not table_data:
+        print("No valid benchmark data found for summary table")
+        return
+    
+    # Create DataFrame and sort by average performance
+    df = pd.DataFrame(table_data)
+    df['avg_numeric'] = df['Average'].astype(float)
+    df = df.sort_values('avg_numeric', ascending=False).drop('avg_numeric', axis=1)
+    
+    # Create a nice formatted table plot
+    fig, ax = plt.subplots(figsize=(14, 8))
+    ax.axis('tight')
+    ax.axis('off')
+    
+    # Create table
+    table = ax.table(cellText=df.values, colLabels=df.columns, 
+                    cellLoc='center', loc='center',
+                    bbox=[0, 0, 1, 1])
+    
+    # Style the table
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    table.scale(1.2, 2)
+    
+    # Color the header
+    for i in range(len(df.columns)):
+        table[(0, i)].set_facecolor('#4CAF50')
+        table[(0, i)].set_text_props(weight='bold', color='white')
+    
+    # Color rows alternately
+    for i in range(1, len(df) + 1):
+        for j in range(len(df.columns)):
+            if i % 2 == 0:
+                table[(i, j)].set_facecolor('#f0f0f0')
+    
+    # Highlight the best performer in each protocol
+    for col_idx in range(1, len(df.columns)):
+        col_name = df.columns[col_idx]
+        if col_name != 'Strategy':
+            max_val = df[col_name].astype(float).max()
+            max_idx = df[col_name].astype(float).idxmax()
+            row_idx = df.index.get_loc(max_idx) + 1
+            table[(row_idx, col_idx)].set_facecolor('#FFD700')  # Gold color for best
+    
+    plt.title('Pushing Benchmark Performance Summary: All Curriculum Strategies', 
+              fontsize=16, fontweight='bold', pad=20)
+    
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, 'benchmark_summary_table.png'), dpi=300, bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, 'benchmark_summary_table.pdf'), bbox_inches='tight')
+    plt.close()
+    
+    # Also save as CSV for easy access
+    csv_path = os.path.join(output_dir, 'benchmark_summary_table.csv')
+    df.to_csv(csv_path, index=False)
+    
+    print(f"Benchmark summary table saved to {output_dir}")
+    print(f"CSV version saved as: {csv_path}")
+    
+    # Print summary to console
+    print("\nBenchmark Performance Summary:")
+    print("="*50)
+    print(df.to_string(index=False))
+    
+    return df
+
 def plot_intervention_effectiveness(intervention_data, output_dir='visualizations'):
     """Create intervention effectiveness bar chart (Reward only as main metric)"""
     os.makedirs(output_dir, exist_ok=True)
@@ -630,15 +841,24 @@ def plot_intervention_effectiveness(intervention_data, output_dir='visualization
     # Process the data for plotting
     all_dfs = []
     for baseline_name, df in intervention_data.items():
+        # Skip empty dataframes
+        if df.empty:
+            print(f"  Skipping {baseline_name}: empty intervention data")
+            continue
         df_copy = df.copy()
         df_copy['baseline'] = baseline_name
         all_dfs.append(df_copy)
     
     if not all_dfs:
-        print("No intervention test data found")
+        print("no intervention test data found - skipping intervention effectiveness plot")
         return
         
     combined_df = pd.concat(all_dfs, ignore_index=True)
+    
+    # Check if combined data is empty or missing required columns
+    if combined_df.empty or 'stage' not in combined_df.columns:
+        print("Insufficient intervention data - skipping intervention effectiveness plot")
+        return
     
     # Get the latest meta-episode data for each baseline and intervention combination
     latest_stage_data = combined_df.groupby(['baseline', 'intervention_type']).apply(
@@ -1022,7 +1242,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate comprehensive visualizations for training and validation data")
     parser.add_argument('--log_dir', type=str, default='logs', help='Base directory containing log folders')
     parser.add_argument('--output_dir', type=str, default='visualizations', help='Output directory for visualizations')
-    parser.add_argument('--baseline', type=str, help='Analyze only a specific baseline (greedy, cm, "Random Intervention", "No Intervention", RND, count, lpm, info, autocalc)')
+    parser.add_argument('--baseline', type=str, help='Analyze only a specific baseline (greedy, cm, "random intervention", "no intervention", RND, count, lpm, info, autocalc)')
     parser.add_argument('--autocalc_analysis', action='store_true', help='Generate AutoCaLC-specific analysis plots')
     
     args = parser.parse_args()
@@ -1068,7 +1288,7 @@ def main():
         print("   Generating intervention effectiveness plot...")
         plot_intervention_effectiveness(intervention_data, args.output_dir)
     else:
-        print("   Warning: No intervention test data found")
+        print("   Warning: no intervention test data found")
     
     # 4. Load benchmark results and generate radar plot
     print("4. Loading benchmark results...")
@@ -1077,6 +1297,10 @@ def main():
     if benchmark_data:
         print("   Generating radar plot...")
         plot_radar_chart(benchmark_data, args.output_dir)
+        print("   Generating focused radar plot...")
+        plot_focused_radar_chart(benchmark_data, args.output_dir)
+        print("   Generating benchmark summary table...")
+        create_benchmark_summary_table(benchmark_data, args.output_dir)
     else:
         print("   Warning: No benchmark results found")
     

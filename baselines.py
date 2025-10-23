@@ -1770,25 +1770,20 @@ class ValidationCallback(BaseCallback):
         with open(env_path, 'rb') as f:
             task_params = pickle.load(f)
 
-        # create env with saved parameters
-        dense_weights = DENSE_REWARD_WEIGHTS.get(self.task_name, [0])
-        task = generate_task(
-            task_generator_id=self.task_name,
-            dense_reward_weights=np.array(dense_weights),
-            variables_space='space_a',
-            fractional_reward_weight=1
-        )
-
-        env = CausalWorld(
-            task=task,
-            skip_frame=task_params['skip_frame'],
-            action_mode='joint_torques',
-            enable_visualization=False,
-            seed=task_params['seed'],
-            max_episode_length=task_params['max_episode_length']
-        )
-
-        return env
+        # recreate the validation environment exactly as when it was generated,
+        # including any intervention wrapper and NextStateWrapper
+        try:
+            env = create_environment(
+                task_name=self.task_name,
+                intervention=task_params.get('intervention', None),
+                seed=task_params.get('seed', 0),
+                skip_frame=task_params.get('skip_frame', 3),
+                max_episode_length=task_params.get('max_episode_length', 500)
+            )
+            return env
+        except Exception as e:
+            logging.error(f"Failed to recreate validation env {env_path}: {e}")
+            return None
     
     def _evaluate_validation(self):
         """evaluate model on all validation environments"""

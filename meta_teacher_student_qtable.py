@@ -27,7 +27,7 @@ python meta_teacher_student_qtable.py --task pushing --meta_episodes 50 --studen
 EVALUATION COMMANDS:
 
 Evaluate trained model (uses best model if available):
-python meta_teacher_student_qtable.py --eval_only --log_dir logs/autocalc_qtable --task pushing --eval_episodes 20
+python meta_teacher_student_qtable.py --eval_only --log_dir logs/autocalc_val_qtable --task pushing --eval_episodes 20
 
 Evaluate with custom model path:
 python meta_teacher_student_qtable.py --eval_only --eval_model_path logs/my_experiment/final_student_model.zip \
@@ -345,7 +345,7 @@ class AutoCaLC:
             csv_logger=self.csvlogger,
             stage=meta_step,
             cumulative_timesteps=cumulative_timesteps,
-            baseline_type="autocalc_qtable"
+            baseline_type="autocalc_val_qtable"
         )
         
         callbacks = [reward_monitor]
@@ -384,7 +384,7 @@ class AutoCaLC:
             cumulative_timesteps=cumulative_timesteps,
             validation_episodes=self.args.validation_episodes,
             seed=1000,  # fixed validation seed
-            baseline_type="autocalc_qtable"
+            baseline_type="autocalc_val_qtable"
         )
         
         # Run validation and get metrics
@@ -725,7 +725,7 @@ def evaluate_student_model(args, log_dir, model_path=None, task_name=None, seed=
             'benchmark_scores': scores
         }
     
-    benchmark_path = os.path.join(log_dir, "evaluation_results.json")
+    benchmark_path = os.path.join(log_dir, "benchmark_results.json")
     with open(benchmark_path, 'w') as f:
         json.dump(benchmark_results, f, indent=2)
     logging.info(f"Evaluation results saved to: {benchmark_path}")
@@ -761,7 +761,7 @@ def parse_args():
     # Seeds and logging
     parser.add_argument('--student_seed', type=int, default=42, help='Student random seed')
     parser.add_argument('--teacher_seed', type=int, default=123, help='Teacher random seed')
-    parser.add_argument('--log_dir', type=str, default='logs/autocalc_qtable', help='Log directory')
+    parser.add_argument('--log_dir', type=str, default='logs/autocalc_val_qtable', help='Log directory')
     parser.add_argument('--use_wandb', action='store_true', help='Use wandb logging')
     parser.add_argument('--device_id', type=int, default=6, help='GPU device ID')
     
@@ -861,7 +861,8 @@ def main():
         logging.info("Running final evaluation...")
         
         # First run simple validation
-        final_validation = autocalc._run_validation(args.meta_episodes)
+        final_cumulative_timesteps = args.meta_episodes * args.student_train_steps
+        final_validation = autocalc._run_validation(args.meta_episodes, final_cumulative_timesteps)
         logging.info(f"Final validation performance: {final_validation:.4f}")
         
         if args.use_wandb and WANDB_AVAILABLE:

@@ -12,7 +12,8 @@ import torch
 import logging
 from causal_world.task_generators import generate_task
 from causal_world.envs import CausalWorld
-from baselines import DENSE_REWARD_WEIGHTS, SUPPORTED_TASKS
+from baselines import DENSE_REWARD_WEIGHTS, SUPPORTED_TASKS, INTERVENTIONS
+from baselines import create_environment
 
 def set_seed(seed):
     """set random seed for reproducibility"""
@@ -20,31 +21,6 @@ def set_seed(seed):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
-
-def create_environment(task_name, seed=0, skip_frame=3, max_episode_length=500):
-    """create a basic env without interventions"""
-    dense_weights = DENSE_REWARD_WEIGHTS.get(task_name, [0])
-    task = generate_task(
-        task_generator_id=task_name,
-        dense_reward_weights=np.array(dense_weights),
-        variables_space='space_a',
-        fractional_reward_weight=1
-    )
-
-    env = CausalWorld(
-        task=task,
-        skip_frame=skip_frame,
-        action_mode='joint_torques',
-        enable_visualization=False,
-        seed=seed,
-        max_episode_length=max_episode_length
-    )
-
-    # explicitly set seed for reproducibility
-    if hasattr(env, 'seed'):
-        env.seed(seed)
-    
-    return env
 
 def create_and_save_validation_envs(base_seed=42, num_envs=10):
     """
@@ -69,9 +45,20 @@ def create_and_save_validation_envs(base_seed=42, num_envs=10):
             seed = base_seed + env_idx * 100
             set_seed(seed)
 
-            # create env
+            # select a random intervention for this validation environment
+            # this creates different world mechanics for each validation env
+            intervention = None
+            if env_idx > 0:  # keep env_idx 0 as baseline (no intervention)
+                intervention_idx = (env_idx - 1) % len(INTERVENTIONS)
+                intervention = INTERVENTIONS[intervention_idx]
+                logging.info(f"    Using intervention: {intervention['type']} for env {env_idx}")
+            else:
+                logging.info(f"    Using no intervention (baseline) for env {env_idx}")
+
+            # create env with the selected intervention
             env = create_environment(
                 task_name=task_name,
+                intervention=intervention,
                 seed=seed,
                 skip_frame=3,
                 max_episode_length=500
@@ -85,6 +72,8 @@ def create_and_save_validation_envs(base_seed=42, num_envs=10):
             task_params = {
                 'task_name': task_name,
                 'seed': seed,
+                'intervention': intervention,  # save the intervention used
+                'intervention_type': intervention['type'] if intervention else 'none',
                 'variable_space': env.get_variable_space_used(),    # save current variable space
                 'skip_frame': 3,
                 'max_episode_length': 500
