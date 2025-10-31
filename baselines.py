@@ -107,7 +107,6 @@ from causal_world.intervention_actors import (
     RandomInterventionActorPolicy
 )
 from validation_actor import ValidationInterventionActorPolicy
-# from consolidated_logger import ConsolidatedLogger, MonitorWithSuccess
 import wandb
 from wandb.integration.sb3 import WandbCallback
 

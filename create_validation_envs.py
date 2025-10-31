@@ -45,15 +45,10 @@ def create_and_save_validation_envs(base_seed=42, num_envs=10):
             seed = base_seed + env_idx * 100
             set_seed(seed)
 
-            # select a random intervention for this validation environment
+            # use the "random" intervention for all validation environments
             # this creates different world mechanics for each validation env
-            intervention = None
-            if env_idx > 0:  # keep env_idx 0 as baseline (no intervention)
-                intervention_idx = (env_idx - 1) % len(INTERVENTIONS)
-                intervention = INTERVENTIONS[intervention_idx]
-                logging.info(f"    Using intervention: {intervention['type']} for env {env_idx}")
-            else:
-                logging.info(f"    Using no intervention (baseline) for env {env_idx}")
+            intervention = next((interv for interv in INTERVENTIONS if interv['type'] == 'random'), None)
+            logging.info(f"    Using intervention: random for env {env_idx}")
 
             # create env with the selected intervention
             env = create_environment(

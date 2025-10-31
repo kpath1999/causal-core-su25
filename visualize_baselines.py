@@ -682,7 +682,7 @@ def plot_focused_radar_chart(benchmark_data, output_dir='visualizations'):
     
     # Number of protocols
     num_protocols = len(success_values[0]) if success_values else 0
-    protocol_names = [f'Protocol {i}' for i in range(num_protocols)]
+    protocol_names = [f'Env variant {i}' for i in range(num_protocols)]
     
     # Angles for each protocol
     angles = np.linspace(0, 2 * np.pi, num_protocols, endpoint=False)
