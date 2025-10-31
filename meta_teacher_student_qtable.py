@@ -33,6 +33,13 @@ Evaluate with custom model path:
 python meta_teacher_student_qtable.py --eval_only --eval_model_path logs/my_experiment/final_student_model.zip \
     --task pushing --eval_episodes 20 --max_episode_length 300
 
+VISUALIZATION COMMANDS:
+
+Generate animated GIF of Q-table evolution (works on headless servers):
+python meta_teacher_student_qtable.py --heatmap --log_dir logs/autocalc_qtable
+
+Output: Creates qtable_evolution.gif in the log directory showing how Q-values evolve across meta-episodes
+
 SUPPORTED TASKS: pushing, reaching, picking, pick_and_place, stacking2
 
 For all options: python meta_teacher_student_qtable.py --help
@@ -40,16 +47,15 @@ For all options: python meta_teacher_student_qtable.py --help
 
 # NOTE: it would be cool to see the Q-table created as a 7x7 grid where I can see the Q-vals evolve across the 50 meta-episodes
 
+import sys
 import numpy as np
 import os
 import json
 import argparse
 import logging
 import random
-
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation, PillowWriter
 from collections import defaultdict
 from copy import deepcopy
 from stable_baselines3 import PPO
@@ -743,6 +749,99 @@ def evaluate_student_model(args, log_dir, model_path=None, task_name=None, seed=
     env.close()
     return benchmark_results
 
+def visualize_qtable_evolution(log_dir='logs/autocalc_qtable'):
+    """
+    Create an animated GIF showing Q-table evolution across meta-episodes.
+    Works on headless servers (no display required).
+    
+    Usage: python meta_teacher_student_qtable.py --heatmap --log_dir logs/autocalc_qtable
+    """
+    # Load curriculum data which contains Q-table history
+    curriculum_path = os.path.join(log_dir, 'learned_curriculum.json')
+    
+    if not os.path.exists(curriculum_path):
+        print(f"Error: No curriculum data found at {curriculum_path}")
+        print(f"Make sure you've trained a model first")
+        return
+    
+    with open(curriculum_path, 'r') as f:
+        data = json.load(f)
+    
+    # Extract Q-table history
+    q_table_history = data.get('q_table_history', [])
+    
+    if not q_table_history:
+        print(f"Error: No Q-table history found in {curriculum_path}")
+        return
+    
+    # Convert to numpy arrays
+    q_tables = [np.array(q) for q in q_table_history]
+    num_snapshots = len(q_tables)
+    
+    print(f"Loaded {num_snapshots} Q-table snapshots from {log_dir}")
+    print(f"Creating animated GIF...")
+    
+    # Compute global min/max for consistent color scale
+    all_q_values = np.concatenate([q.flatten() for q in q_tables])
+    vmin = float(np.min(all_q_values))
+    vmax = float(np.max(all_q_values))
+    
+    # Handle edge case where all values are the same
+    if np.isclose(vmin, vmax):
+        vmin -= 0.1
+        vmax += 0.1
+    
+    # Create figure
+    fig, ax = plt.subplots(figsize=(10, 8))
+    
+    # Initial heatmap
+    im = ax.imshow(q_tables[0], cmap='coolwarm', vmin=vmin, vmax=vmax, aspect='auto')
+    
+    # Set up axes
+    ax.set_xticks(range(len(INTERVENTION_NAMES)))
+    ax.set_yticks(range(len(INTERVENTION_NAMES)))
+    ax.set_xticklabels(INTERVENTION_NAMES, rotation=45, ha='right', fontsize=10)
+    ax.set_yticklabels(INTERVENTION_NAMES, fontsize=10)
+    ax.set_xlabel('Action (Next Intervention)', fontsize=12, fontweight='bold')
+    ax.set_ylabel('State (Current Intervention)', fontsize=12, fontweight='bold')
+    
+    # Add colorbar
+    cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    cbar.set_label('Q-value', fontsize=12, fontweight='bold')
+    
+    # Title
+    title = ax.set_title(f'Q-table Evolution - Meta-Episode 0 / {num_snapshots - 1}', 
+                         fontsize=14, fontweight='bold', pad=15)
+    
+    # Add grid
+    ax.set_xticks(np.arange(len(INTERVENTION_NAMES)) - 0.5, minor=True)
+    ax.set_yticks(np.arange(len(INTERVENTION_NAMES)) - 0.5, minor=True)
+    ax.grid(which='minor', color='gray', linestyle='-', linewidth=0.5, alpha=0.3)
+    
+    plt.tight_layout()
+    
+    # Animation update function
+    def update(frame):
+        im.set_data(q_tables[frame])
+        title.set_text(f'Q-table Evolution - Meta-Episode {frame} / {num_snapshots - 1}')
+        return [im, title]
+    
+    # Create animation
+    anim = FuncAnimation(fig, update, frames=num_snapshots, interval=200, blit=True, repeat=True)
+    
+    # Save as GIF
+    output_path = os.path.join(log_dir, 'qtable_evolution.gif')
+    print(f"Saving animation to {output_path}...")
+    writer = PillowWriter(fps=5)
+    anim.save(output_path, writer=writer)
+    
+    plt.close(fig)
+    
+    print(f"\nAnimation saved successfully!")
+    print(f"Location: {output_path}")
+    print(f"Duration: {num_snapshots} frames at 5 FPS ({num_snapshots/5:.1f} seconds)")
+
+
 def parse_args():
     """Parse command line arguments (modified for Q-table hyperparameters)"""
     parser = argparse.ArgumentParser(description="AutoCaLC with Tabular Q-Learning Teacher")
@@ -761,7 +860,7 @@ def parse_args():
     # Seeds and logging
     parser.add_argument('--student_seed', type=int, default=42, help='Student random seed')
     parser.add_argument('--teacher_seed', type=int, default=123, help='Teacher random seed')
-    parser.add_argument('--log_dir', type=str, default='logs/autocalc_val_qtable', help='Log directory')
+    parser.add_argument('--log_dir', type=str, default='logs/autocalc_qtable', help='Log directory')
     parser.add_argument('--use_wandb', action='store_true', help='Use wandb logging')
     parser.add_argument('--device_id', type=int, default=6, help='GPU device ID')
     
@@ -779,11 +878,19 @@ def parse_args():
     parser.add_argument('--max_episode_length', type=int, default=250, help='Maximum episode length for evaluation')
     parser.add_argument('--skip_frame', type=int, default=3, help='Frame skip for environment')
     
+    # Visualization
+    parser.add_argument('--heatmap', action='store_true', help='Generate animated GIF of Q-table evolution')
+    
     return parser.parse_args()
 
 def main():
     """Main execution function"""
     args = parse_args()
+    
+    # Handle visualization mode
+    if args.heatmap:
+        visualize_qtable_evolution(log_dir=args.log_dir)
+        return
     
     # Setup logging
     os.makedirs(args.log_dir, exist_ok=True)

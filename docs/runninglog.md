@@ -2,7 +2,7 @@
 
 [x] ~~Switch to the validation environment creation strategy, where the random intervention is applied. This way we get a better gauge on the validation reward curves being representative of the agent's capabilities.~~
 
-[ ] Improve table (summary + Q) visuals {heatmap + terminology + text size}
+[x] ~~Improve table (summary + Q) visuals {heatmap + terminology + text size}~~
 
 [ ] Move to multi-task testing, observing whether AutoCaLC can generalize (high chance it does not, but this is still worth testing)
 
